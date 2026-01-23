@@ -23,7 +23,7 @@ function RecipientCard({ category, language, fallback }: { category: Category; l
   const label = language === 'mk'
     ? category.name_mk || category.name || category.name_en || ''
     : category.name_en || category.name || category.name_mk || ''
-  const imageSrc = category.category_image_path ? getImageUrl(category.category_image_path) : fallback
+  const imageSrc = (category.category_image_path ? getImageUrl(category.category_image_path) : null) ?? fallback
 
   return (
     <Link
