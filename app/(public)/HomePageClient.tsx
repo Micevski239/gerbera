@@ -1,6 +1,5 @@
 'use client'
 
-import type { JSX } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { getImageUrl } from '@/lib/supabase/client'
@@ -10,7 +9,7 @@ import ProductShowcase from '@/components/sections/ProductShowcase'
 import TestimonialsShowcase from '@/components/sections/TestimonialsShowcase'
 import OccasionShowcase from '@/components/sections/OccasionShowcase'
 import RecipientShowcase from '@/components/sections/RecipientShowcase'
-import type { Category, Product, Occasion } from '@/lib/supabase/types'
+import type { Category, Product, Occasion, SiteStat } from '@/lib/supabase/types'
 
 const navLinks = [
   { label: { mk: 'Дома', en: 'Home' }, href: '/' },
@@ -19,57 +18,10 @@ const navLinks = [
   { label: { mk: 'Контакт', en: 'Contact' }, href: '/contact' },
 ]
 
-type BusinessFeatureIcon = 'gift' | 'flower' | 'balloon' | 'wine' | 'sparkles'
-
-interface BusinessFeature {
-  icon: BusinessFeatureIcon
-  text: { mk: string; en: string }
-}
-
-const featureIconMap: Record<BusinessFeatureIcon, JSX.Element> = {
-  gift: (
-    <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M20 12v7a2 2 0 01-2 2H6a2 2 0 01-2-2v-7m16 0H4m16 0V7a2 2 0 00-2-2h-3.5a1.5 1.5 0 010-3 1.5 1.5 0 010 3V5m-7 0v2m0-2a1.5 1.5 0 110-3 1.5 1.5 0 010 3H6a2 2 0 00-2 2v5" />
-      <path strokeLinecap="round" strokeLinejoin="round" d="M12 5v16" />
-    </svg>
-  ),
-  flower: (
-    <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M12 21c2.5-2 4-4 4-6s-1.5-4-4-4-4 2-4 4 1.5 4 4 6z" />
-      <circle cx="12" cy="7" r="3" />
-      <path strokeLinecap="round" strokeLinejoin="round" d="M12 4V2m5 5h2m-2 0l1.5-1.5M7 7H5m2 0L5.5 5.5" />
-    </svg>
-  ),
-  balloon: (
-    <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M12 21s-1.5-2-1.5-3 1.5-1 1.5-1 1.5 0 1.5 1-1.5 3-1.5 3zm0-5c-3.037 0-5.5-2.686-5.5-6S8.963 4 12 4s5.5 2.686 5.5 6-2.463 6-5.5 6z" />
-      <path strokeLinecap="round" strokeLinejoin="round" d="M12 11v2" />
-    </svg>
-  ),
-  wine: (
-    <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M8 3h8v4a4 4 0 01-4 4 4 4 0 01-4-4V3zm4 8v9m-4 0h8" />
-    </svg>
-  ),
-  sparkles: (
-    <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M12 3l1.5 3.5L17 8l-3.5 1.5L12 13l-1.5-3.5L7 8l3.5-1.5L12 3z" />
-      <path strokeLinecap="round" strokeLinejoin="round" d="M6 15l.8 1.8L9 17.6l-1.8.8L6 21l-.8-2.6L3.4 17.6 5.2 16.8 6 15zm12 0l.8 1.8 2.2.8-1.8.8L18 21l-.8-2.6-2.2-.8 2.2-.8.8-1.8z" />
-    </svg>
-  ),
-}
-
-const businessFeatures: BusinessFeature[] = [
-  { icon: 'gift', text: { mk: 'Персонализирани подароци', en: 'Personalized gifts' } },
-  { icon: 'flower', text: { mk: 'Свежи и вештачки цвеќиња', en: 'Fresh & artificial flowers' } },
-  { icon: 'balloon', text: { mk: 'Балони со посвета', en: 'Custom balloons' } },
-  { icon: 'wine', text: { mk: 'Персонализирани вина', en: 'Personalized wines' } },
-  { icon: 'sparkles', text: { mk: 'Декорации за настани', en: 'Event decorations' } },
-]
-
 interface HomePageClientProps {
   categories: Category[]
   occasions: Occasion[]
+  stats: SiteStat[]
   productHighlights?: {
     latest: Product[]
     popular: Product[]
@@ -80,6 +32,7 @@ interface HomePageClientProps {
 export default function HomePageClient({
   categories,
   occasions,
+  stats,
   productHighlights
 }: HomePageClientProps) {
   const { language } = useLanguage()
@@ -89,6 +42,7 @@ export default function HomePageClient({
     backgroundSize: 'contain',
     backgroundPosition: 'center',
     backgroundRepeat: 'repeat',
+    backgroundAttachment: 'fixed',
   } as const
 
   // Get category label helper
@@ -302,24 +256,29 @@ export default function HomePageClient({
               </div>
             </div>
             <div className="grid gap-4 sm:grid-cols-2 content-start">
-              {businessFeatures.map((feature) => (
-                <div
-                  key={feature.text.en}
-                  className="flex items-start gap-4 rounded-2xl bg-surface-base/80 backdrop-blur-sm p-5 shadow-soft transition-all duration-300 hover:shadow-lift hover:-translate-y-0.5"
-                >
-                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-accent-burgundy-50 text-accent-burgundy-500">
-                    {featureIconMap[feature.icon]}
+              {stats.map((stat) => {
+                const label = language === 'mk' ? stat.label_mk : stat.label_en
+                const suffix = language === 'mk' ? stat.suffix_mk : stat.suffix_en
+                return (
+                  <div
+                    key={stat.id}
+                    className="flex items-center gap-4 rounded-2xl bg-surface-base/80 backdrop-blur-sm p-5 shadow-soft transition-all duration-300 hover:shadow-lift hover:-translate-y-0.5"
+                  >
+                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-accent-burgundy-50 text-accent-burgundy-500">
+                      <StatIcon icon={stat.icon ?? 'star'} />
+                    </div>
+                    <div>
+                      <div className="flex items-baseline gap-1">
+                        <span className="text-3xl font-bold text-accent-burgundy-500">{stat.value}</span>
+                        {suffix && <span className="text-lg font-semibold text-accent-burgundy-400">{suffix}</span>}
+                      </div>
+                      <p className="mt-0.5 text-ds-body-sm text-ink-muted">
+                        {label}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-ds-body font-semibold text-ink-strong">
-                      {language === 'mk' ? feature.text.mk : feature.text.en}
-                    </p>
-                    <p className="mt-1 text-ds-body-sm text-ink-muted leading-relaxed">
-                      {language === 'mk' ? 'Изработено со љубов и внимание.' : 'Made to order with love and attention.'}
-                    </p>
-                  </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
           </div>
         </section>
@@ -334,6 +293,65 @@ interface HeroCategoryTileProps {
   fallback: string
   className?: string
   featured?: boolean
+}
+
+function StatIcon({ icon }: { icon: string }) {
+  switch (icon) {
+    case 'calendar':
+      return (
+        <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+      )
+    case 'users':
+      return (
+        <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+      )
+    case 'box':
+      return (
+        <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+        </svg>
+      )
+    case 'heart':
+      return (
+        <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+        </svg>
+      )
+    case 'star':
+      return (
+        <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+        </svg>
+      )
+    case 'award':
+      return (
+        <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+        </svg>
+      )
+    case 'check':
+      return (
+        <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      )
+    case 'gift':
+      return (
+        <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
+        </svg>
+      )
+    default:
+      return (
+        <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+        </svg>
+      )
+  }
 }
 
 function HeroCategoryTile({ category, label, fallback, className = '', featured = false }: HeroCategoryTileProps) {

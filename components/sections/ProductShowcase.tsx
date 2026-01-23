@@ -132,16 +132,6 @@ export default function ProductShowcase({ products, language }: ProductShowcaseP
                 </button>
               ))}
             </div>
-            <div className="hidden sm:block h-6 w-px bg-neutral-200" />
-            <Link
-              href="/products"
-              className="text-sm font-medium text-accent-burgundy-500 hover:text-accent-burgundy-500/80 transition-colors duration-200 flex items-center gap-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-burgundy-500 focus-visible:ring-offset-2 rounded"
-            >
-              {language === 'mk' ? 'Погледни ги сите' : 'View All'}
-              <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-            </Link>
           </div>
           <div className="flex gap-3">
             <button

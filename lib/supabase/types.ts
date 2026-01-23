@@ -771,6 +771,47 @@ export type Database = {
           updated_at?: string
         }
       }>
+      site_stats: SupabaseTable<{
+        Row: {
+          id: string
+          label_mk: string
+          label_en: string
+          value: string
+          suffix_mk: string | null
+          suffix_en: string | null
+          icon: string | null
+          display_order: number
+          is_visible: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          label_mk: string
+          label_en: string
+          value: string
+          suffix_mk?: string | null
+          suffix_en?: string | null
+          icon?: string | null
+          display_order?: number
+          is_visible?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          label_mk?: string
+          label_en?: string
+          value?: string
+          suffix_mk?: string | null
+          suffix_en?: string | null
+          icon?: string | null
+          display_order?: number
+          is_visible?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+      }>
     }
     Views: {
       products_with_details: SupabaseView<{
@@ -855,6 +896,7 @@ export type HeroTile = Database['public']['Tables']['hero_tiles']['Row']
 export type HomepageSectionItem = Database['public']['Tables']['homepage_section_items']['Row']
 export type HomepageSectionWithItems = Database['public']['Views']['homepage_sections_with_items']['Row']
 export type Occasion = Database['public']['Tables']['occasions']['Row']
+export type SiteStat = Database['public']['Tables']['site_stats']['Row']
 
 // Insert types
 export type CategoryInsert = Database['public']['Tables']['categories']['Insert']
@@ -872,6 +914,7 @@ export type HeroTileInsert = Database['public']['Tables']['hero_tiles']['Insert'
 export type HomepageSectionInsert = Database['public']['Tables']['homepage_sections']['Insert']
 export type HomepageSectionItemInsert = Database['public']['Tables']['homepage_section_items']['Insert']
 export type OccasionInsert = Database['public']['Tables']['occasions']['Insert']
+export type SiteStatInsert = Database['public']['Tables']['site_stats']['Insert']
 
 // Update types
 export type CategoryUpdate = Database['public']['Tables']['categories']['Update']
@@ -889,6 +932,7 @@ export type HeroTileUpdate = Database['public']['Tables']['hero_tiles']['Update'
 export type HomepageSectionUpdate = Database['public']['Tables']['homepage_sections']['Update']
 export type HomepageSectionItemUpdate = Database['public']['Tables']['homepage_section_items']['Update']
 export type OccasionUpdate = Database['public']['Tables']['occasions']['Update']
+export type SiteStatUpdate = Database['public']['Tables']['site_stats']['Update']
 
 // Helper type for getting localized content
 export type LocalizedField<T extends string> = {
