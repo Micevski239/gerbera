@@ -46,9 +46,11 @@ export default function CategoriesClient({ categories }: CategoriesClientProps) 
   }, [categories])
 
   const [forms, setForms] = useState<Record<string, CategoryFormState>>(defaultForms)
+  const [editingId, setEditingId] = useState<string | null>(null)
   const [savingId, setSavingId] = useState<string | null>(null)
   const [movingId, setMovingId] = useState<string | null>(null)
   const [creating, setCreating] = useState(false)
+  const [showCreateForm, setShowCreateForm] = useState(false)
   const [uploadingImageId, setUploadingImageId] = useState<string | null>(null)
 
   const nextOrder = useMemo(() => {
@@ -144,6 +146,7 @@ export default function CategoriesClient({ categories }: CategoriesClientProps) 
       ...prev,
       [categoryId]: defaultForms[categoryId],
     }))
+    setEditingId(null)
   }
 
   const handleSave = async (categoryId: string) => {
@@ -175,6 +178,7 @@ export default function CategoriesClient({ categories }: CategoriesClientProps) 
 
       if (error) throw new Error(error.message)
 
+      setEditingId(null)
       router.refresh()
     } catch (error) {
       console.error(error)
@@ -211,6 +215,17 @@ export default function CategoriesClient({ categories }: CategoriesClientProps) 
 
       if (error) throw new Error(error.message)
 
+      setNewCategory({
+        name_mk: '',
+        name_en: '',
+        slug: '',
+        description_mk: '',
+        description_en: '',
+        display_order: nextOrder + 10,
+        is_visible: true,
+        category_image_path: '',
+      })
+      setShowCreateForm(false)
       router.refresh()
     } catch (error) {
       console.error(error)
@@ -263,7 +278,7 @@ export default function CategoriesClient({ categories }: CategoriesClientProps) 
 
       if (secondError) throw new Error(secondError.message)
 
-      location.reload()
+      router.refresh()
     } catch (error) {
       console.error(error)
       alert('Failed to reorder categories.')
@@ -272,311 +287,303 @@ export default function CategoriesClient({ categories }: CategoriesClientProps) 
     }
   }
 
+  const handleToggleVisibility = async (categoryId: string) => {
+    const form = forms[categoryId]
+    if (!form) return
+
+    const newVisibility = !form.is_visible
+
+    try {
+      const { error } = await supabase
+        .from('categories')
+        .update({ is_visible: newVisibility } as never)
+        .eq('id', categoryId)
+
+      if (error) throw new Error(error.message)
+      router.refresh()
+    } catch (error) {
+      console.error(error)
+      alert('Failed to update visibility.')
+    }
+  }
+
   return (
-    <div className="space-y-8">
-      <form onSubmit={handleCreate} className="rounded-2xl bg-white p-6 shadow-card space-y-4">
-        <div>
-          <h2 className="text-xl font-semibold text-neutral-800">Create Category</h2>
-          <p className="text-sm text-neutral-500">Categories help group products and populate homepage sections.</p>
-        </div>
-        <div className="grid gap-4 md:grid-cols-3">
-          <div>
-            <label className="label">Name (MK)</label>
-            <input
-              className="input"
-              value={newCategory.name_mk}
-              onChange={(e) => setNewCategory((prev) => ({ ...prev, name_mk: e.target.value }))}
-              required
-            />
-          </div>
-          <div>
-            <label className="label">Name (EN)</label>
-            <input
-              className="input"
-              value={newCategory.name_en}
-              onChange={(e) => {
-                const value = e.target.value
-                setNewCategory((prev) => ({
-                  ...prev,
-                  name_en: value,
-                  slug: slugify(value),
-                }))
-              }}
-              required
-            />
-          </div>
-          <div>
-            <label className="label">Slug</label>
-            <input
-              className="input"
-              value={newCategory.slug}
-              onChange={(e) => setNewCategory((prev) => ({ ...prev, slug: e.target.value }))}
-              placeholder="birthday-arrangements"
-            />
-          </div>
-        </div>
-        <div className="space-y-3">
-          <label className="label">Category image</label>
-          <div className="flex flex-wrap gap-4">
-            <div className="relative h-32 w-32 overflow-hidden rounded-xl border border-neutral-200 bg-neutral-50">
-              {newCategoryImageUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={newCategoryImageUrl}
-                  alt="Category preview"
-                  className="h-full w-full object-cover"
-                />
-              ) : (
-                <div className="flex h-full w-full items-center justify-center text-sm text-neutral-400">
-                  No image
-                </div>
-              )}
-            </div>
-            <div className="flex min-w-[220px] flex-1 flex-col gap-2">
-              <div className="flex flex-wrap gap-3">
-                <label className={`btn btn-secondary cursor-pointer ${uploadingImageId === 'new' ? 'pointer-events-none opacity-60' : ''}`}>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={(e) => {
-                      void handleImageSelect(null, e.target.files)
-                      e.target.value = ''
-                    }}
-                  />
-                  {uploadingImageId === 'new' ? 'Uploading…' : 'Upload image'}
-                </label>
-                {newCategory.category_image_path && (
-                  <button
-                    type="button"
-                    className="btn btn-outline"
-                    onClick={() => setNewCategory((prev) => ({ ...prev, category_image_path: '' }))}
-                  >
-                    Remove
-                  </button>
-                )}
-              </div>
+    <div className="space-y-6">
+      {/* Header with Add Button */}
+      <div className="flex items-center justify-between">
+        <p className="text-sm text-neutral-500">{categories.length} categor{categories.length !== 1 ? 'ies' : 'y'}</p>
+        <button
+          onClick={() => setShowCreateForm(!showCreateForm)}
+          className="btn btn-primary"
+        >
+          {showCreateForm ? 'Cancel' : '+ Add Category'}
+        </button>
+      </div>
+
+      {/* Create Form (collapsible) */}
+      {showCreateForm && (
+        <form onSubmit={handleCreate} className="rounded-2xl bg-white p-6 shadow-card space-y-4 border-2 border-primary-200">
+          <h2 className="text-xl font-semibold text-neutral-800">New Category</h2>
+
+          <div className="grid gap-4 md:grid-cols-3">
+            <div>
+              <label className="label">Name (MK)</label>
               <input
                 className="input"
-                value={newCategory.category_image_path}
-                onChange={(e) => setNewCategory((prev) => ({ ...prev, category_image_path: e.target.value }))}
-                placeholder="categories/spring-arrangements/cover.jpg"
+                value={newCategory.name_mk}
+                onChange={(e) => setNewCategory((prev) => ({ ...prev, name_mk: e.target.value }))}
+                required
               />
-              <p className="text-xs text-neutral-500">Stored as a Supabase storage path. Upload or paste manually.</p>
+            </div>
+            <div>
+              <label className="label">Name (EN)</label>
+              <input
+                className="input"
+                value={newCategory.name_en}
+                onChange={(e) => {
+                  const value = e.target.value
+                  setNewCategory((prev) => ({
+                    ...prev,
+                    name_en: value,
+                    slug: slugify(value),
+                  }))
+                }}
+                required
+              />
+            </div>
+            <div>
+              <label className="label">Slug</label>
+              <input
+                className="input"
+                value={newCategory.slug}
+                onChange={(e) => setNewCategory((prev) => ({ ...prev, slug: e.target.value }))}
+                placeholder="auto-generated"
+              />
             </div>
           </div>
-        </div>
-        <div className="grid gap-4 md:grid-cols-2">
-          <label className="label flex items-center gap-3">
-            <input
-              type="checkbox"
-              className="w-5 h-5 text-primary-600"
-              checked={newCategory.is_visible}
-              onChange={(e) => setNewCategory((prev) => ({ ...prev, is_visible: e.target.checked }))}
-            />
-            <span>Visible to customers</span>
-          </label>
-        </div>
-        <div className="grid gap-4 md:grid-cols-2">
-          <div>
-            <label className="label">Description (MK)</label>
-            <textarea
-              className="textarea"
-              rows={3}
-              value={newCategory.description_mk ?? ''}
-              onChange={(e) => setNewCategory((prev) => ({ ...prev, description_mk: e.target.value }))}
-            />
-          </div>
-          <div>
-            <label className="label">Description (EN)</label>
-            <textarea
-              className="textarea"
-              rows={3}
-              value={newCategory.description_en ?? ''}
-              onChange={(e) => setNewCategory((prev) => ({ ...prev, description_en: e.target.value }))}
-            />
-          </div>
-        </div>
-        <button type="submit" className="btn btn-primary" disabled={creating}>
-          {creating ? 'Saving…' : 'Create Category'}
-        </button>
-      </form>
 
-      <div className="space-y-6">
+          <div className="flex flex-wrap gap-4 items-start">
+            <div className="relative h-24 w-24 overflow-hidden rounded-xl border border-neutral-200 bg-neutral-50 flex-shrink-0">
+              {newCategoryImageUrl ? (
+                <img src={newCategoryImageUrl} alt="Preview" className="h-full w-full object-cover" />
+              ) : (
+                <div className="flex h-full w-full items-center justify-center text-xs text-neutral-400">No image</div>
+              )}
+            </div>
+            <div className="flex-1 space-y-2">
+              <label className={`btn btn-secondary cursor-pointer text-sm ${uploadingImageId === 'new' ? 'pointer-events-none opacity-60' : ''}`}>
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => { void handleImageSelect(null, e.target.files); e.target.value = '' }}
+                />
+                {uploadingImageId === 'new' ? 'Uploading...' : 'Upload Image'}
+              </label>
+            </div>
+          </div>
+
+          <div className="flex gap-3">
+            <button type="submit" className="btn btn-primary" disabled={creating}>
+              {creating ? 'Creating...' : 'Create Category'}
+            </button>
+            <button type="button" className="btn btn-secondary" onClick={() => setShowCreateForm(false)}>
+              Cancel
+            </button>
+          </div>
+        </form>
+      )}
+
+      {/* Categories List */}
+      <div className="space-y-3">
         {categories.map((category, index) => {
           const form = forms[category.id]
           if (!form) return null
+          const isEditing = editingId === category.id
           const categoryImageUrl = getImageUrl(form.category_image_path)
+
           return (
-            <div key={category.id} className="rounded-2xl bg-white p-6 shadow-card space-y-5">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <div>
-                  <h3 className="text-lg font-semibold text-neutral-800">{category.name_mk}</h3>
-                  <p className="text-sm text-neutral-500">Slug: {category.slug}</p>
+            <div key={category.id} className="rounded-xl bg-white shadow-card overflow-hidden">
+              {/* Collapsed View */}
+              <div className="flex items-center gap-4 p-4">
+                {/* Image */}
+                <div className="relative h-14 w-14 overflow-hidden rounded-xl border border-neutral-200 bg-neutral-50 flex-shrink-0">
+                  {categoryImageUrl ? (
+                    <img src={categoryImageUrl} alt={category.name_en} className="h-full w-full object-cover" />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center text-xs text-neutral-400">?</div>
+                  )}
                 </div>
-                <div className="flex gap-2">
+
+                {/* Info */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-semibold text-neutral-800 truncate">{category.name_en}</h3>
+                    <span className="text-neutral-400">|</span>
+                    <span className="text-neutral-600 truncate">{category.name_mk}</span>
+                  </div>
+                  <p className="text-sm text-neutral-500">/{category.slug}</p>
+                </div>
+
+                {/* Status & Actions */}
+                <div className="flex items-center gap-2 flex-shrink-0">
                   <button
-                    className="px-3 py-2 rounded-xl border border-neutral-200 text-sm"
-                    onClick={() => handleMove(category.id, 'up')}
-                    disabled={index === 0 || movingId === category.id}
+                    onClick={() => handleToggleVisibility(category.id)}
+                    className={`px-2 py-1 text-xs font-medium rounded-full transition-colors ${
+                      form.is_visible
+                        ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200'
+                        : 'bg-neutral-100 text-neutral-500 hover:bg-neutral-200'
+                    }`}
                   >
-                    ↑
+                    {form.is_visible ? 'Visible' : 'Hidden'}
                   </button>
+
+                  <div className="flex gap-1">
+                    <button
+                      className="p-1.5 rounded-lg border border-neutral-200 text-neutral-500 hover:bg-neutral-50 disabled:opacity-30"
+                      onClick={() => handleMove(category.id, 'up')}
+                      disabled={index === 0 || movingId === category.id}
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                      </svg>
+                    </button>
+                    <button
+                      className="p-1.5 rounded-lg border border-neutral-200 text-neutral-500 hover:bg-neutral-50 disabled:opacity-30"
+                      onClick={() => handleMove(category.id, 'down')}
+                      disabled={index === categories.length - 1 || movingId === category.id}
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+                  </div>
+
                   <button
-                    className="px-3 py-2 rounded-xl border border-neutral-200 text-sm"
-                    onClick={() => handleMove(category.id, 'down')}
-                    disabled={index === categories.length - 1 || movingId === category.id}
+                    onClick={() => setEditingId(isEditing ? null : category.id)}
+                    className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${
+                      isEditing
+                        ? 'bg-neutral-200 text-neutral-700'
+                        : 'bg-primary-100 text-primary-700 hover:bg-primary-200'
+                    }`}
                   >
-                    ↓
+                    {isEditing ? 'Close' : 'Edit'}
                   </button>
                 </div>
               </div>
 
-              <div className="grid gap-4 md:grid-cols-2">
-                <div>
-                  <label className="label">Name (MK)</label>
-                  <input
-                    className="input"
-                    value={form.name_mk}
-                    onChange={(e) => handleFormChange(category.id, 'name_mk', e.target.value)}
-                  />
-                </div>
-                <div>
-                  <label className="label">Name (EN)</label>
-                  <input
-                    className="input"
-                    value={form.name_en}
-                    onChange={(e) => {
-                      const value = e.target.value
-                      handleFormChange(category.id, 'name_en', value)
-                      handleFormChange(category.id, 'slug', slugify(value))
-                    }}
-                  />
-                </div>
-              </div>
+              {/* Expanded Edit Form */}
+              {isEditing && (
+                <div className="border-t border-neutral-100 p-4 bg-neutral-50 space-y-4">
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div>
+                      <label className="label">Name (MK)</label>
+                      <input
+                        className="input"
+                        value={form.name_mk}
+                        onChange={(e) => handleFormChange(category.id, 'name_mk', e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <label className="label">Name (EN)</label>
+                      <input
+                        className="input"
+                        value={form.name_en}
+                        onChange={(e) => handleFormChange(category.id, 'name_en', e.target.value)}
+                      />
+                    </div>
+                  </div>
 
-              <div className="grid gap-4 md:grid-cols-3">
-                <div>
-                  <label className="label">Slug</label>
-                  <div className="flex gap-2">
-                    <input
-                      className="input flex-1"
-                      value={form.slug}
-                      onChange={(e) => handleFormChange(category.id, 'slug', e.target.value)}
-                    />
-                    <button type="button" className="btn btn-outline" onClick={() => handleGenerateSlug(category.id)}>
-                      Generate
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div>
+                      <label className="label">Slug</label>
+                      <div className="flex gap-2">
+                        <input
+                          className="input flex-1"
+                          value={form.slug}
+                          onChange={(e) => handleFormChange(category.id, 'slug', e.target.value)}
+                        />
+                        <button type="button" className="btn btn-outline text-sm" onClick={() => handleGenerateSlug(category.id)}>
+                          Gen
+                        </button>
+                      </div>
+                    </div>
+                    <div>
+                      <label className="label">Image</label>
+                      <div className="flex gap-2">
+                        <label className={`btn btn-secondary cursor-pointer text-sm flex-1 ${uploadingImageId === category.id ? 'pointer-events-none opacity-60' : ''}`}>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={(e) => { void handleImageSelect(category.id, e.target.files); e.target.value = '' }}
+                          />
+                          {uploadingImageId === category.id ? 'Uploading...' : 'Upload'}
+                        </label>
+                        {form.category_image_path && (
+                          <button
+                            type="button"
+                            className="btn btn-outline text-sm"
+                            onClick={() => handleFormChange(category.id, 'category_image_path', '')}
+                          >
+                            Clear
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div>
+                      <label className="label">Description (MK)</label>
+                      <textarea
+                        className="textarea"
+                        rows={2}
+                        value={form.description_mk ?? ''}
+                        onChange={(e) => handleFormChange(category.id, 'description_mk', e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <label className="label">Description (EN)</label>
+                      <textarea
+                        className="textarea"
+                        rows={2}
+                        value={form.description_en ?? ''}
+                        onChange={(e) => handleFormChange(category.id, 'description_en', e.target.value)}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap gap-3 pt-2">
+                    <button
+                      className="btn btn-primary"
+                      onClick={() => handleSave(category.id)}
+                      disabled={savingId === category.id}
+                    >
+                      {savingId === category.id ? 'Saving...' : 'Save Changes'}
+                    </button>
+                    <button
+                      className="btn btn-secondary"
+                      onClick={() => resetForm(category.id)}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      className="btn btn-danger ml-auto"
+                      onClick={() => handleDelete(category.id)}
+                    >
+                      Delete
                     </button>
                   </div>
                 </div>
-                <label className="label flex items-center gap-3">
-                  <input
-                    type="checkbox"
-                    className="w-5 h-5 text-primary-600"
-                    checked={form.is_visible}
-                    onChange={(e) => handleFormChange(category.id, 'is_visible', e.target.checked)}
-                  />
-                  <span>Visible to customers</span>
-                </label>
-              </div>
-
-              <div className="space-y-3">
-                <label className="label">Category image</label>
-                <div className="flex flex-wrap gap-4">
-                  <div className="relative h-32 w-32 overflow-hidden rounded-xl border border-neutral-200 bg-neutral-50">
-                    {categoryImageUrl ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={categoryImageUrl}
-                        alt={`${form.name_en} preview`}
-                        className="h-full w-full object-cover"
-                      />
-                    ) : (
-                      <div className="flex h-full w-full items-center justify-center text-sm text-neutral-400">
-                        No image
-                      </div>
-                    )}
-                  </div>
-                  <div className="flex min-w-[220px] flex-1 flex-col gap-2">
-                    <div className="flex flex-wrap gap-3">
-                      <label className={`btn btn-secondary cursor-pointer ${uploadingImageId === category.id ? 'pointer-events-none opacity-60' : ''}`}>
-                        <input
-                          type="file"
-                          accept="image/*"
-                          className="hidden"
-                          onChange={(e) => {
-                            void handleImageSelect(category.id, e.target.files)
-                            e.target.value = ''
-                          }}
-                        />
-                        {uploadingImageId === category.id ? 'Uploading…' : 'Upload image'}
-                      </label>
-                      {form.category_image_path && (
-                        <button
-                          type="button"
-                          className="btn btn-outline"
-                          onClick={() => handleFormChange(category.id, 'category_image_path', '')}
-                        >
-                          Remove
-                        </button>
-                      )}
-                    </div>
-                    <input
-                      className="input"
-                      value={form.category_image_path}
-                      onChange={(e) => handleFormChange(category.id, 'category_image_path', e.target.value)}
-                      placeholder="categories/autumn-gifts/cover.jpg"
-                    />
-                    <p className="text-xs text-neutral-500">Paste an existing storage path or upload a new image.</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid gap-4 md:grid-cols-2">
-                <div>
-                  <label className="label">Description (MK)</label>
-                  <textarea
-                    className="textarea"
-                    rows={3}
-                    value={form.description_mk ?? ''}
-                    onChange={(e) => handleFormChange(category.id, 'description_mk', e.target.value)}
-                  />
-                </div>
-                <div>
-                  <label className="label">Description (EN)</label>
-                  <textarea
-                    className="textarea"
-                    rows={3}
-                    value={form.description_en ?? ''}
-                    onChange={(e) => handleFormChange(category.id, 'description_en', e.target.value)}
-                  />
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <span className={`px-3 py-1 text-xs font-semibold rounded-full ${form.is_visible ? 'bg-emerald-100 text-emerald-700' : 'bg-neutral-100 text-neutral-500'}`}>
-                  {form.is_visible ? 'Visible' : 'Hidden'}
-                </span>
-              </div>
-
-              <div className="flex flex-wrap gap-3">
-                <button className="btn btn-primary" onClick={() => handleSave(category.id)} disabled={savingId === category.id}>
-                  {savingId === category.id ? 'Saving…' : 'Save changes'}
-                </button>
-                <button className="btn btn-secondary" type="button" onClick={() => resetForm(category.id)} disabled={savingId === category.id}>
-                  Reset
-                </button>
-                <button className="btn btn-danger" type="button" onClick={() => handleDelete(category.id)}>
-                  Delete
-                </button>
-              </div>
+              )}
             </div>
           )
         })}
 
         {categories.length === 0 && (
-          <div className="rounded-2xl border border-dashed border-neutral-200 p-6 text-center text-neutral-500">
-            No categories yet. Use the form above to add your first category.
+          <div className="rounded-xl border-2 border-dashed border-neutral-200 p-8 text-center text-neutral-500">
+            No categories yet. Click "+ Add Category" to create your first one.
           </div>
         )}
       </div>

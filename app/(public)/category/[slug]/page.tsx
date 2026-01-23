@@ -3,46 +3,7 @@ import { notFound } from 'next/navigation'
 import CategoryPageClient from './CategoryPageClient'
 import type { ProductWithDetails, Category } from '@/lib/supabase/types'
 
-export const revalidate = 60
-
-async function getCategories(): Promise<Category[]> {
-  const supabase = await createClient()
-  const { data, error } = await supabase
-    .from('categories')
-    .select('*')
-    .eq('is_visible', true)
-    .order('display_order')
-
-  if (error) return []
-  return data || []
-}
-
-async function getCategoryBySlug(slug: string): Promise<Category | null> {
-  const supabase = await createClient()
-  const { data, error } = await supabase
-    .from('categories')
-    .select('*')
-    .eq('slug', slug)
-    .eq('is_visible', true)
-    .single()
-
-  if (error) return null
-  return data
-}
-
-async function getProductsByCategory(categoryId: string): Promise<ProductWithDetails[]> {
-  const supabase = await createClient()
-  const { data, error } = await supabase
-    .from('products_with_details')
-    .select('*')
-    .eq('category_id', categoryId)
-    .eq('is_visible', true)
-    .eq('status', 'published')
-    .order('display_order')
-
-  if (error) return []
-  return data || []
-}
+export const revalidate = 3600
 
 interface CategoryPageProps {
   params: Promise<{ slug: string }>
@@ -50,22 +11,44 @@ interface CategoryPageProps {
 
 export default async function CategoryPage({ params }: CategoryPageProps) {
   const { slug } = await params
-  const [categories, category] = await Promise.all([
-    getCategories(),
-    getCategoryBySlug(slug),
+  const supabase = await createClient()
+
+  // Run all queries in parallel with single client
+  const [categoriesResult, categoryResult] = await Promise.all([
+    supabase
+      .from('categories')
+      .select('*')
+      .eq('is_visible', true)
+      .order('display_order'),
+    supabase
+      .from('categories')
+      .select('*')
+      .eq('slug', slug)
+      .eq('is_visible', true)
+      .single(),
   ])
+
+  const categories = categoriesResult.data || []
+  const category = categoryResult.data
 
   if (!category) {
     notFound()
   }
 
-  const products = await getProductsByCategory(category.id)
+  // Get products for this category
+  const { data: products } = await supabase
+    .from('products_with_details')
+    .select('*')
+    .eq('category_id', category.id)
+    .eq('is_visible', true)
+    .eq('status', 'published')
+    .order('display_order')
 
   return (
     <CategoryPageClient
       category={category}
       categories={categories}
-      products={products}
+      products={products || []}
     />
   )
 }

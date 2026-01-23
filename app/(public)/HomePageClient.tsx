@@ -5,10 +5,8 @@ import Link from 'next/link'
 import { getImageUrl } from '@/lib/supabase/client'
 import { useLanguage } from '@/context/LanguageContext'
 import LanguageSwitcher from '@/components/LanguageSwitcher'
-import ProductShowcase from '@/components/sections/ProductShowcase'
 import TestimonialsShowcase from '@/components/sections/TestimonialsShowcase'
 import OccasionShowcase from '@/components/sections/OccasionShowcase'
-import RecipientShowcase from '@/components/sections/RecipientShowcase'
 import type { Category, Product, Occasion, SiteStat } from '@/lib/supabase/types'
 
 const navLinks = [
@@ -36,14 +34,6 @@ export default function HomePageClient({
   productHighlights
 }: HomePageClientProps) {
   const { language } = useLanguage()
-
-  const heroBackgroundStyle = {
-    backgroundImage: "url('/images/hero-background.png')",
-    backgroundSize: '500px 500px',
-    backgroundPosition: 'center',
-    backgroundRepeat: 'repeat',
-    backgroundAttachment: 'fixed',
-  } as const
 
   // Get category label helper
   const getCategoryLabel = (category: Category) => {
@@ -174,10 +164,7 @@ export default function HomePageClient({
       </header>
 
       <main>
-        <section
-          className="bg-accent-sage-50"
-          style={heroBackgroundStyle}
-        >
+        <section className="bg-white">
           <div className="container-custom grid grid-cols-2 gap-4 py-12 sm:grid-cols-3 lg:grid-cols-4 lg:grid-rows-2">
             {heroTilesLayout.map((tile, index) => (
               tile.category ? (
@@ -194,28 +181,15 @@ export default function HomePageClient({
           </div>
         </section>
 
-        {productHighlights && (
-          <ProductShowcase
-            products={{
-              latest: productHighlights.latest,
-              popular: productHighlights.popular,
-              best: productHighlights.best,
-            }}
-            language={language}
-          />
-        )}
-
-        <RecipientShowcase language={language} categories={categories} />
+        {/* Shop by Occasion */}
+        <OccasionShowcase language={language} occasions={occasions} />
 
         {/* Testimonials */}
         <TestimonialsShowcase language={language} />
 
-        {/* Shop by Occasion */}
-        <OccasionShowcase language={language} occasions={occasions} />
-
         {/* About/Trust Section */}
         <section className="bg-[#fefaf9]">
-          <div className="container-custom grid gap-12 py-20 lg:grid-cols-[1.2fr_0.8fr]">
+          <div className="container-custom grid gap-12 py-20 lg:grid-cols-[1.2fr_0.8fr] items-center">
             <div>
               <span className="brand-pill">Gerbera Gifts</span>
               <h2 className="heading-2 mt-4">
@@ -255,7 +229,7 @@ export default function HomePageClient({
                 </Link>
               </div>
             </div>
-            <div className="grid gap-4 sm:grid-cols-2 content-start">
+            <div className="grid gap-4 sm:grid-cols-2">
               {stats.map((stat) => {
                 const label = language === 'mk' ? stat.label_mk : stat.label_en
                 const suffix = language === 'mk' ? stat.suffix_mk : stat.suffix_en
@@ -361,7 +335,7 @@ function HeroCategoryTile({ category, label, fallback, className = '', featured 
   return (
     <Link
       href={`/category/${category.slug}`}
-      className={`group relative overflow-hidden rounded-2xl border border-white/10 shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-hero focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-burgundy-500 focus-visible:ring-offset-2 ${className}`}
+      className={`group relative overflow-hidden rounded-2xl border border-white/10 shadow-card transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-hero focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-burgundy-500 focus-visible:ring-offset-2 ${className}`}
     >
       <div className={`${tileHeight} w-full`}>
         <Image

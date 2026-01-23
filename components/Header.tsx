@@ -23,7 +23,7 @@ export default function Header() {
     return pathname.startsWith(href)
   }
 
-  if (pathname === '/') {
+  if (pathname === '/' || pathname === '/products' || pathname.startsWith('/product/')) {
     return null
   }
 

@@ -56,8 +56,10 @@ export default function ProductsClient({ products, categories }: ProductsClientP
   }, [products])
 
   const [forms, setForms] = useState<Record<string, ProductFormState>>(defaultForms)
+  const [editingId, setEditingId] = useState<string | null>(null)
   const [savingId, setSavingId] = useState<string | null>(null)
   const [creating, setCreating] = useState(false)
+  const [showCreateForm, setShowCreateForm] = useState(false)
   const [movingId, setMovingId] = useState<string | null>(null)
   const [uploadingImageId, setUploadingImageId] = useState<string | null>(null)
 
@@ -159,6 +161,14 @@ export default function ProductsClient({ products, categories }: ProductsClientP
     }
   }
 
+  const resetForm = (productId: string) => {
+    setForms((prev) => ({
+      ...prev,
+      [productId]: defaultForms[productId],
+    }))
+    setEditingId(null)
+  }
+
   const handleSave = async (productId: string) => {
     const form = forms[productId]
     if (!form) return
@@ -199,6 +209,7 @@ export default function ProductsClient({ products, categories }: ProductsClientP
 
       if (error) throw new Error(error.message)
 
+      setEditingId(null)
       router.refresh()
     } catch (error) {
       console.error(error)
@@ -263,6 +274,7 @@ export default function ProductsClient({ products, categories }: ProductsClientP
         is_visible: true,
         category_id: categories[0]?.id || '',
       })
+      setShowCreateForm(false)
       router.refresh()
     } catch (error) {
       console.error(error)
@@ -324,209 +336,229 @@ export default function ProductsClient({ products, categories }: ProductsClientP
     }
   }
 
+  const handleToggleVisibility = async (productId: string) => {
+    const form = forms[productId]
+    if (!form) return
+
+    const newVisibility = !form.is_visible
+
+    try {
+      const { error } = await supabase
+        .from('products')
+        .update({ is_visible: newVisibility } as never)
+        .eq('id', productId)
+
+      if (error) throw new Error(error.message)
+      router.refresh()
+    } catch (error) {
+      console.error(error)
+      alert('Failed to update visibility.')
+    }
+  }
+
   const statusOptions: ProductStatus[] = ['draft', 'published', 'sold']
 
   return (
-    <div className="space-y-8">
-      <form onSubmit={handleCreate} className="rounded-2xl bg-white p-6 shadow-card space-y-4">
-        <div>
-          <h2 className="text-xl font-semibold text-neutral-800">Create Product</h2>
-          <p className="text-sm text-neutral-500">Products require names, category, and an image URL.</p>
-        </div>
-        <div className="grid gap-4 md:grid-cols-2">
-          <div>
-            <label className="label">Name (MK)</label>
-            <input
-              className="input"
-              value={newProduct.name_mk}
-              onChange={(e) => setNewProduct((prev) => ({ ...prev, name_mk: e.target.value }))}
-              required
-            />
-          </div>
-          <div>
-            <label className="label">Name (EN)</label>
-            <input
-              className="input"
-              value={newProduct.name_en}
-              onChange={(e) => setNewProduct((prev) => ({ ...prev, name_en: e.target.value }))}
-              required
-            />
-          </div>
-        </div>
-        <div className="grid gap-4 md:grid-cols-4">
-          <div>
-            <label className="label">Category</label>
-            <select
-              className="input"
-              value={newProduct.category_id}
-              onChange={(e) => setNewProduct((prev) => ({ ...prev, category_id: e.target.value }))}
-              required
-            >
-              <option value="">Select category</option>
-              {categories.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.name_mk} / {category.name_en}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label className="label">Status</label>
-            <select
-              className="input"
-              value={newProduct.status}
-              onChange={(e) => setNewProduct((prev) => ({ ...prev, status: e.target.value as ProductStatus }))}
-            >
-              {statusOptions.map((status) => (
-                <option key={status} value={status}>
-                  {status}
-                </option>
-              ))}
-            </select>
-          </div>
-          <label className="label flex items-center gap-3">
-            <input
-              type="checkbox"
-              className="w-5 h-5 text-primary-600"
-              checked={newProduct.is_visible}
-              onChange={(e) => setNewProduct((prev) => ({ ...prev, is_visible: e.target.checked }))}
-            />
-            <span>Visible</span>
-          </label>
-        </div>
-        <div className="grid gap-4 md:grid-cols-2">
-          <div>
-            <label className="label">Price (€)</label>
-            <input
-              type="number"
-              step="0.01"
-              className="input"
-              value={newProduct.price}
-              onChange={(e) => setNewProduct((prev) => ({ ...prev, price: e.target.value }))}
-            />
-          </div>
-          <div>
-            <label className="label">Sale Price (€)</label>
-            <input
-              type="number"
-              step="0.01"
-              className="input"
-              value={newProduct.sale_price}
-              onChange={(e) => setNewProduct((prev) => ({ ...prev, sale_price: e.target.value }))}
-            />
-          </div>
-        </div>
-        <div className="grid gap-4 md:grid-cols-3">
-          <label className="label flex items-center gap-3">
-            <input
-              type="checkbox"
-              className="w-5 h-5"
-              checked={newProduct.is_on_sale}
-              onChange={(e) => setNewProduct((prev) => ({ ...prev, is_on_sale: e.target.checked }))}
-            />
-            <span>Mark as on sale</span>
-          </label>
-          <label className="label flex items-center gap-3">
-            <input
-              type="checkbox"
-              className="w-5 h-5"
-              checked={newProduct.is_best_seller}
-              onChange={(e) => setNewProduct((prev) => ({ ...prev, is_best_seller: e.target.checked }))}
-            />
-            <span>Mark as best seller</span>
-          </label>
-        </div>
-        <div className="grid gap-4 md:grid-cols-2">
-          <div>
-            <label className="label">Upload Image</label>
-            <input
-              type="file"
-              accept="image/*"
-              className="input"
-              onChange={(e) => handleImageSelect(null, e.target.files)}
-            />
-            {uploadingImageId === 'new' && <p className="text-xs text-neutral-500 mt-1">Uploading…</p>}
-            {newProduct.image_url && (
-              <p className="text-xs text-neutral-500 mt-1">Image uploaded</p>
-            )}
-          </div>
-        </div>
-        <div className="grid gap-4 md:grid-cols-2">
-          <div>
-            <label className="label">Description (MK)</label>
-            <textarea
-              className="textarea"
-              rows={3}
-              value={newProduct.description_mk ?? ''}
-              onChange={(e) => setNewProduct((prev) => ({ ...prev, description_mk: e.target.value }))}
-            />
-          </div>
-          <div>
-            <label className="label">Description (EN)</label>
-            <textarea
-              className="textarea"
-              rows={3}
-              value={newProduct.description_en ?? ''}
-              onChange={(e) => setNewProduct((prev) => ({ ...prev, description_en: e.target.value }))}
-            />
-          </div>
-        </div>
-        <button type="submit" className="btn btn-primary" disabled={creating}>
-          {creating ? 'Saving…' : 'Create Product'}
+    <div className="space-y-6">
+      {/* Header with Add Button */}
+      <div className="flex items-center justify-between">
+        <p className="text-sm text-neutral-500">{products.length} product{products.length !== 1 ? 's' : ''}</p>
+        <button
+          onClick={() => setShowCreateForm(!showCreateForm)}
+          className="btn btn-primary"
+        >
+          {showCreateForm ? 'Cancel' : '+ Add Product'}
         </button>
-      </form>
+      </div>
 
-      <div className="space-y-6">
+      {/* Create Form (collapsible) */}
+      {showCreateForm && (
+        <form onSubmit={handleCreate} className="rounded-2xl bg-white p-6 shadow-card space-y-4 border-2 border-primary-200">
+          <h2 className="text-xl font-semibold text-neutral-800">New Product</h2>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <div>
+              <label className="label">Name (MK)</label>
+              <input
+                className="input"
+                value={newProduct.name_mk}
+                onChange={(e) => setNewProduct((prev) => ({ ...prev, name_mk: e.target.value }))}
+                required
+              />
+            </div>
+            <div>
+              <label className="label">Name (EN)</label>
+              <input
+                className="input"
+                value={newProduct.name_en}
+                onChange={(e) => setNewProduct((prev) => ({ ...prev, name_en: e.target.value }))}
+                required
+              />
+            </div>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-3">
+            <div>
+              <label className="label">Category</label>
+              <select
+                className="input"
+                value={newProduct.category_id}
+                onChange={(e) => setNewProduct((prev) => ({ ...prev, category_id: e.target.value }))}
+                required
+              >
+                <option value="">Select category</option>
+                {categories.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.name_en}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="label">Price (€)</label>
+              <input
+                type="number"
+                step="0.01"
+                className="input"
+                value={newProduct.price}
+                onChange={(e) => setNewProduct((prev) => ({ ...prev, price: e.target.value }))}
+              />
+            </div>
+            <div>
+              <label className="label">Sale Price (€)</label>
+              <input
+                type="number"
+                step="0.01"
+                className="input"
+                value={newProduct.sale_price}
+                onChange={(e) => setNewProduct((prev) => ({ ...prev, sale_price: e.target.value }))}
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-wrap gap-4 items-start">
+            <div className="relative h-24 w-24 overflow-hidden rounded-xl border border-neutral-200 bg-neutral-50 flex-shrink-0">
+              {newProduct.image_url ? (
+                <img src={newProduct.image_url} alt="Preview" className="h-full w-full object-cover" />
+              ) : (
+                <div className="flex h-full w-full items-center justify-center text-xs text-neutral-400">No image</div>
+              )}
+            </div>
+            <div className="flex-1 space-y-2">
+              <label className={`btn btn-secondary cursor-pointer text-sm ${uploadingImageId === 'new' ? 'pointer-events-none opacity-60' : ''}`}>
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => { void handleImageSelect(null, e.target.files); e.target.value = '' }}
+                />
+                {uploadingImageId === 'new' ? 'Uploading...' : 'Upload Image'}
+              </label>
+            </div>
+          </div>
+
+          <div className="flex gap-3">
+            <button type="submit" className="btn btn-primary" disabled={creating}>
+              {creating ? 'Creating...' : 'Create Product'}
+            </button>
+            <button type="button" className="btn btn-secondary" onClick={() => setShowCreateForm(false)}>
+              Cancel
+            </button>
+          </div>
+        </form>
+      )}
+
+      {/* Products List */}
+      <div className="space-y-3">
         {products.map((product, index) => {
           const form = forms[product.id]
           if (!form) return null
+          const isEditing = editingId === product.id
           const category = categoryLookup.get(form.category_id)
+
           return (
-            <div key={product.id} className="rounded-2xl bg-white p-6 shadow-card space-y-5">
-              <div className="flex flex-wrap items-center justify-between gap-4">
-                <div>
-                  <h3 className="text-lg font-semibold text-neutral-800">{product.name_en}</h3>
-                  <p className="text-sm text-neutral-500">{category ? `${category.name_mk} / ${category.name_en}` : 'Unassigned'}</p>
+            <div key={product.id} className="rounded-xl bg-white shadow-card overflow-hidden">
+              {/* Collapsed View */}
+              <div className="flex items-center gap-4 p-4">
+                {/* Image */}
+                <div className="relative h-14 w-14 overflow-hidden rounded-xl border border-neutral-200 bg-neutral-50 flex-shrink-0">
+                  {form.image_url ? (
+                    <img src={form.image_url} alt={product.name_en} className="h-full w-full object-cover" />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center text-xs text-neutral-400">?</div>
+                  )}
                 </div>
-                <div className="flex gap-2">
+
+                {/* Info */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-semibold text-neutral-800 truncate">{product.name_en}</h3>
+                    {form.price && (
+                      <>
+                        <span className="text-neutral-400">•</span>
+                        <span className="text-primary-600 font-medium">€{form.price}</span>
+                      </>
+                    )}
+                  </div>
+                  <p className="text-sm text-neutral-500">{category?.name_en || 'No category'}</p>
+                </div>
+
+                {/* Status & Actions */}
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  {form.is_best_seller && (
+                    <span className="px-2 py-1 text-xs font-medium rounded-full bg-amber-100 text-amber-700">Best</span>
+                  )}
+                  {form.is_on_sale && (
+                    <span className="px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-700">Sale</span>
+                  )}
                   <button
-                    className="px-3 py-2 rounded-xl border border-neutral-200 text-sm"
-                    onClick={() => handleMove(product.id, 'up')}
-                    disabled={index === 0 || movingId === product.id}
+                    onClick={() => handleToggleVisibility(product.id)}
+                    className={`px-2 py-1 text-xs font-medium rounded-full transition-colors ${
+                      form.is_visible
+                        ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200'
+                        : 'bg-neutral-100 text-neutral-500 hover:bg-neutral-200'
+                    }`}
                   >
-                    ↑
+                    {form.is_visible ? 'Visible' : 'Hidden'}
                   </button>
+
+                  <div className="flex gap-1">
+                    <button
+                      className="p-1.5 rounded-lg border border-neutral-200 text-neutral-500 hover:bg-neutral-50 disabled:opacity-30"
+                      onClick={() => handleMove(product.id, 'up')}
+                      disabled={index === 0 || movingId === product.id}
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                      </svg>
+                    </button>
+                    <button
+                      className="p-1.5 rounded-lg border border-neutral-200 text-neutral-500 hover:bg-neutral-50 disabled:opacity-30"
+                      onClick={() => handleMove(product.id, 'down')}
+                      disabled={index === products.length - 1 || movingId === product.id}
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+                  </div>
+
                   <button
-                    className="px-3 py-2 rounded-xl border border-neutral-200 text-sm"
-                    onClick={() => handleMove(product.id, 'down')}
-                    disabled={index === products.length - 1 || movingId === product.id}
+                    onClick={() => setEditingId(isEditing ? null : product.id)}
+                    className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${
+                      isEditing
+                        ? 'bg-neutral-200 text-neutral-700'
+                        : 'bg-primary-100 text-primary-700 hover:bg-primary-200'
+                    }`}
                   >
-                    ↓
+                    {isEditing ? 'Close' : 'Edit'}
                   </button>
                 </div>
               </div>
 
-              <div className="grid gap-4 md:grid-cols-[200px_1fr]">
-                <div>
-                  <div className="relative aspect-square w-full overflow-hidden rounded-2xl border border-dashed border-neutral-200">
-                    {form.image_url ? (
-                      <img src={form.image_url} alt={form.name_en} className="h-full w-full object-cover" />
-                    ) : (
-                      <div className="flex h-full w-full items-center justify-center text-sm text-neutral-400">No image</div>
-                    )}
-                  </div>
-                  <label className="mt-3 block text-sm font-medium text-neutral-600">
-                    <span>Change image</span>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      className="mt-1 block w-full text-sm"
-                      onChange={(e) => handleImageSelect(product.id, e.target.files)}
-                    />
-                  </label>
-                  {uploadingImageId === product.id && <p className="text-xs text-neutral-500">Uploading…</p>}
-                </div>
-                <div className="space-y-4">
+              {/* Expanded Edit Form */}
+              {isEditing && (
+                <div className="border-t border-neutral-100 p-4 bg-neutral-50 space-y-4">
                   <div className="grid gap-4 md:grid-cols-2">
                     <div>
                       <label className="label">Name (MK)</label>
@@ -554,40 +586,12 @@ export default function ProductsClient({ products, categories }: ProductsClientP
                         value={form.category_id}
                         onChange={(e) => handleFormChange(product.id, 'category_id', e.target.value)}
                       >
-                        <option value="">Select category</option>
-                        {categories.map((category) => (
-                          <option key={category.id} value={category.id}>
-                            {category.name_mk} / {category.name_en}
-                          </option>
+                        <option value="">Select</option>
+                        {categories.map((cat) => (
+                          <option key={cat.id} value={cat.id}>{cat.name_en}</option>
                         ))}
                       </select>
                     </div>
-                    <div>
-                      <label className="label">Status</label>
-                      <select
-                        className="input"
-                        value={form.status}
-                        onChange={(e) => handleFormChange(product.id, 'status', e.target.value as ProductStatus)}
-                      >
-                        {statusOptions.map((status) => (
-                          <option key={status} value={status}>
-                            {status}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <label className="label flex items-center gap-3">
-                      <input
-                        type="checkbox"
-                        className="w-5 h-5"
-                        checked={form.is_visible}
-                        onChange={(e) => handleFormChange(product.id, 'is_visible', e.target.checked)}
-                      />
-                      <span>Visible</span>
-                    </label>
-                  </div>
-
-                  <div className="grid gap-4 md:grid-cols-2">
                     <div>
                       <label className="label">Price (€)</label>
                       <input
@@ -608,27 +612,63 @@ export default function ProductsClient({ products, categories }: ProductsClientP
                         onChange={(e) => handleFormChange(product.id, 'sale_price', e.target.value)}
                       />
                     </div>
+                    <div>
+                      <label className="label">Status</label>
+                      <select
+                        className="input"
+                        value={form.status}
+                        onChange={(e) => handleFormChange(product.id, 'status', e.target.value as ProductStatus)}
+                      >
+                        {statusOptions.map((status) => (
+                          <option key={status} value={status}>{status}</option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
 
-                  <div className="grid gap-4 md:grid-cols-3">
-                    <label className="label flex items-center gap-3">
+                  <div className="flex flex-wrap gap-4">
+                    <label className="flex items-center gap-2 text-sm">
                       <input
                         type="checkbox"
-                        className="w-5 h-5"
+                        className="w-4 h-4"
                         checked={form.is_on_sale}
                         onChange={(e) => handleFormChange(product.id, 'is_on_sale', e.target.checked)}
                       />
-                      <span>On sale</span>
+                      On Sale
                     </label>
-                    <label className="label flex items-center gap-3">
+                    <label className="flex items-center gap-2 text-sm">
                       <input
                         type="checkbox"
-                        className="w-5 h-5"
+                        className="w-4 h-4"
                         checked={form.is_best_seller}
                         onChange={(e) => handleFormChange(product.id, 'is_best_seller', e.target.checked)}
                       />
-                      <span>Best seller</span>
+                      Best Seller
                     </label>
+                  </div>
+
+                  <div>
+                    <label className="label">Image</label>
+                    <div className="flex gap-2">
+                      <label className={`btn btn-secondary cursor-pointer text-sm ${uploadingImageId === product.id ? 'pointer-events-none opacity-60' : ''}`}>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(e) => { void handleImageSelect(product.id, e.target.files); e.target.value = '' }}
+                        />
+                        {uploadingImageId === product.id ? 'Uploading...' : 'Upload'}
+                      </label>
+                      {form.image_url && (
+                        <button
+                          type="button"
+                          className="btn btn-outline text-sm"
+                          onClick={() => handleFormChange(product.id, 'image_url', '')}
+                        >
+                          Clear
+                        </button>
+                      )}
+                    </div>
                   </div>
 
                   <div className="grid gap-4 md:grid-cols-2">
@@ -636,7 +676,7 @@ export default function ProductsClient({ products, categories }: ProductsClientP
                       <label className="label">Description (MK)</label>
                       <textarea
                         className="textarea"
-                        rows={3}
+                        rows={2}
                         value={form.description_mk ?? ''}
                         onChange={(e) => handleFormChange(product.id, 'description_mk', e.target.value)}
                       />
@@ -645,33 +685,43 @@ export default function ProductsClient({ products, categories }: ProductsClientP
                       <label className="label">Description (EN)</label>
                       <textarea
                         className="textarea"
-                        rows={3}
+                        rows={2}
                         value={form.description_en ?? ''}
                         onChange={(e) => handleFormChange(product.id, 'description_en', e.target.value)}
                       />
                     </div>
                   </div>
 
-                  <div className="flex flex-wrap gap-3">
-                    <button className="btn btn-primary" onClick={() => handleSave(product.id)} disabled={savingId === product.id}>
-                      {savingId === product.id ? 'Saving…' : 'Save changes'}
+                  <div className="flex flex-wrap gap-3 pt-2">
+                    <button
+                      className="btn btn-primary"
+                      onClick={() => handleSave(product.id)}
+                      disabled={savingId === product.id}
+                    >
+                      {savingId === product.id ? 'Saving...' : 'Save Changes'}
                     </button>
-                    <button className="btn btn-secondary" type="button" onClick={() => setForms((prev) => ({ ...prev, [product.id]: defaultForms[product.id] }))} disabled={savingId === product.id}>
-                      Reset
+                    <button
+                      className="btn btn-secondary"
+                      onClick={() => resetForm(product.id)}
+                    >
+                      Cancel
                     </button>
-                    <button className="btn btn-danger" type="button" onClick={() => handleDelete(product.id)}>
+                    <button
+                      className="btn btn-danger ml-auto"
+                      onClick={() => handleDelete(product.id)}
+                    >
                       Delete
                     </button>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
           )
         })}
 
         {products.length === 0 && (
-          <div className="rounded-2xl border border-dashed border-neutral-200 p-6 text-center text-neutral-500">
-            No products yet. Use the form above to add your first product.
+          <div className="rounded-xl border-2 border-dashed border-neutral-200 p-8 text-center text-neutral-500">
+            No products yet. Click "+ Add Product" to create your first one.
           </div>
         )}
       </div>

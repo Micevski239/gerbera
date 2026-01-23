@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import HomePageClient from './HomePageClient'
 import type { Category, Product, Occasion, SiteStat } from '@/lib/supabase/types'
 
-export const revalidate = 60
+export const revalidate = 3600 // Cache for 1 hour
 
 async function getHomepageData() {
   const supabase = await createClient()
