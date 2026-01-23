@@ -1,0 +1,325 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-canvas-100 text-ink-base font-body text-ds-body antialiased;
+  }
+
+  ::selection {
+    @apply bg-accent-burgundy/30 text-ink-strong;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-heading text-ink-strong font-normal;
+  }
+
+  a {
+    @apply text-inherit;
+  }
+}
+
+@layer components {
+  .section-shell {
+    @apply mx-auto max-w-shell px-5 md:px-8;
+  }
+
+  .container-custom {
+    @apply mx-auto max-w-shell px-5 md:px-8;
+  }
+
+  .section {
+    @apply py-10 md:py-12;
+  }
+
+  .section-header {
+    @apply flex flex-col gap-2 text-center;
+  }
+
+  .heading-1 {
+    @apply font-heading text-ds-display text-ink-strong leading-tight;
+  }
+
+  .heading-2 {
+    @apply font-heading text-ds-title text-ink-strong leading-tight;
+  }
+
+  .heading-3 {
+    @apply font-heading text-ds-section text-ink-strong;
+  }
+
+  .heading-4 {
+    @apply font-heading text-ds-body-lg text-ink-strong;
+  }
+
+  .heading-5 {
+    @apply font-heading text-ds-body text-ink-strong uppercase tracking-eyebrow;
+  }
+
+  .subheading {
+    @apply text-ds-body-sm uppercase tracking-eyebrow text-ink-muted;
+  }
+
+  .eyebrow {
+    @apply text-ds-eyebrow font-medium uppercase tracking-eyebrow text-ink-muted;
+  }
+
+  .btn {
+    @apply inline-flex h-11 items-center justify-center gap-2 rounded-md px-5 font-body text-ds-body font-medium text-ink-strong transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-state-focus focus-visible:ring-offset-2 focus-visible:ring-offset-canvas-100 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .btn-primary {
+    @apply btn bg-accent-burgundy-500 text-surface-base shadow-soft hover:bg-accent-burgundy-600 hover:shadow-lift;
+  }
+
+  .btn-secondary {
+    @apply btn border border-border-soft bg-surface-base text-ink-strong shadow-card hover:bg-surface-raised;
+  }
+
+  .btn-outline {
+    @apply btn border border-border-soft bg-transparent text-ink-strong hover:bg-surface-raised;
+  }
+
+  .btn-outline-primary {
+    @apply btn border border-accent-burgundy-500 text-accent-burgundy-500 bg-transparent hover:bg-state-hover;
+  }
+
+  .btn-white {
+    @apply btn border border-border-soft bg-surface-base text-ink-strong;
+  }
+
+  .btn-danger {
+    @apply btn bg-ink-strong text-canvas-100 shadow-soft hover:bg-ink-strong/90;
+  }
+
+  .btn-subtle {
+    @apply inline-flex items-center gap-2 text-ds-body font-medium text-ink-base underline decoration-border-soft underline-offset-4 transition-colors hover:text-accent-burgundy-500;
+  }
+
+  .btn-sm {
+    @apply h-10 px-4 text-ds-body-sm;
+  }
+
+  .lang-switcher {
+    @apply inline-flex gap-1 rounded-pill border border-border-soft bg-surface-base p-1;
+  }
+
+  .lang-btn {
+    @apply flex-1 rounded-pill px-3 py-1.5 text-ds-body-sm font-medium transition-colors;
+  }
+
+  .lang-btn-active {
+    @apply bg-ink-strong text-canvas-100 shadow-soft;
+  }
+
+  .lang-btn-inactive {
+    @apply text-ink-base hover:bg-state-hover;
+  }
+
+  .input {
+    @apply w-full rounded-md border border-border-soft bg-surface-base px-4 py-3 text-ds-body text-ink-base placeholder:text-ink-muted focus:border-ink-base focus:outline-none focus:ring-2 focus:ring-state-focus/40 focus:ring-offset-2 focus:ring-offset-surface-base;
+  }
+
+  .input-error {
+    @apply border-accent-burgundy-500 text-accent-burgundy-500;
+  }
+
+  .textarea {
+    @apply input min-h-32;
+  }
+
+  .select {
+    @apply input appearance-none pr-10;
+  }
+
+  .label {
+    @apply text-ds-body-sm font-medium uppercase tracking-eyebrow text-ink-muted;
+  }
+
+  .card {
+    @apply rounded-lg border border-border-soft bg-surface-base shadow-card;
+  }
+
+  .card-hover {
+    @apply transition-shadow duration-200 hover:shadow-lift;
+  }
+
+  .card-bordered {
+    @apply card;
+  }
+
+  .card-elevated {
+    @apply card shadow-lift;
+  }
+
+  .badge {
+    @apply inline-flex items-center gap-1 rounded-pill px-3 py-1 text-ds-body-sm font-medium;
+  }
+
+  .badge-primary {
+    @apply badge bg-accent-burgundy-500 text-surface-base;
+  }
+
+  .badge-secondary {
+    @apply badge bg-accent-sage-500 text-surface-base;
+  }
+
+  .badge-outline {
+    @apply badge border border-border-soft text-ink-base;
+  }
+
+  .badge-accent {
+    @apply badge bg-accent-gold-500 text-ink-strong;
+  }
+
+  .badge-error {
+    @apply badge bg-ink-strong text-canvas-100;
+  }
+
+  .badge-sale {
+    @apply badge bg-accent-burgundy-500/95 text-surface-base shadow-soft;
+  }
+
+  .badge-bestseller {
+    @apply badge bg-accent-sage-500/95 text-surface-base shadow-soft;
+  }
+
+  .badge-status {
+    @apply badge bg-ink-strong text-canvas-100;
+  }
+
+  .product-card-shell {
+    @apply flex flex-col rounded-lg border border-border-soft bg-surface-base shadow-card transition-shadow hover:shadow-lift;
+  }
+
+  .brand-pill {
+    @apply inline-flex items-center gap-2 rounded-pill border border-border-soft bg-surface-base px-4 py-2 text-ds-body-sm font-medium uppercase tracking-eyebrow text-ink-muted;
+  }
+
+  .testimonial-card {
+    @apply card flex h-full flex-col gap-4 p-6;
+  }
+
+  .testimonial-content {
+    @apply text-ds-body text-ink-base;
+  }
+
+  .testimonial-author {
+    @apply mt-auto flex items-center gap-3;
+  }
+
+  .testimonial-stars {
+    @apply flex gap-1 text-accent-gold-500;
+  }
+
+  /* Hero tile variants */
+  .hero-tile-primary {
+    @apply rounded-2xl bg-accent-sage-50 shadow-hero transition-transform duration-300 hover:scale-105;
+  }
+
+  .hero-tile-secondary {
+    @apply rounded-xl bg-surface-base shadow-card transition-transform duration-300 hover:scale-102;
+  }
+
+  /* Badge color variants using design system */
+  .badge-burgundy {
+    @apply badge bg-accent-burgundy-50 text-accent-burgundy-600;
+  }
+
+  .badge-sage {
+    @apply badge bg-accent-sage-50 text-accent-sage-600;
+  }
+
+  .badge-gold {
+    @apply badge bg-accent-gold-50 text-accent-gold-600;
+  }
+
+  .badge-neutral {
+    @apply badge bg-neutral-100 text-neutral-600;
+  }
+
+  /* Card variants */
+  .card-featured {
+    @apply rounded-2xl border border-accent-burgundy-200 bg-surface-base shadow-feature;
+  }
+
+  /* Section backgrounds */
+  .section-bg-warm {
+    @apply bg-gradient-warm;
+  }
+
+  .section-bg-cool {
+    @apply bg-gradient-cool;
+  }
+
+  .section-bg-neutral {
+    @apply bg-canvas-100;
+  }
+
+  /* Focus states for accessibility */
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-burgundy-500 focus-visible:ring-offset-2;
+  }
+
+  /* Hover lift effect */
+  .hover-lift {
+    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-lift;
+  }
+
+  /* Smooth link transitions */
+  .link-smooth {
+    @apply transition-colors duration-200;
+  }
+
+  /* Navigation link with underline animation */
+  .nav-link {
+    @apply relative px-3 py-2 transition-colors duration-200 hover:text-accent-burgundy-500;
+  }
+
+  .nav-link::after {
+    @apply content-[''] absolute bottom-0 left-3 right-3 h-0.5 bg-accent-burgundy-500 transition-transform duration-200 origin-left scale-x-0;
+  }
+
+  .nav-link:hover::after,
+  .nav-link.active::after {
+    @apply scale-x-100;
+  }
+
+  /* Icon button */
+  .icon-btn {
+    @apply flex h-11 w-11 items-center justify-center rounded-full text-neutral-600 hover:text-accent-burgundy-500 hover:bg-accent-burgundy-50 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-burgundy-500 focus-visible:ring-offset-2;
+  }
+
+  /* Arrow navigation button */
+  .arrow-btn {
+    @apply h-9 w-9 rounded-full border border-neutral-200 text-neutral-500 hover:text-accent-burgundy-500 hover:border-accent-burgundy-500/50 transition-all duration-200 disabled:opacity-30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-burgundy-500 focus-visible:ring-offset-2;
+  }
+
+  /* Decorative blob shapes */
+  .blob-burgundy {
+    @apply bg-accent-burgundy-100/30 rounded-full blur-3xl;
+  }
+
+  .blob-gold {
+    @apply bg-accent-gold-100/20 rounded-full blur-3xl;
+  }
+
+  /* Quote decoration */
+  .quote-mark {
+    @apply font-heading text-5xl text-accent-burgundy-500/20 select-none leading-none;
+  }
+}

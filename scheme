@@ -1,0 +1,142 @@
+# Sections System (Updated)
+
+## Supabase Tables
+```
+create type section_shape as enum ('circle', 'square');
+
+create table categories (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  name_mk text not null,
+  name_en text not null,
+  slug text unique not null,
+  description text,
+  description_mk text,
+  description_en text,
+  category_image_path text,
+  display_order int not null default 0,
+  is_visible boolean not null default true,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create table products (
+  id uuid primary key default gen_random_uuid(),
+  category_id uuid not null references categories(id) on delete cascade,
+  name text not null,
+  name_mk text not null,
+  name_en text not null,
+  description text,
+  description_mk text,
+  description_en text,
+  image_url text not null,
+  price_text text,
+  price numeric(12,2),
+  sale_price numeric(12,2),
+  status text not null default 'draft' check (status in ('draft','published','sold')),
+  is_on_sale boolean not null default false,
+  is_best_seller boolean not null default false,
+  display_order int not null default 0,
+  is_visible boolean not null default true,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create table sections (
+  id uuid primary key default gen_random_uuid(),
+  title_mk text not null,
+  title_en text not null,
+  shape section_shape not null default 'square',
+  category_id uuid not null references categories(id) on delete cascade,
+  product_limit int not null default 8,
+  "order" int not null,
+  is_active boolean not null default true,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+```
+
+## Example Supabase Query
+```ts
+const supabase = createClient()
+
+const { data: sectionRows } = await supabase
+  .from('sections')
+  .select(`
+    *,
+    categories:category_id (
+      id,
+      name,
+      name_mk,
+      name_en,
+      slug
+    )
+  `)
+  .eq('is_active', true)
+  .order('order')
+
+const categoryIds = sectionRows?.map((section) => section.category_id) ?? []
+
+const { data: productRows } = await supabase
+  .from('products')
+  .select('*')
+  .in('category_id', categoryIds)
+  .eq('is_visible', true)
+  .eq('status', 'published')
+  .order('display_order')
+
+const sections = sectionRows?.map((section) => ({
+  ...section,
+  category: section.categories,
+  products: (productRows ?? [])
+    .filter((product) => product.category_id === section.category_id)
+    .slice(0, section.product_limit),
+})) ?? []
+```
+
+## Frontend Structure
+- `useSections()` hook: fetches sections + category relations + products, groups products per section, returns `{ sections, loading, error }`.
+- `DynamicSections`: client component that uses the hook, displays loading/error states, then renders `SectionList`.
+- `SectionList`: iterates sections, shows MK/EN titles based on language, renders a square grid per section.
+- `ProductTile`: presentational card (image, localized name, price) linking to `/product/[id]`.
+
+### Types
+```
+type SectionShape = 'circle' | 'square'
+
+interface Product {
+  id: string
+  categoryId: string
+  name: string
+  nameMk: string
+  nameEn: string
+  imageUrl: string
+  price?: number | null
+  priceText?: string | null
+}
+
+interface Section {
+  id: string
+  titleMk: string
+  titleEn: string
+  shape: SectionShape
+  categoryId: string
+  category?: Category | null
+  productLimit: number
+  products: Product[]
+}
+```
+
+## Styling Logic
+```
+const getTileShape = (shape: SectionShape) =>
+  shape === 'circle'
+    ? 'rounded-full'
+    : 'rounded-2xl'
+```
+Apply the helper to the image containers so sections can switch between circle and square grids while keeping layout consistent.
+
+## Admin Panel Notes
+- Section form now includes MK/EN titles, `shape`, `order`, `product_limit`, `category_id` dropdown, and visibility toggle.
+- Sections list shows reorder buttons and a delete action.
+- Products are managed separately (each product belongs to exactly one category via `category_id`).

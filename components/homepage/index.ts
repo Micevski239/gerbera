@@ -1,0 +1,7 @@
+export { default as SectionRenderer } from './SectionRenderer'
+export { default as ProductGridSection } from './ProductGridSection'
+export { default as CategoryGridSection } from './CategoryGridSection'
+export { default as BannerSection } from './BannerSection'
+export { default as TrustBadgesSection } from './TrustBadgesSection'
+export { default as GallerySection } from './GallerySection'
+export { default as TextImageSection } from './TextImageSection'
