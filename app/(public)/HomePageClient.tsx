@@ -39,7 +39,7 @@ export default function HomePageClient({
 
   const heroBackgroundStyle = {
     backgroundImage: "url('/images/hero-background.png')",
-    backgroundSize: 'contain',
+    backgroundSize: '500px 500px',
     backgroundPosition: 'center',
     backgroundRepeat: 'repeat',
     backgroundAttachment: 'fixed',

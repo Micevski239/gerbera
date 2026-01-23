@@ -67,7 +67,7 @@ export default function RecipientShowcase({ language, categories }: RecipientSho
       className="relative overflow-hidden"
       style={{
         backgroundImage: "url('/images/hero-background.png')",
-        backgroundSize: 'contain',
+        backgroundSize: '500px 500px',
         backgroundRepeat: 'repeat',
         backgroundAttachment: 'fixed',
       }}
