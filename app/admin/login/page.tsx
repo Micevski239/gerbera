@@ -37,8 +37,8 @@ export default function AdminLoginPage() {
         return
       }
 
-      // Redirect to admin announcements dashboard
-      router.push('/admin/announcements')
+      // Redirect to admin products dashboard
+      router.push('/admin/products')
       router.refresh()
     } catch (err) {
       setError('An unexpected error occurred')

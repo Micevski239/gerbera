@@ -4,11 +4,13 @@ import { useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { compressImage } from '@/lib/utils'
-import type { Category, Product, ProductStatus } from '@/lib/supabase/types'
+import type { Category, Product, ProductOccasion, Occasion, ProductStatus } from '@/lib/supabase/types'
 
 interface ProductsClientProps {
   products: Product[]
   categories: Category[]
+  occasions: Occasion[]
+  productOccasions: ProductOccasion[]
 }
 
 interface ProductFormState {
@@ -25,13 +27,24 @@ interface ProductFormState {
   display_order: number
   is_visible: boolean
   category_id: string
+  occasion_ids: string[]
 }
 
 const PRODUCT_BUCKET = 'product-images'
 
-export default function ProductsClient({ products, categories }: ProductsClientProps) {
+export default function ProductsClient({ products, categories, occasions, productOccasions }: ProductsClientProps) {
   const supabase = createClient()
   const router = useRouter()
+
+  const productOccasionMap = useMemo(() => {
+    const map = new Map<string, string[]>()
+    productOccasions.forEach((link) => {
+      const list = map.get(link.product_id) ?? []
+      list.push(link.occasion_id)
+      map.set(link.product_id, list)
+    })
+    return map
+  }, [productOccasions])
 
   const defaultForms = useMemo(() => {
     const map: Record<string, ProductFormState> = {}
@@ -50,10 +63,11 @@ export default function ProductsClient({ products, categories }: ProductsClientP
         display_order: product.display_order,
         is_visible: product.is_visible,
         category_id: product.category_id,
+        occasion_ids: productOccasionMap.get(product.id) ?? [],
       }
     })
     return map
-  }, [products])
+  }, [products, productOccasionMap])
 
   const [forms, setForms] = useState<Record<string, ProductFormState>>(defaultForms)
   const [editingId, setEditingId] = useState<string | null>(null)
@@ -82,6 +96,7 @@ export default function ProductsClient({ products, categories }: ProductsClientP
     display_order: nextOrder,
     is_visible: true,
     category_id: categories[0]?.id || '',
+    occasion_ids: [],
   })
 
   useEffect(() => {
@@ -102,7 +117,7 @@ export default function ProductsClient({ products, categories }: ProductsClientP
     return map
   }, [categories])
 
-  const handleFormChange = (productId: string, field: keyof ProductFormState, value: string | number | boolean | null) => {
+  const handleFormChange = (productId: string, field: keyof ProductFormState, value: ProductFormState[keyof ProductFormState]) => {
     setForms((prev) => ({
       ...prev,
       [productId]: {
@@ -209,6 +224,25 @@ export default function ProductsClient({ products, categories }: ProductsClientP
 
       if (error) throw new Error(error.message)
 
+      const occasionIds = Array.from(new Set(form.occasion_ids))
+      const { error: deleteError } = await supabase
+        .from('product_occasions')
+        .delete()
+        .eq('product_id', productId)
+
+      if (deleteError) throw new Error(deleteError.message)
+
+      if (occasionIds.length > 0) {
+        const { error: insertError } = await supabase
+          .from('product_occasions')
+          .insert(occasionIds.map((occasionId) => ({
+            product_id: productId,
+            occasion_id: occasionId,
+          })) as never)
+
+        if (insertError) throw new Error(insertError.message)
+      }
+
       setEditingId(null)
       router.refresh()
     } catch (error) {
@@ -236,7 +270,7 @@ export default function ProductsClient({ products, categories }: ProductsClientP
 
     setCreating(true)
     try {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('products')
         .insert({
           name: newProduct.name_mk || newProduct.name_en,
@@ -256,8 +290,25 @@ export default function ProductsClient({ products, categories }: ProductsClientP
           is_visible: newProduct.is_visible,
           category_id: newProduct.category_id,
         } as never)
+        .select('id')
+        .single()
 
       if (error) throw new Error(error.message)
+
+      const createdId = data?.id
+      if (createdId) {
+        const occasionIds = Array.from(new Set(newProduct.occasion_ids))
+        if (occasionIds.length > 0) {
+          const { error: linkError } = await supabase
+            .from('product_occasions')
+            .insert(occasionIds.map((occasionId) => ({
+              product_id: createdId,
+              occasion_id: occasionId,
+            })) as never)
+
+          if (linkError) throw new Error(linkError.message)
+        }
+      }
 
       setNewProduct({
         name_mk: '',
@@ -273,6 +324,7 @@ export default function ProductsClient({ products, categories }: ProductsClientP
         display_order: nextOrder + 10,
         is_visible: true,
         category_id: categories[0]?.id || '',
+        occasion_ids: [],
       })
       setShowCreateForm(false)
       router.refresh()
@@ -433,6 +485,36 @@ export default function ProductsClient({ products, categories }: ProductsClientP
                 value={newProduct.sale_price}
                 onChange={(e) => setNewProduct((prev) => ({ ...prev, sale_price: e.target.value }))}
               />
+            </div>
+          </div>
+
+          <div>
+            <label className="label">Occasions</label>
+            <div className="grid gap-2 max-h-40 overflow-auto rounded-lg border border-neutral-200 bg-white p-3">
+              {occasions.length === 0 && (
+                <p className="text-xs text-neutral-500">No occasions yet.</p>
+              )}
+              {occasions.map((occasion) => {
+                const checked = newProduct.occasion_ids.includes(occasion.id)
+                return (
+                  <label key={occasion.id} className="flex items-center gap-2 text-sm text-neutral-700">
+                    <input
+                      type="checkbox"
+                      className="w-4 h-4"
+                      checked={checked}
+                      onChange={(e) => {
+                        setNewProduct((prev) => ({
+                          ...prev,
+                          occasion_ids: e.target.checked
+                            ? [...prev.occasion_ids, occasion.id]
+                            : prev.occasion_ids.filter((id) => id !== occasion.id),
+                        }))
+                      }}
+                    />
+                    <span>{occasion.name_en}</span>
+                  </label>
+                )
+              })}
             </div>
           </div>
 
@@ -623,6 +705,34 @@ export default function ProductsClient({ products, categories }: ProductsClientP
                           <option key={status} value={status}>{status}</option>
                         ))}
                       </select>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="label">Occasions</label>
+                    <div className="grid gap-2 max-h-40 overflow-auto rounded-lg border border-neutral-200 bg-white p-3">
+                      {occasions.length === 0 && (
+                        <p className="text-xs text-neutral-500">No occasions yet.</p>
+                      )}
+                      {occasions.map((occasion) => {
+                        const checked = form.occasion_ids.includes(occasion.id)
+                        return (
+                          <label key={occasion.id} className="flex items-center gap-2 text-sm text-neutral-700">
+                            <input
+                              type="checkbox"
+                              className="w-4 h-4"
+                              checked={checked}
+                              onChange={(e) => {
+                                const nextIds = e.target.checked
+                                  ? [...form.occasion_ids, occasion.id]
+                                  : form.occasion_ids.filter((id) => id !== occasion.id)
+                                handleFormChange(product.id, 'occasion_ids', nextIds)
+                              }}
+                            />
+                            <span>{occasion.name_en}</span>
+                          </label>
+                        )
+                      })}
                     </div>
                   </div>
 

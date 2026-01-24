@@ -26,10 +26,8 @@ export default function AdminNav() {
         { href: '/admin/categories', label: 'Categories', icon: 'folder' },
         { href: '/admin/occasions', label: 'Occasions', icon: 'gift' },
         { href: '/admin/products', label: 'Products', icon: 'box' },
-        { href: '/admin/sections', label: 'Sections', icon: 'layout' },
         { href: '/admin/hero-tiles', label: 'Hero Tiles', icon: 'image' },
         { href: '/admin/testimonials', label: 'Testimonials', icon: 'star' },
-        { href: '/admin/announcements', label: 'Announcements', icon: 'megaphone' },
         { href: '/admin/stats', label: 'Site Stats', icon: 'chart' },
       ],
     },
@@ -118,7 +116,7 @@ export default function AdminNav() {
     <>
       {/* Logo */}
       <div className="p-4 border-b border-neutral-200">
-        <Link href="/admin/sections" className="flex items-center gap-3">
+        <Link href="/admin/products" className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center flex-shrink-0">
             <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
@@ -197,7 +195,7 @@ export default function AdminNav() {
     <>
       {/* Mobile header */}
       <div className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-white border-b border-neutral-200 z-40 flex items-center justify-between px-4">
-        <Link href="/admin/sections" className="flex items-center gap-2">
+        <Link href="/admin/products" className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center">
             <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />

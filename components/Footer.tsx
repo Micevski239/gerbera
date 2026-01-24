@@ -34,16 +34,25 @@ export default function Footer() {
               {t('footer.quickLinks')}
             </h3>
             <ul className="space-y-2.5">
-              {quickLinks.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-white/70 hover:text-white transition-colors text-sm"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
+              {quickLinks.map((link) => {
+                const isDisabled = link.href === '/about' || link.href === '/contact'
+                return (
+                  <li key={link.href}>
+                    {isDisabled ? (
+                      <span className="text-white/40 text-sm cursor-not-allowed" aria-disabled="true">
+                        {link.label}
+                      </span>
+                    ) : (
+                      <Link
+                        href={link.href}
+                        className="text-white/70 hover:text-white transition-colors text-sm"
+                      >
+                        {link.label}
+                      </Link>
+                    )}
+                  </li>
+                )
+              })}
             </ul>
           </div>
 

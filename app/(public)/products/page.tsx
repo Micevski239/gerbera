@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import ShopPageClient from './ShopPageClient'
-import type { Category, Product } from '@/lib/supabase/types'
+import type { Category, Product, Occasion, ProductOccasion } from '@/lib/supabase/types'
 
 export const dynamic = 'force-dynamic'
 
@@ -18,10 +18,14 @@ interface ProductWithCategory extends Product {
   } | null
 }
 
+interface ProductOccasionLink extends ProductOccasion {
+  occasion_slug: string
+}
+
 async function getShopData() {
   const supabase = await createClient()
 
-  const [categoriesResult, productsResult] = await Promise.all([
+  const [categoriesResult, productsResult, occasionsResult, productOccasionsResult] = await Promise.all([
     supabase
       .from('categories')
       .select('*')
@@ -41,6 +45,14 @@ async function getShopData() {
       .eq('is_visible', true)
       .eq('status', 'published')
       .order('display_order'),
+    supabase
+      .from('occasions')
+      .select('*')
+      .eq('is_visible', true)
+      .order('display_order'),
+    supabase
+      .from('product_occasions')
+      .select('*'),
   ])
 
   // Transform products to include category info at top level
@@ -52,14 +64,35 @@ async function getShopData() {
     category_name_en: product.categories?.name_en || '',
   }))
 
+  const occasionSlugById = new Map<string, string>()
+  ;(occasionsResult.data || []).forEach((occasion) => {
+    occasionSlugById.set(occasion.id, occasion.slug)
+  })
+
+  const productOccasions: ProductOccasionLink[] = (productOccasionsResult.data || [])
+    .map((row) => ({
+      ...row,
+      occasion_slug: occasionSlugById.get(row.occasion_id) || '',
+    }))
+    .filter((row) => row.occasion_slug)
+
   return {
     categories: (categoriesResult.data || []) as Category[],
     products,
+    occasions: (occasionsResult.data || []) as Occasion[],
+    productOccasions,
   }
 }
 
 export default async function ShopPage() {
-  const { categories, products } = await getShopData()
+  const { categories, products, occasions, productOccasions } = await getShopData()
 
-  return <ShopPageClient categories={categories} products={products} />
+  return (
+    <ShopPageClient
+      categories={categories}
+      products={products}
+      occasions={occasions}
+      productOccasions={productOccasions}
+    />
+  )
 }

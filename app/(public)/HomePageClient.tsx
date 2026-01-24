@@ -103,26 +103,41 @@ export default function HomePageClient({
             </Link>
 
             <nav className="flex flex-wrap items-center justify-center gap-1 text-ds-body-sm font-semibold uppercase tracking-wide text-neutral-700">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`relative px-3 py-2 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-burgundy-500 focus-visible:ring-offset-2 rounded ${
-                    link.href === '/'
-                      ? 'text-accent-burgundy-500'
-                      : 'hover:text-accent-burgundy-500'
-                  }`}
-                >
-                  {language === 'mk' ? link.label.mk : link.label.en}
-                  {/* Underline animation */}
-                  <span
-                    className={`absolute bottom-1 left-3 right-3 h-0.5 bg-accent-burgundy-500 transition-transform duration-200 origin-left ${
-                      link.href === '/' ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
+              {navLinks.map((link) => {
+                const isDisabled = link.href === '/about' || link.href === '/contact'
+                if (isDisabled) {
+                  return (
+                    <span
+                      key={link.href}
+                      className="relative px-3 py-2 rounded text-neutral-400 cursor-not-allowed"
+                      aria-disabled="true"
+                    >
+                      {language === 'mk' ? link.label.mk : link.label.en}
+                    </span>
+                  )
+                }
+
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={`relative px-3 py-2 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-burgundy-500 focus-visible:ring-offset-2 rounded ${
+                      link.href === '/'
+                        ? 'text-accent-burgundy-500'
+                        : 'hover:text-accent-burgundy-500'
                     }`}
-                    style={{ transform: link.href === '/' ? 'scaleX(1)' : undefined }}
-                  />
-                </Link>
-              ))}
+                  >
+                    {language === 'mk' ? link.label.mk : link.label.en}
+                    {/* Underline animation */}
+                    <span
+                      className={`absolute bottom-1 left-3 right-3 h-0.5 bg-accent-burgundy-500 transition-transform duration-200 origin-left ${
+                        link.href === '/' ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
+                      }`}
+                      style={{ transform: link.href === '/' ? 'scaleX(1)' : undefined }}
+                    />
+                  </Link>
+                )
+              })}
             </nav>
 
             <div className="flex items-center gap-1">
@@ -334,7 +349,7 @@ function HeroCategoryTile({ category, label, fallback, className = '', featured 
 
   return (
     <Link
-      href={`/category/${category.slug}`}
+      href={`/products?category=${category.slug}`}
       className={`group relative overflow-hidden rounded-2xl border border-white/10 shadow-card transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-hero focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-burgundy-500 focus-visible:ring-offset-2 ${className}`}
     >
       <div className={`${tileHeight} w-full`}>

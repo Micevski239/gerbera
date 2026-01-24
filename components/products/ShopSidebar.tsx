@@ -1,12 +1,15 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { useLanguage, getLocalizedField } from '@/context/LanguageContext'
-import type { Category } from '@/lib/supabase/types'
+import type { Category, Occasion } from '@/lib/supabase/types'
 
 interface ShopSidebarProps {
   categories: Category[]
+  occasions: Occasion[]
   selectedCategory: string | null
+  selectedOccasion: string | null
   onCategoryChange: (slug: string | null) => void
   priceRange: { min: number | null; max: number | null }
   onPriceChange: (range: { min: number | null; max: number | null }) => void
@@ -22,7 +25,9 @@ interface ShopSidebarProps {
 
 export default function ShopSidebar({
   categories,
+  occasions,
   selectedCategory,
+  selectedOccasion,
   onCategoryChange,
   priceRange,
   onPriceChange,
@@ -119,6 +124,37 @@ export default function ShopSidebar({
             })}
           </div>
         </div>
+
+        {/* Occasions Section */}
+        {occasions.length > 0 && (
+          <>
+            <div className="border-t border-neutral-200" />
+            <div>
+              <h3 className="text-sm font-semibold text-neutral-900 uppercase tracking-wider mb-3">
+                {language === 'mk' ? 'Пригоди' : 'Occasions'}
+              </h3>
+              <div className="space-y-1">
+                {occasions.map((occasion) => {
+                  const label = getLocalizedField(occasion, 'name', language)
+                  const isActive = selectedOccasion === occasion.slug
+                  return (
+                    <Link
+                      key={occasion.id}
+                      href={`/products?occasion=${occasion.slug}`}
+                      className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-left transition-all duration-200 ${
+                        isActive
+                          ? 'bg-accent-burgundy-50 text-accent-burgundy-700 font-medium'
+                          : 'text-neutral-600 hover:bg-neutral-100'
+                      }`}
+                    >
+                      <span className="line-clamp-1">{label}</span>
+                    </Link>
+                  )
+                })}
+              </div>
+            </div>
+          </>
+        )}
 
         {/* Divider */}
         <div className="border-t border-neutral-200" />

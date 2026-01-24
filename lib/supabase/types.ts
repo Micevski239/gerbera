@@ -226,6 +226,23 @@ export type Database = {
           created_at?: string
         }
       }>
+      product_occasions: SupabaseTable<{
+        Row: {
+          product_id: string
+          occasion_id: string
+          created_at: string
+        }
+        Insert: {
+          product_id: string
+          occasion_id: string
+          created_at?: string
+        }
+        Update: {
+          product_id?: string
+          occasion_id?: string
+          created_at?: string
+        }
+      }>
       homepage_hero_slides: SupabaseTable<{
         Row: {
           id: string
@@ -879,6 +896,7 @@ export type Database = {
 export type Category = Database['public']['Tables']['categories']['Row']
 export type Product = Database['public']['Tables']['products']['Row']
 export type ProductImage = Database['public']['Tables']['product_images']['Row']
+export type ProductOccasion = Database['public']['Tables']['product_occasions']['Row']
 export type ProductWithDetails = Database['public']['Views']['products_with_details']['Row']
 export type HeroSlide = Database['public']['Tables']['homepage_hero_slides']['Row']
 export type GridImage = Database['public']['Tables']['homepage_grid_images']['Row']
@@ -902,6 +920,7 @@ export type SiteStat = Database['public']['Tables']['site_stats']['Row']
 export type CategoryInsert = Database['public']['Tables']['categories']['Insert']
 export type ProductInsert = Database['public']['Tables']['products']['Insert']
 export type ProductImageInsert = Database['public']['Tables']['product_images']['Insert']
+export type ProductOccasionInsert = Database['public']['Tables']['product_occasions']['Insert']
 export type HeroSlideInsert = Database['public']['Tables']['homepage_hero_slides']['Insert']
 export type GridImageInsert = Database['public']['Tables']['homepage_grid_images']['Insert']
 export type WelcomeTileInsert = Database['public']['Tables']['welcome_tiles']['Insert']
@@ -920,6 +939,7 @@ export type SiteStatInsert = Database['public']['Tables']['site_stats']['Insert'
 export type CategoryUpdate = Database['public']['Tables']['categories']['Update']
 export type ProductUpdate = Database['public']['Tables']['products']['Update']
 export type ProductImageUpdate = Database['public']['Tables']['product_images']['Update']
+export type ProductOccasionUpdate = Database['public']['Tables']['product_occasions']['Update']
 export type HeroSlideUpdate = Database['public']['Tables']['homepage_hero_slides']['Update']
 export type GridImageUpdate = Database['public']['Tables']['homepage_grid_images']['Update']
 export type WelcomeTileUpdate = Database['public']['Tables']['welcome_tiles']['Update']

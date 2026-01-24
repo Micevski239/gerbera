@@ -45,19 +45,34 @@ export default function Header() {
 
           {/* Desktop Navigation - Centered */}
           <nav className="hidden md:flex items-center gap-8 lg:gap-10">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`relative text-xs font-medium uppercase tracking-widest transition-colors pb-1 ${
-                  isActive(link.href)
-                    ? 'text-neutral-900 border-b border-neutral-900'
-                    : 'text-neutral-600 hover:text-neutral-900'
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
+            {navLinks.map((link) => {
+              const isDisabled = link.href === '/about' || link.href === '/contact'
+              if (isDisabled) {
+                return (
+                  <span
+                    key={link.href}
+                    className="relative text-xs font-medium uppercase tracking-widest text-neutral-400 pb-1 cursor-not-allowed"
+                    aria-disabled="true"
+                  >
+                    {link.label}
+                  </span>
+                )
+              }
+
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`relative text-xs font-medium uppercase tracking-widest transition-colors pb-1 ${
+                    isActive(link.href)
+                      ? 'text-neutral-900 border-b border-neutral-900'
+                      : 'text-neutral-600 hover:text-neutral-900'
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              )
+            })}
           </nav>
 
           {/* Right side - Search, Language switcher */}

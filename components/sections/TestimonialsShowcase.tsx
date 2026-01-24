@@ -79,7 +79,7 @@ export default function TestimonialsShowcase({ language }: TestimonialsShowcaseP
                 return (
                   <div
                     key={`${testimonial.id}-${index}`}
-                    className="w-72 flex-shrink-0 rounded-xl border-2 border-[#880f4f] bg-neutral-50/50 p-5"
+                    className="w-72 flex-shrink-0 rounded-xl border-[0.5px] border-[#880f4f] bg-neutral-50/50 p-5"
                   >
                     {/* Stars */}
                     <div className="flex gap-0.5 text-amber-400">

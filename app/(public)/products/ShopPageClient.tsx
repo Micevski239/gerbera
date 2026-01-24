@@ -1,13 +1,14 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 import { useLanguage } from '@/context/LanguageContext'
 import LanguageSwitcher from '@/components/LanguageSwitcher'
 import ProductCard from '@/components/ProductCard'
 import ShopSidebar from '@/components/products/ShopSidebar'
 import MobileShopFilter from '@/components/products/MobileShopFilter'
-import type { Category, Product } from '@/lib/supabase/types'
+import type { Category, Product, Occasion, ProductOccasion } from '@/lib/supabase/types'
 
 const navLinks = [
   { label: { mk: 'Дома', en: 'Home' }, href: '/' },
@@ -24,14 +25,28 @@ interface ProductWithCategory extends Product {
   category_name_en: string
 }
 
+interface ProductOccasionLink extends ProductOccasion {
+  occasion_slug: string
+}
+
 interface ShopPageClientProps {
   categories: Category[]
   products: ProductWithCategory[]
+  occasions: Occasion[]
+  productOccasions: ProductOccasionLink[]
 }
 
-export default function ShopPageClient({ categories, products }: ShopPageClientProps) {
+export default function ShopPageClient({ categories, products, occasions, productOccasions }: ShopPageClientProps) {
   const { language, t } = useLanguage()
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
+  const searchParams = useSearchParams()
+  const categoryParam = searchParams.get('category')
+  const occasionParam = searchParams.get('occasion')
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(() => (
+    categoryParam && categoryParam.length > 0 ? categoryParam : null
+  ))
+  const [selectedOccasion, setSelectedOccasion] = useState<string | null>(() => (
+    occasionParam && occasionParam.length > 0 ? occasionParam : null
+  ))
   const [priceRange, setPriceRange] = useState<{ min: number | null; max: number | null }>({
     min: null,
     max: null,
@@ -40,6 +55,22 @@ export default function ShopPageClient({ categories, products }: ShopPageClientP
   const [showBestSeller, setShowBestSeller] = useState(false)
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false)
 
+  useEffect(() => {
+    if (categoryParam && categoryParam.length > 0) {
+      setSelectedCategory(categoryParam)
+    } else {
+      setSelectedCategory(null)
+    }
+  }, [categoryParam])
+
+  useEffect(() => {
+    if (occasionParam && occasionParam.length > 0) {
+      setSelectedOccasion(occasionParam)
+    } else {
+      setSelectedOccasion(null)
+    }
+  }, [occasionParam])
+
   // Contact info
   const contactPhone = process.env.NEXT_PUBLIC_CONTACT_PHONE || '+389 70 123 456'
   const dialablePhone = contactPhone.replace(/[^+\d]/g, '')
@@ -47,12 +78,29 @@ export default function ShopPageClient({ categories, products }: ShopPageClientP
   const facebookUrl = process.env.NEXT_PUBLIC_FACEBOOK_URL || 'https://facebook.com'
 
   // Filter products by all criteria
+  const productOccasionMap = useMemo(() => {
+    const map = new Map<string, Set<string>>()
+    productOccasions.forEach((row) => {
+      if (!row.occasion_slug) return
+      if (!map.has(row.product_id)) {
+        map.set(row.product_id, new Set())
+      }
+      map.get(row.product_id)?.add(row.occasion_slug)
+    })
+    return map
+  }, [productOccasions])
+
   const filteredProducts = useMemo(() => {
     let result = products
 
     // Category filter
     if (selectedCategory) {
       result = result.filter(p => p.category_slug === selectedCategory)
+    }
+
+    // Occasion filter
+    if (selectedOccasion) {
+      result = result.filter((product) => productOccasionMap.get(product.id)?.has(selectedOccasion))
     }
 
     // Price filter
@@ -74,15 +122,22 @@ export default function ShopPageClient({ categories, products }: ShopPageClientP
     }
 
     return result
-  }, [products, selectedCategory, priceRange, showOnSale, showBestSeller])
+  }, [products, selectedCategory, selectedOccasion, priceRange, showOnSale, showBestSeller, productOccasionMap])
 
   // Get product count per category (from unfiltered products)
   const getCategoryCount = (slug: string) => {
     return products.filter(p => p.category_slug === slug).length
   }
 
+  const getOccasionLabel = (slug: string) => {
+    const occasion = occasions.find((item) => item.slug === slug)
+    if (!occasion) return slug
+    return language === 'mk' ? occasion.name_mk : occasion.name_en
+  }
+
   // Check if any filters are active
   const hasActiveFilters = selectedCategory !== null ||
+    selectedOccasion !== null ||
     priceRange.min !== null ||
     priceRange.max !== null ||
     showOnSale ||
@@ -91,6 +146,7 @@ export default function ShopPageClient({ categories, products }: ShopPageClientP
   // Clear all filters
   const handleClearFilters = () => {
     setSelectedCategory(null)
+    setSelectedOccasion(null)
     setPriceRange({ min: null, max: null })
     setShowOnSale(false)
     setShowBestSeller(false)
@@ -234,7 +290,9 @@ export default function ShopPageClient({ categories, products }: ShopPageClientP
               {/* Sidebar - Desktop Only */}
               <ShopSidebar
                 categories={categories}
+                occasions={occasions}
                 selectedCategory={selectedCategory}
+                selectedOccasion={selectedOccasion}
                 onCategoryChange={setSelectedCategory}
                 priceRange={priceRange}
                 onPriceChange={setPriceRange}
@@ -258,6 +316,19 @@ export default function ShopPageClient({ categories, products }: ShopPageClientP
                         {categories.find(c => c.slug === selectedCategory)?.name || selectedCategory}
                         <button
                           onClick={() => setSelectedCategory(null)}
+                          className="hover:text-accent-burgundy-900"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      </span>
+                    )}
+                    {selectedOccasion && (
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-accent-burgundy-50 text-accent-burgundy-700 text-sm rounded-full">
+                        {getOccasionLabel(selectedOccasion)}
+                        <button
+                          onClick={() => setSelectedOccasion(null)}
                           className="hover:text-accent-burgundy-900"
                         >
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
