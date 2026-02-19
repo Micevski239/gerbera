@@ -16,7 +16,7 @@
   }
 
   ::selection {
-    @apply bg-accent-burgundy/30 text-ink-strong;
+    @apply bg-primary-200/50 text-ink-strong;
   }
 
   h1,
@@ -43,7 +43,7 @@
   }
 
   .section {
-    @apply py-10 md:py-12;
+    @apply py-8 md:py-12;
   }
 
   .section-header {
@@ -83,7 +83,7 @@
   }
 
   .btn-primary {
-    @apply btn bg-accent-burgundy-500 text-surface-base shadow-soft hover:bg-accent-burgundy-600 hover:shadow-lift;
+    @apply btn bg-ink-strong text-white shadow-soft hover:bg-neutral-800 hover:shadow-lift;
   }
 
   .btn-secondary {
@@ -95,7 +95,7 @@
   }
 
   .btn-outline-primary {
-    @apply btn border border-accent-burgundy-500 text-accent-burgundy-500 bg-transparent hover:bg-state-hover;
+    @apply btn border border-primary-500 text-primary-500 bg-transparent hover:bg-state-hover;
   }
 
   .btn-white {
@@ -107,7 +107,11 @@
   }
 
   .btn-subtle {
-    @apply inline-flex items-center gap-2 text-ds-body font-medium text-ink-base underline decoration-border-soft underline-offset-4 transition-colors hover:text-accent-burgundy-500;
+    @apply inline-flex items-center gap-2 text-ds-body font-medium text-ink-base underline decoration-border-soft underline-offset-4 transition-colors hover:text-primary-500;
+  }
+
+  .btn-whatsapp {
+    @apply btn bg-[#25D366] text-white shadow-soft hover:bg-[#1fba59] hover:shadow-lift font-semibold;
   }
 
   .btn-sm {
@@ -135,7 +139,7 @@
   }
 
   .input-error {
-    @apply border-accent-burgundy-500 text-accent-burgundy-500;
+    @apply border-primary-500 text-primary-600;
   }
 
   .textarea {
@@ -171,11 +175,11 @@
   }
 
   .badge-primary {
-    @apply badge bg-accent-burgundy-500 text-surface-base;
+    @apply badge bg-primary-500 text-white;
   }
 
   .badge-secondary {
-    @apply badge bg-accent-sage-500 text-surface-base;
+    @apply badge bg-secondary-500 text-white;
   }
 
   .badge-outline {
@@ -183,7 +187,7 @@
   }
 
   .badge-accent {
-    @apply badge bg-accent-gold-500 text-ink-strong;
+    @apply badge bg-accent-400 text-ink-strong;
   }
 
   .badge-error {
@@ -191,15 +195,31 @@
   }
 
   .badge-sale {
-    @apply badge bg-accent-burgundy-500/95 text-surface-base shadow-soft;
+    @apply badge bg-primary-800 text-white shadow-soft;
   }
 
   .badge-bestseller {
-    @apply badge bg-accent-sage-500/95 text-surface-base shadow-soft;
+    @apply badge bg-secondary-500/95 text-white shadow-soft;
   }
 
   .badge-status {
     @apply badge bg-ink-strong text-canvas-100;
+  }
+
+  .badge-coral {
+    @apply badge bg-primary-700 text-white;
+  }
+
+  .badge-sage {
+    @apply badge bg-secondary-50 text-secondary-700;
+  }
+
+  .badge-saffron {
+    @apply badge bg-accent-50 text-accent-700;
+  }
+
+  .badge-neutral {
+    @apply badge bg-neutral-100 text-neutral-600;
   }
 
   .product-card-shell {
@@ -223,38 +243,21 @@
   }
 
   .testimonial-stars {
-    @apply flex gap-1 text-accent-gold-500;
+    @apply flex gap-1 text-accent-400;
   }
 
   /* Hero tile variants */
   .hero-tile-primary {
-    @apply rounded-2xl bg-accent-sage-50 shadow-hero transition-transform duration-300 hover:scale-105;
+    @apply rounded-2xl bg-secondary-50 shadow-hero transition-transform duration-300 hover:scale-105;
   }
 
   .hero-tile-secondary {
     @apply rounded-xl bg-surface-base shadow-card transition-transform duration-300 hover:scale-102;
   }
 
-  /* Badge color variants using design system */
-  .badge-burgundy {
-    @apply badge bg-accent-burgundy-50 text-accent-burgundy-600;
-  }
-
-  .badge-sage {
-    @apply badge bg-accent-sage-50 text-accent-sage-600;
-  }
-
-  .badge-gold {
-    @apply badge bg-accent-gold-50 text-accent-gold-600;
-  }
-
-  .badge-neutral {
-    @apply badge bg-neutral-100 text-neutral-600;
-  }
-
   /* Card variants */
   .card-featured {
-    @apply rounded-2xl border border-accent-burgundy-200 bg-surface-base shadow-feature;
+    @apply rounded-2xl border border-primary-200 bg-surface-base shadow-feature;
   }
 
   /* Section backgrounds */
@@ -270,9 +273,13 @@
     @apply bg-canvas-100;
   }
 
+  .section-bg-linen {
+    @apply bg-canvas-200;
+  }
+
   /* Focus states for accessibility */
   .focus-ring {
-    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-burgundy-500 focus-visible:ring-offset-2;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2;
   }
 
   /* Hover lift effect */
@@ -287,11 +294,11 @@
 
   /* Navigation link with underline animation */
   .nav-link {
-    @apply relative px-3 py-2 transition-colors duration-200 hover:text-accent-burgundy-500;
+    @apply relative px-3 py-2 transition-colors duration-200 hover:text-primary-500;
   }
 
   .nav-link::after {
-    @apply content-[''] absolute bottom-0 left-3 right-3 h-0.5 bg-accent-burgundy-500 transition-transform duration-200 origin-left scale-x-0;
+    @apply content-[''] absolute bottom-0 left-3 right-3 h-0.5 bg-primary-500 transition-transform duration-200 origin-left scale-x-0;
   }
 
   .nav-link:hover::after,
@@ -301,26 +308,26 @@
 
   /* Icon button */
   .icon-btn {
-    @apply flex h-11 w-11 items-center justify-center rounded-full text-neutral-600 hover:text-accent-burgundy-500 hover:bg-accent-burgundy-50 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-burgundy-500 focus-visible:ring-offset-2;
+    @apply flex h-11 w-11 items-center justify-center rounded-full text-neutral-500 hover:text-primary-500 hover:bg-primary-50 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2;
   }
 
   /* Arrow navigation button */
   .arrow-btn {
-    @apply h-9 w-9 rounded-full border border-neutral-200 text-neutral-500 hover:text-accent-burgundy-500 hover:border-accent-burgundy-500/50 transition-all duration-200 disabled:opacity-30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-burgundy-500 focus-visible:ring-offset-2;
+    @apply h-9 w-9 rounded-full border border-neutral-200 text-neutral-500 hover:text-primary-500 hover:border-primary-500/50 transition-all duration-200 disabled:opacity-30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2;
   }
 
   /* Decorative blob shapes */
-  .blob-burgundy {
-    @apply bg-accent-burgundy-100/30 rounded-full blur-3xl;
+  .blob-coral {
+    @apply bg-primary-100/30 rounded-full blur-3xl;
   }
 
-  .blob-gold {
-    @apply bg-accent-gold-100/20 rounded-full blur-3xl;
+  .blob-saffron {
+    @apply bg-accent-100/20 rounded-full blur-3xl;
   }
 
   /* Quote decoration */
   .quote-mark {
-    @apply font-heading text-5xl text-accent-burgundy-500/20 select-none leading-none;
+    @apply font-heading text-5xl text-primary-500/20 select-none leading-none;
   }
 
   /* Product grids */
@@ -365,5 +372,20 @@
 
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
+  }
+
+  /* Warm image filter for phone photos */
+  .img-warm {
+    filter: saturate(1.05) brightness(1.02);
+  }
+
+  /* Service feature box */
+  .service-box {
+    @apply flex flex-col items-center text-center p-6 md:p-8 rounded-2xl;
+  }
+
+  /* Split banner (50/50) */
+  .split-banner {
+    @apply grid grid-cols-1 md:grid-cols-2 items-center gap-8 md:gap-0;
   }
 }

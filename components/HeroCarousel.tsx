@@ -82,7 +82,7 @@ export default function HeroCarousel({ slides }: HeroCarouselProps) {
 
             <div className="absolute inset-0 z-20 flex items-center">
               <div className="max-w-md rounded-lg bg-surface-base/95 px-5 py-6 shadow-card md:ml-8 md:px-8 md:py-8">
-                <div className="h-0.5 w-10 bg-accent-coral" />
+                <div className="h-0.5 w-10 bg-primary-500" />
                 <h1 className="mt-4 font-heading text-ds-title text-ink-strong">{title}</h1>
                 {subtitle && (
                   <p className="mt-3 text-ds-body text-ink-muted">{subtitle}</p>

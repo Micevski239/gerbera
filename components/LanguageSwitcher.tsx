@@ -38,7 +38,7 @@ export default function LanguageSwitcher({ variant = 'default' }: LanguageSwitch
   return (
     <button
       onClick={toggleLanguage}
-      className="flex h-11 w-11 items-center justify-center rounded-full text-xs font-semibold text-neutral-600 transition-all duration-200 hover:text-accent-burgundy-500 hover:bg-accent-burgundy-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-burgundy-500 focus-visible:ring-offset-2"
+      className="flex h-11 w-11 items-center justify-center rounded-full text-xs font-semibold text-neutral-600 transition-all duration-200 hover:text-primary-500 hover:bg-primary-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
       aria-label="Toggle language"
     >
       {label}

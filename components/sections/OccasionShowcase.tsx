@@ -17,39 +17,33 @@ function OccasionCard({ occasion, language }: { occasion: Occasion; language: 'm
   return (
     <Link
       href={`/products?occasion=${occasion.slug}`}
-      className="group relative mx-auto block aspect-square w-full max-w-[216px] overflow-hidden rounded-full shadow-card transition-all duration-300 hover:shadow-lift hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-burgundy-500 focus-visible:ring-offset-2"
+      className="group flex flex-col items-center gap-3 w-[120px] sm:w-[140px] md:w-[160px] flex-shrink-0"
     >
-      {imageSrc ? (
-        <Image
-          src={imageSrc}
-          alt={label}
-          fill
-          className="object-cover transition-transform duration-500 group-hover:scale-110"
-          sizes="(max-width: 640px) 40vw, (max-width: 1024px) 20vw, 12vw"
-          loading="lazy"
-        />
-      ) : (
-        <div className="flex h-full w-full items-center justify-center bg-accent-burgundy-50">
-          <span className="text-5xl transition-transform duration-300 group-hover:scale-110">{occasion.icon}</span>
-        </div>
-      )}
+      {/* Circle image */}
+      <div className="relative aspect-square w-full overflow-hidden rounded-full border-2 border-border-soft shadow-card transition-all duration-300 group-hover:shadow-lift group-hover:-translate-y-1 group-hover:border-primary-300">
+        {imageSrc ? (
+          <Image
+            src={imageSrc}
+            alt={label}
+            fill
+            className="object-cover img-warm transition-transform duration-500 group-hover:scale-110"
+            sizes="(max-width: 640px) 120px, (max-width: 1024px) 140px, 160px"
+            loading="lazy"
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center bg-canvas-200">
+            <span className="text-4xl transition-transform duration-300 group-hover:scale-110">{occasion.icon}</span>
+          </div>
+        )}
 
-      {/* Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/30 to-black/60 opacity-60 transition-opacity duration-300 group-hover:opacity-70" />
-
-      {/* Centered Label */}
-      <div className="absolute inset-0 flex items-center justify-center px-4 text-center">
-        <h3 className="font-heading text-ds-body sm:text-ds-body-lg font-semibold text-white text-center drop-shadow-lg leading-snug line-clamp-2">
-          {label}
-        </h3>
+        {/* Subtle overlay on hover */}
+        <div className="absolute inset-0 bg-ink-strong/0 transition-colors duration-300 group-hover:bg-ink-strong/10 rounded-full" />
       </div>
 
-      {/* Arrow indicator on hover */}
-      <span className="pointer-events-none absolute left-1/2 bottom-5 -translate-x-1/2 flex h-9 w-9 items-center justify-center rounded-full border border-white/40 bg-white/10 text-white backdrop-blur-sm opacity-0 translate-y-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
-        <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-        </svg>
-      </span>
+      {/* Label below circle */}
+      <h3 className="font-body text-sm font-medium text-ink-base text-center leading-snug line-clamp-2 group-hover:text-ink-strong transition-colors">
+        {label}
+      </h3>
     </Link>
   )
 }
@@ -60,8 +54,8 @@ export default function OccasionShowcase({ language, occasions }: OccasionShowca
   }
 
   return (
-    <section className="relative overflow-hidden bg-white">
-      <div className="container-custom relative py-16 space-y-8">
+    <section className="bg-white">
+      <div className="container-custom py-12 md:py-16 space-y-8">
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto">
           <p className="eyebrow font-body">
@@ -70,14 +64,9 @@ export default function OccasionShowcase({ language, occasions }: OccasionShowca
           <h2 className="font-heading text-ds-section text-ink-strong">
             {language === 'mk' ? 'Пронајди го совршениот подарок' : 'Find the perfect gift'}
           </h2>
-          <p className="mt-3 text-ds-body text-ink-muted">
-            {language === 'mk'
-              ? 'Изберете од нашата колекција за секоја специјална пригода'
-              : 'Choose from our collection for every special occasion'}
-          </p>
         </div>
 
-        {/* Responsive Layout - matching RecipientShowcase */}
+        {/* Horizontally scrollable on mobile, centered wrap on desktop */}
         <div className="flex flex-wrap justify-center gap-6 sm:gap-8">
           {occasions.map((occasion) => (
             <OccasionCard

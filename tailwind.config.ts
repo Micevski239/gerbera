@@ -9,113 +9,93 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Background variations for section contrast
+        // Background variations
         canvas: {
-          50: '#FFFFFF',
-          100: '#FDF8F9',  // Very subtle pink tint
-          200: '#F9FAFB',  // Light neutral gray
+          50: '#F5F5F5',
+          100: '#F9F7F5',
+          200: '#FFF5F0',
         },
         surface: {
           base: '#FFFFFF',
-          raised: '#FEFCFD',  // Barely tinted
-          overlay: '#F9FAFB',
+          raised: '#FAFAFA',
+          overlay: '#F5F5F5',
         },
         ink: {
-          strong: '#1F1D1A',
-          base: '#4A443D',
-          muted: '#7A6D63',
+          strong: '#1A1A1A',
+          base: '#333333',
+          muted: '#666666',
         },
-        // New accent colors
+        // Primary — Coral
+        primary: {
+          50: '#FFF5F0',
+          100: '#FFE8DE',
+          200: '#FFD5C4',
+          300: '#F2BBA8',
+          400: '#E8A699',
+          500: '#E8A699',
+          600: '#D4907F',
+          700: '#B87161',
+          800: '#965A4C',
+          900: '#6E3F35',
+        },
+        // Secondary — Muted Sage (unchanged)
+        secondary: {
+          50: '#EEF6F1',
+          100: '#D4EAE0',
+          200: '#B8DCC9',
+          300: '#9ECEB4',
+          400: '#8DC5A7',
+          500: '#81B29A',
+          600: '#6E9D85',
+          700: '#5B886F',
+          800: '#476A57',
+          900: '#334D3F',
+        },
+        // Accent — Warm Saffron (unchanged)
         accent: {
-          burgundy: '#880f4f',
-          sage: '#7CB342',
-          gold: '#FFA000',
-        },
-        // Burgundy/Wine - Primary accent
-        'accent-burgundy': {
-          50: '#FCE4EC',
-          100: '#F8BBD9',
-          200: '#F48FB1',
-          500: '#880f4f',
-          600: '#880E4F',
-          800: '#560027',
-        },
-        // Olive/Sage Green - Secondary accent
-        'accent-sage': {
-          50: '#F1F8E9',
-          100: '#C5E1A5',
-          200: '#AED581',
-          500: '#7CB342',
-          600: '#689F38',
-          800: '#33691E',
-        },
-        // Gold - Highlights and stars
-        'accent-gold': {
-          50: '#FFF8E1',
-          100: '#FFECB3',
-          200: '#FFE082',
-          500: '#FFA000',
-          600: '#FF8F00',
-          800: '#FF6F00',
+          50: '#FFF9EE',
+          100: '#FFF0D4',
+          200: '#FFE7BA',
+          300: '#F7D9A2',
+          400: '#F2CC8F',
+          500: '#E8BE7D',
+          600: '#D4A96A',
+          700: '#B88F57',
+          800: '#937043',
+          900: '#6B5130',
         },
         border: {
-          soft: '#E5E7EB',
-          bold: '#D1D5DB',
+          soft: '#E5E5E5',
+          bold: '#CCCCCC',
         },
         state: {
-          hover: '#FCE4EC',
-          focus: '#880f4f',
-        },
-        // Primary palette (burgundy)
-        primary: {
-          50: '#FCE4EC',
-          100: '#F8BBD9',
-          200: '#F48FB1',
-          300: '#F06292',
-          400: '#EC407A',
-          500: '#880f4f',
-          600: '#880E4F',
-          700: '#6D0A3D',
-          800: '#560027',
-          900: '#3E001A',
-        },
-        // Secondary palette (sage)
-        secondary: {
-          50: '#F1F8E9',
-          100: '#DCEDC8',
-          200: '#C5E1A5',
-          300: '#AED581',
-          400: '#9CCC65',
-          500: '#7CB342',
-          600: '#689F38',
-          700: '#558B2F',
-          800: '#33691E',
-          900: '#1B5E20',
+          hover: '#FFF5F0',
+          focus: '#E8A699',
         },
         neutral: {
           50: '#FAFAFA',
           100: '#F5F5F5',
-          200: '#E5E7EB',
-          300: '#D1D5DB',
-          400: '#9CA3AF',
-          500: '#6B7280',
-          600: '#4B5563',
-          700: '#374151',
-          800: '#1F2937',
-          900: '#111827',
+          200: '#E5E5E5',
+          300: '#D4D4D4',
+          400: '#A3A3A3',
+          500: '#737373',
+          600: '#525252',
+          700: '#404040',
+          800: '#262626',
+          900: '#171717',
         },
-        cream: {
-          50: '#FFFFFF',
-          100: '#FAFAFA',
-          200: '#F5F5F5',
-          300: '#E5E7EB',
-          400: '#D1D5DB',
-          500: '#9CA3AF',
+        // Pastel palette for service features
+        pastel: {
+          peach: '#F4D9C6',
+          lime: '#E8F5C6',
+          pink: '#F5D9F0',
+          blue: '#D9F5F0',
         },
+        softPink: '#FFE0D6',
       },
       fontFamily: {
-        heading: ['var(--font-nunito)', 'Nunito', 'sans-serif'],
-        body: ['var(--font-nunito)', 'Nunito', 'sans-serif'],
+        heading: ['var(--font-playfair)', 'Playfair Display', 'serif'],
+        body: ['var(--font-poppins)', 'Poppins', 'sans-serif'],
       },
       fontSize: {
         'ds-display': ['2.75rem', { lineHeight: '1.1', letterSpacing: '-0.02em' }],
@@ -153,18 +133,19 @@ const config: Config = {
         pill: '999px',
       },
       boxShadow: {
-        soft: '0 2px 8px rgba(31, 29, 26, 0.08)',
-        card: '0 4px 16px rgba(31, 29, 26, 0.06)',
-        lift: '0 10px 25px rgba(173, 20, 87, 0.15)',
-        hero: '0 20px 40px rgba(31, 29, 26, 0.12)',
-        feature: '0 15px 35px rgba(173, 20, 87, 0.18)',
+        soft: '0 2px 8px rgba(26, 26, 26, 0.08)',
+        card: '0 4px 16px rgba(26, 26, 26, 0.06)',
+        lift: '0 10px 25px rgba(232, 166, 153, 0.15)',
+        hero: '0 20px 40px rgba(26, 26, 26, 0.12)',
+        feature: '0 15px 35px rgba(232, 166, 153, 0.12)',
       },
       maxWidth: {
         shell: '82.5rem',
       },
       backgroundImage: {
-        'gradient-warm': 'linear-gradient(135deg, #FFFFFF 0%, #FCE4EC 100%)',
-        'gradient-cool': 'linear-gradient(135deg, #FFFFFF 0%, #F1F8E9 100%)',
+        'gradient-warm': 'linear-gradient(135deg, #FFFFFF 0%, #FFF5F0 100%)',
+        'gradient-cool': 'linear-gradient(135deg, #FFFFFF 0%, #EEF6F1 100%)',
+        'gradient-linen': 'linear-gradient(135deg, #F9F7F5 0%, #FFF5F0 100%)',
       },
       keyframes: {
         'subtle-scale': {
@@ -175,10 +156,15 @@ const config: Config = {
           '0%': { opacity: '0' },
           '100%': { opacity: '1' },
         },
+        'pulse-ring': {
+          '0%': { transform: 'scale(1)', opacity: '1' },
+          '100%': { transform: 'scale(1.4)', opacity: '0' },
+        },
       },
       animation: {
         'subtle-scale': 'subtle-scale 3s ease-in-out infinite',
         'fade-in': 'fade-in 0.3s ease-in',
+        'pulse-ring': 'pulse-ring 1.5s ease-out infinite',
       },
     },
   },

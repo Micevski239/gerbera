@@ -47,7 +47,7 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-accent-coral to-accent-fern p-4">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-primary-500 to-accent-fern p-4">
       <div className="w-full max-w-md rounded-lg border border-border-soft bg-surface-base p-8 shadow-lift">
         <div className="mb-8 text-center">
           <h1 className="font-heading text-ds-section text-ink-strong">Admin Login</h1>
@@ -90,7 +90,7 @@ export default function AdminLoginPage() {
           </div>
 
           {error && (
-            <div className="rounded-lg border border-accent-coral/40 bg-state-hover px-4 py-3 text-ds-body-sm text-accent-coral">
+            <div className="rounded-lg border border-primary-500/40 bg-state-hover px-4 py-3 text-ds-body-sm text-primary-500">
               {error}
             </div>
           )}
@@ -105,7 +105,7 @@ export default function AdminLoginPage() {
         </form>
 
         <div className="mt-6 text-center">
-          <a href="/" className="text-ds-body-sm text-accent-coral underline-offset-4 hover:underline">
+          <a href="/" className="text-ds-body-sm text-primary-500 underline-offset-4 hover:underline">
             Back to website
           </a>
         </div>

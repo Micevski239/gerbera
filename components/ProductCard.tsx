@@ -90,7 +90,7 @@ export default function ProductCard({
     return alignment === 'left' ? 'justify-start' : 'justify-center'
   }
 
-  // Showcase variant - for product highlights section
+  // Showcase variant
   if (variant === 'showcase') {
     const hasSale = !!originalPrice && !!currentPrice && originalPrice !== currentPrice
     const discountPercent = product.is_on_sale && product.price && product.sale_price
@@ -98,14 +98,14 @@ export default function ProductCard({
       : 0
 
     return (
-      <div className="flex flex-col rounded-2xl border border-accent-coral-100 bg-surface-base shadow-feature p-5 gap-4">
+      <div className="flex flex-col rounded-2xl border border-primary-100 bg-surface-base shadow-feature p-5 gap-4">
         <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-canvas-200">
           {imageUrl ? (
             <Image
               src={imageUrl}
               alt={name}
               fill
-              className="object-cover"
+              className="object-cover img-warm"
               sizes="(max-width: 768px) 50vw, 240px"
             />
           ) : (
@@ -120,23 +120,23 @@ export default function ProductCard({
           )}
         </div>
         <div className="space-y-2">
-          <Link href={`/product/${product.id}`} className="font-semibold text-ds-body-sm text-ink-strong line-clamp-2 hover:text-accent-coral transition-colors">
+          <Link href={`/product/${product.id}`} className="font-heading font-semibold text-ds-body-sm text-ink-strong line-clamp-2 hover:text-primary-500 transition-colors">
             {name}
           </Link>
-          <div className="flex items-center gap-1 text-accent-marigold text-ds-body-sm">
+          <div className="flex items-center gap-1 text-accent-400 text-ds-body-sm">
             {Array.from({ length: 5 }).map((_, idx) => (
-              <span key={idx}>★</span>
+              <span key={idx}>&#9733;</span>
             ))}
           </div>
           {showPrice && (
             <div className="flex items-baseline gap-3">
               {hasSale ? (
                 <>
-                  <span className="text-ds-body font-semibold text-ink-strong">{currentPrice}</span>
+                  <span className="text-ds-body font-bold text-ink-strong">{currentPrice}</span>
                   <span className="text-ds-body-sm text-ink-muted line-through">{originalPrice}</span>
                 </>
               ) : currentPrice ? (
-                <span className="text-ds-body font-semibold text-ink-strong">{currentPrice}</span>
+                <span className="text-ds-body font-bold text-ink-strong">{currentPrice}</span>
               ) : null}
             </div>
           )}
@@ -145,116 +145,123 @@ export default function ProductCard({
           href={`/product/${product.id}`}
           className="mt-auto btn-secondary text-ds-body-sm"
         >
-          {language === 'mk' ? 'Додај во кошничка' : 'Add to Cart'}
+          {language === 'mk' ? 'Погледни' : 'View'}
         </Link>
       </div>
     )
   }
 
-  // Shop variant - clean, centered design for shop grid
+  // Shop variant
   if (variant === 'shop') {
     const hasSale = product.is_on_sale && product.sale_price && product.price
+    const discountPercent = hasSale
+      ? Math.round(((product.price! - product.sale_price!) / product.price!) * 100)
+      : 0
 
     return (
       <Link
         href={`/product/${product.id}`}
-        className="group block bg-white"
+        className="group block"
       >
         {/* Image Container */}
-        <div className="relative aspect-square overflow-hidden bg-neutral-50 border border-neutral-200 rounded-sm mb-4">
+        <div className="relative aspect-square overflow-hidden bg-neutral-100 rounded-2xl mb-3">
           {imageUrl ? (
             <Image
               src={imageUrl}
               alt={name}
               fill
-              className="object-cover transition-transform duration-500 group-hover:scale-105"
+              className="object-cover img-warm transition-transform duration-500 group-hover:scale-105"
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center bg-neutral-50">
-              <svg className="w-16 h-16 text-neutral-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="flex h-full w-full items-center justify-center bg-neutral-100">
+              <svg className="w-16 h-16 text-neutral-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
             </div>
           )}
 
-          {/* Badges */}
-          {showBadge && (product.is_on_sale || product.is_best_seller) && (
-            <div className="absolute top-2 left-2 flex flex-col gap-1.5">
-              {product.is_on_sale && (
-                <span className="px-2 py-0.5 text-[10px] font-semibold bg-red-500 text-white rounded">
-                  {language === 'mk' ? 'Попуст' : 'Sale'}
-                </span>
-              )}
-              {product.is_best_seller && (
-                <span className="px-2 py-0.5 text-[10px] font-semibold bg-amber-500 text-white rounded">
-                  {language === 'mk' ? 'Топ' : 'Best'}
-                </span>
-              )}
-            </div>
+          {/* Discount badge — top left */}
+          {showBadge && hasSale && discountPercent > 0 && (
+            <span className="absolute top-3 left-3 bg-primary-400 text-white text-[11px] font-semibold px-2.5 py-1 rounded-full">
+              {discountPercent}% OFF
+            </span>
           )}
+
+          {/* Heart icon — top right */}
+          <span className="absolute top-3 right-3 w-8 h-8 flex items-center justify-center rounded-full bg-white/80 backdrop-blur-sm text-ink-muted opacity-0 group-hover:opacity-100 transition-opacity">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+            </svg>
+          </span>
         </div>
 
-        {/* Content - Centered */}
-        <div className="text-center px-2">
-          {/* Product Name */}
-          <h3 className="font-medium text-neutral-700 line-clamp-2 mb-2 group-hover:text-accent-burgundy-600 transition-colors text-sm md:text-base">
-            {name}
-          </h3>
+        {/* Content */}
+        <div className="flex items-start justify-between gap-2 px-1">
+          <div className="min-w-0">
+            <h3 className="font-body text-sm text-ink-base font-normal line-clamp-1 group-hover:text-ink-strong transition-colors">
+              {name}
+            </h3>
+            {showPrice && (
+              <div className="flex items-center gap-2 mt-1">
+                {hasSale ? (
+                  <>
+                    <span className="text-sm text-ink-muted line-through">
+                      {formatPrice(product.price)}
+                    </span>
+                    <span className="text-sm font-semibold text-ink-strong">
+                      {formatPrice(product.sale_price)}
+                    </span>
+                  </>
+                ) : currentPrice ? (
+                  <span className="text-sm font-semibold text-ink-strong">
+                    {currentPrice}
+                  </span>
+                ) : priceText ? (
+                  <span className="text-sm text-ink-muted">
+                    {priceText}
+                  </span>
+                ) : null}
+              </div>
+            )}
+          </div>
 
-          {/* Price */}
-          {showPrice && (
-            <div className="flex items-center justify-center gap-2">
-              {hasSale ? (
-                <>
-                  <span className="text-base font-semibold text-accent-burgundy-500">
-                    {formatPrice(product.sale_price)}
-                  </span>
-                  <span className="text-sm text-neutral-400 line-through">
-                    {formatPrice(product.price)}
-                  </span>
-                </>
-              ) : currentPrice ? (
-                <span className="text-base font-semibold text-accent-burgundy-500">
-                  {currentPrice}
-                </span>
-              ) : priceText ? (
-                <span className="text-sm text-neutral-500">
-                  {priceText}
-                </span>
-              ) : null}
-            </div>
-          )}
+          {/* Heart icon — always visible on mobile via flex layout */}
+          <span className="flex-shrink-0 mt-0.5 text-ink-muted md:hidden">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+            </svg>
+          </span>
         </div>
       </Link>
     )
   }
 
-  // Mini variant - tiny cards for related products
+  // Mini variant
   if (variant === 'mini') {
     return (
       <Link
         href={`/product/${product.id}`}
         className="group block"
       >
-        <div className="relative aspect-square overflow-hidden bg-neutral-50 border border-neutral-200 rounded mb-2">
+        <div className="relative aspect-square overflow-hidden bg-canvas-200 border border-border-soft rounded mb-2">
           {imageUrl ? (
             <Image
               src={imageUrl}
               alt={name}
               fill
-              className="object-cover transition-transform duration-300 group-hover:scale-105"
+              className="object-cover img-warm transition-transform duration-300 group-hover:scale-105"
               sizes="120px"
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center bg-neutral-50">
-              <svg className="w-6 h-6 text-neutral-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="flex h-full w-full items-center justify-center bg-canvas-200">
+              <svg className="w-6 h-6 text-neutral-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
             </div>
           )}
         </div>
-        <p className="text-xs text-neutral-600 text-center line-clamp-2 group-hover:text-accent-burgundy-600 transition-colors">
+        <p className="text-xs text-ink-base text-center line-clamp-2 group-hover:text-primary-700 transition-colors">
           {name}
         </p>
       </Link>
@@ -271,7 +278,7 @@ export default function ProductCard({
               src={imageUrl}
               alt={name}
               fill
-              className="object-cover transition-transform duration-500 group-hover:scale-105"
+              className="object-cover img-warm transition-transform duration-500 group-hover:scale-105"
               sizes="160px"
             />
           ) : (
@@ -288,12 +295,12 @@ export default function ProductCard({
         </div>
         <div className="flex-1 px-4 py-4">
           {categoryName && <p className="text-ds-body-sm uppercase tracking-eyebrow text-ink-muted">{categoryName}</p>}
-          <h3 className="mt-2 font-heading text-ds-body-lg text-ink-strong transition-colors group-hover:text-accent-coral">
+          <h3 className="mt-2 font-heading text-ds-body-lg text-ink-strong transition-colors group-hover:text-primary-700">
             {name}
           </h3>
           {showPrice && (currentPrice || priceText) && (
             <div className="mt-3 flex items-baseline gap-2">
-              <span className="text-ds-body text-ink-strong">
+              <span className="text-ds-body text-ink-strong font-semibold">
                 {currentPrice || priceText}
               </span>
               {originalPrice && <span className="text-ds-body-sm text-ink-muted line-through">{originalPrice}</span>}
@@ -304,7 +311,7 @@ export default function ProductCard({
     )
   }
 
-  // Compact variant - for grid sections with more options
+  // Compact variant
   if (variant === 'compact') {
     return (
       <div className="space-y-3">
@@ -315,7 +322,7 @@ export default function ProductCard({
                 src={imageUrl}
                 alt={name}
                 fill
-                className="object-cover transition-transform duration-500 group-hover:scale-105"
+                className="object-cover img-warm transition-transform duration-500 group-hover:scale-105"
                 sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
               />
             ) : (
@@ -333,12 +340,12 @@ export default function ProductCard({
 
           <div className="mt-4 space-y-2 text-left">
             {categoryName && <p className="text-ds-body-sm uppercase tracking-eyebrow text-ink-muted">{categoryName}</p>}
-            <h3 className="font-heading text-ds-body-lg text-ink-strong text-balance transition-colors group-hover:text-accent-coral">
+            <h3 className="font-heading text-ds-body-lg text-ink-strong text-balance transition-colors group-hover:text-primary-700">
               {name}
             </h3>
             {showPrice && (currentPrice || priceText) && (
               <div className="flex items-baseline gap-2">
-                <span className="text-ds-body text-ink-strong">
+                <span className="text-ds-body text-primary-500 font-semibold">
                   {currentPrice || priceText}
                 </span>
                 {originalPrice && <span className="text-ds-body-sm text-ink-muted line-through">{originalPrice}</span>}
@@ -373,7 +380,7 @@ export default function ProductCard({
             src={imageUrl}
             alt={name}
             fill
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            className="object-cover img-warm transition-transform duration-500 group-hover:scale-105"
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           />
         ) : (
@@ -391,12 +398,12 @@ export default function ProductCard({
 
       <div className={`px-4 pb-5 pt-4 ${getAlignmentClass()}`}>
         {categoryName && <p className="text-ds-body-sm uppercase tracking-eyebrow text-ink-muted">{categoryName}</p>}
-        <h3 className="mt-2 font-heading text-ds-section text-ink-strong text-balance transition-colors group-hover:text-accent-coral">
+        <h3 className="mt-2 font-heading text-ds-section text-ink-strong text-balance transition-colors group-hover:text-primary-700">
           {name}
         </h3>
         {showPrice && (currentPrice || priceText) && (
           <div className={`mt-3 flex items-center gap-2 ${getPriceAlignmentClass()}`}>
-            <span className="text-ds-body text-ink-strong">
+            <span className="text-ds-body text-primary-500 font-semibold">
               {currentPrice || priceText}
             </span>
             {originalPrice && <span className="text-ds-body-sm text-ink-muted line-through">{originalPrice}</span>}

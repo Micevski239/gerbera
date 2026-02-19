@@ -84,7 +84,7 @@ export default function CategoryShowcase({ language }: CategoryShowcaseProps) {
   const handleNext = () => setStartIndex((prev) => Math.min(maxIndex, prev + 1))
 
   return (
-    <section className="bg-accent-sage-50">
+    <section className="bg-secondary-50">
       <div className="container-custom space-y-8 py-16">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
@@ -96,7 +96,7 @@ export default function CategoryShowcase({ language }: CategoryShowcaseProps) {
           <div className="flex gap-3">
             <button
               aria-label={language === 'mk' ? 'Претходни категории' : 'Previous categories'}
-              className="h-9 w-9 rounded-full border border-border-soft text-ink-muted hover:bg-state-hover hover:text-accent-burgundy-500 hover:border-accent-burgundy-500/50 transition-all duration-200 disabled:opacity-30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-burgundy-500 focus-visible:ring-offset-2"
+              className="h-9 w-9 rounded-full border border-border-soft text-ink-muted hover:bg-state-hover hover:text-primary-500 hover:border-primary-500/50 transition-all duration-200 disabled:opacity-30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
               onClick={handlePrev}
               disabled={currentIndex === 0}
             >
@@ -104,7 +104,7 @@ export default function CategoryShowcase({ language }: CategoryShowcaseProps) {
             </button>
             <button
               aria-label={language === 'mk' ? 'Следни категории' : 'Next categories'}
-              className="h-9 w-9 rounded-full border border-border-soft text-ink-muted hover:bg-state-hover hover:text-accent-burgundy-500 hover:border-accent-burgundy-500/50 transition-all duration-200 disabled:opacity-30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-burgundy-500 focus-visible:ring-offset-2"
+              className="h-9 w-9 rounded-full border border-border-soft text-ink-muted hover:bg-state-hover hover:text-primary-500 hover:border-primary-500/50 transition-all duration-200 disabled:opacity-30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
               onClick={handleNext}
               disabled={currentIndex === maxIndex}
             >
@@ -118,9 +118,9 @@ export default function CategoryShowcase({ language }: CategoryShowcaseProps) {
             <Link
               key={category.id}
               href={category.slug ? `/category/${category.slug}` : '/categories'}
-              className="group flex flex-col items-center gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-burgundy-500 focus-visible:ring-offset-4 rounded-xl"
+              className="group flex flex-col items-center gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-4 rounded-xl"
             >
-              <div className="relative h-44 w-44 overflow-hidden rounded-full border-2 border-border-soft bg-surface-base shadow-card transition-all duration-300 group-hover:shadow-lift group-hover:border-accent-burgundy-200 group-hover:scale-105">
+              <div className="relative h-44 w-44 overflow-hidden rounded-full border-2 border-border-soft bg-surface-base shadow-card transition-all duration-300 group-hover:shadow-lift group-hover:border-primary-200 group-hover:scale-105">
                 {category.image ? (
                   <Image
                     src={category.image}
@@ -130,7 +130,7 @@ export default function CategoryShowcase({ language }: CategoryShowcaseProps) {
                     sizes="176px"
                   />
                 ) : (
-                  <div className="flex h-full w-full flex-col items-center justify-center bg-accent-burgundy-50/50 text-accent-burgundy-500/40 gap-2">
+                  <div className="flex h-full w-full flex-col items-center justify-center bg-primary-50/50 text-primary-500/40 gap-2">
                     <svg className="h-10 w-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M12 21c2.5-2 4-4 4-6s-1.5-4-4-4-4 2-4 4 1.5 4 4 6z" />
                       <circle cx="12" cy="7" r="3" />
@@ -140,7 +140,7 @@ export default function CategoryShowcase({ language }: CategoryShowcaseProps) {
                 )}
               </div>
               <div className="text-center">
-                <p className="font-heading text-ds-body font-semibold text-ink-strong group-hover:text-accent-burgundy-500 transition-colors duration-200">{category.name}</p>
+                <p className="font-heading text-ds-body font-semibold text-ink-strong group-hover:text-primary-500 transition-colors duration-200">{category.name}</p>
                 <span className="inline-flex items-center gap-1 text-ds-body-sm text-ink-muted">
                   <span className="font-medium">{category.count || 0}</span> {language === 'mk' ? 'продукти' : 'products'}
                 </span>

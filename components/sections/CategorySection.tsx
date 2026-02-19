@@ -18,7 +18,7 @@ const backgroundClasses: Record<BackgroundVariant, string> = {
   warm: 'bg-canvas-100',
   white: 'bg-white',
   green: 'bg-accent-fern-50',
-  peach: 'bg-accent-coral-50',
+  peach: 'bg-primary-500-50',
   gray: 'bg-neutral-50',
 }
 
@@ -55,7 +55,7 @@ export default function CategorySection({
           </div>
           <Link
             href={`/category/${category.slug}`}
-            className="inline-flex items-center gap-2 text-ds-body font-medium text-accent-coral hover:text-accent-coral-600 transition-colors"
+            className="inline-flex items-center gap-2 text-ds-body font-medium text-primary-500 hover:text-primary-500-600 transition-colors"
           >
             {viewAllLabel}
             <span aria-hidden="true">→</span>
@@ -115,7 +115,7 @@ export default function CategorySection({
 
                 {/* Product Info */}
                 <div className="p-4 flex flex-col flex-1">
-                  <h3 className="font-heading text-ds-body-lg text-ink-strong line-clamp-2 transition-colors group-hover:text-accent-coral">
+                  <h3 className="font-heading text-ds-body-lg text-ink-strong line-clamp-2 transition-colors group-hover:text-primary-500">
                     {productName}
                   </h3>
 

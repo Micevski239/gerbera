@@ -28,7 +28,7 @@ function RecipientCard({ category, language, fallback }: { category: Category; l
   return (
     <Link
       href={`/category/${category.slug}`}
-      className="group relative mx-auto block aspect-square w-full max-w-[216px] overflow-hidden rounded-full shadow-card transition-all duration-300 hover:shadow-lift hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-burgundy-500 focus-visible:ring-offset-2"
+      className="group relative mx-auto block aspect-square w-full max-w-[216px] overflow-hidden rounded-full shadow-card transition-all duration-300 hover:shadow-lift hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
     >
       {/* Background Image */}
       <Image

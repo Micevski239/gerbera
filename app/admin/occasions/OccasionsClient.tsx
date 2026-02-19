@@ -371,7 +371,7 @@ export default function OccasionsClient({ occasions }: OccasionsClientProps) {
               {newOccasionImageUrl ? (
                 <img src={newOccasionImageUrl} alt="Preview" className="h-full w-full object-cover" />
               ) : newOccasion.icon ? (
-                <div className="flex h-full w-full items-center justify-center text-3xl bg-accent-burgundy-50">{newOccasion.icon}</div>
+                <div className="flex h-full w-full items-center justify-center text-3xl bg-primary-50">{newOccasion.icon}</div>
               ) : (
                 <div className="flex h-full w-full items-center justify-center text-xs text-neutral-400">No image</div>
               )}
@@ -423,7 +423,7 @@ export default function OccasionsClient({ occasions }: OccasionsClientProps) {
                   {occasionImageUrl ? (
                     <img src={occasionImageUrl} alt={occasion.name_en} className="h-full w-full object-cover" />
                   ) : occasion.icon ? (
-                    <div className="flex h-full w-full items-center justify-center text-2xl bg-accent-burgundy-50">{occasion.icon}</div>
+                    <div className="flex h-full w-full items-center justify-center text-2xl bg-primary-50">{occasion.icon}</div>
                   ) : (
                     <div className="flex h-full w-full items-center justify-center text-xs text-neutral-400">?</div>
                   )}

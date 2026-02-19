@@ -129,7 +129,7 @@ export default function MobileShopFilter({
             {hasActiveFilters && (
               <button
                 onClick={onClearFilters}
-                className="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm text-accent-burgundy-600 hover:text-accent-burgundy-700 border border-accent-burgundy-200 hover:bg-accent-burgundy-50 rounded-lg transition-colors"
+                className="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm text-primary-600 hover:text-primary-700 border border-primary-200 hover:bg-primary-50 rounded-lg transition-colors"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -149,17 +149,17 @@ export default function MobileShopFilter({
                   onClick={() => handleCategorySelect(null)}
                   className={`w-full flex items-center justify-between px-3 py-3 rounded-lg text-left transition-all duration-200 ${
                     selectedCategory === null
-                      ? 'bg-accent-burgundy-50 text-accent-burgundy-700 font-medium'
+                      ? 'bg-primary-50 text-primary-700 font-medium'
                       : 'text-neutral-600 hover:bg-neutral-100'
                   }`}
                 >
                   <span>{language === 'mk' ? 'Сите производи' : 'All Products'}</span>
                   <div className="flex items-center gap-2">
-                    <span className={`text-sm ${selectedCategory === null ? 'text-accent-burgundy-500' : 'text-neutral-400'}`}>
+                    <span className={`text-sm ${selectedCategory === null ? 'text-primary-500' : 'text-neutral-400'}`}>
                       {totalProducts}
                     </span>
                     {selectedCategory === null && (
-                      <svg className="w-5 h-5 text-accent-burgundy-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-5 h-5 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                     )}
@@ -178,17 +178,17 @@ export default function MobileShopFilter({
                       onClick={() => handleCategorySelect(category.slug)}
                       className={`w-full flex items-center justify-between px-3 py-3 rounded-lg text-left transition-all duration-200 ${
                         isActive
-                          ? 'bg-accent-burgundy-50 text-accent-burgundy-700 font-medium'
+                          ? 'bg-primary-50 text-primary-700 font-medium'
                           : 'text-neutral-600 hover:bg-neutral-100'
                       }`}
                     >
                       <span className="line-clamp-1">{name}</span>
                       <div className="flex items-center gap-2">
-                        <span className={`text-sm ${isActive ? 'text-accent-burgundy-500' : 'text-neutral-400'}`}>
+                        <span className={`text-sm ${isActive ? 'text-primary-500' : 'text-neutral-400'}`}>
                           {count}
                         </span>
                         {isActive && (
-                          <svg className="w-5 h-5 text-accent-burgundy-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-5 h-5 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                           </svg>
                         )}
@@ -215,7 +215,7 @@ export default function MobileShopFilter({
                       value={minInput}
                       onChange={(e) => setMinInput(e.target.value)}
                       placeholder={language === 'mk' ? 'Мин' : 'Min'}
-                      className="w-full px-3 py-3 text-base border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-burgundy-500 focus:border-transparent"
+                      className="w-full px-3 py-3 text-base border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                       min="0"
                     />
                   </div>
@@ -226,7 +226,7 @@ export default function MobileShopFilter({
                       value={maxInput}
                       onChange={(e) => setMaxInput(e.target.value)}
                       placeholder={language === 'mk' ? 'Макс' : 'Max'}
-                      className="w-full px-3 py-3 text-base border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-burgundy-500 focus:border-transparent"
+                      className="w-full px-3 py-3 text-base border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                       min="0"
                     />
                   </div>
@@ -234,7 +234,7 @@ export default function MobileShopFilter({
                 {(priceRange.min !== null || priceRange.max !== null) && (
                   <button
                     onClick={handleClearPrice}
-                    className="text-sm text-accent-burgundy-600 hover:text-accent-burgundy-700"
+                    className="text-sm text-primary-600 hover:text-primary-700"
                   >
                     {language === 'mk' ? 'Исчисти цена' : 'Clear price'}
                   </button>
@@ -257,7 +257,7 @@ export default function MobileShopFilter({
                     type="checkbox"
                     checked={showOnSale}
                     onChange={(e) => onSaleChange(e.target.checked)}
-                    className="w-5 h-5 rounded border-neutral-300 text-accent-burgundy-600 focus:ring-accent-burgundy-500"
+                    className="w-5 h-5 rounded border-neutral-300 text-primary-600 focus:ring-primary-500"
                   />
                   <span className="flex items-center gap-2 text-neutral-700">
                     <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-700">
@@ -273,7 +273,7 @@ export default function MobileShopFilter({
                     type="checkbox"
                     checked={showBestSeller}
                     onChange={(e) => onBestSellerChange(e.target.checked)}
-                    className="w-5 h-5 rounded border-neutral-300 text-accent-burgundy-600 focus:ring-accent-burgundy-500"
+                    className="w-5 h-5 rounded border-neutral-300 text-primary-600 focus:ring-primary-500"
                   />
                   <span className="flex items-center gap-2 text-neutral-700">
                     <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-amber-100 text-amber-700">
@@ -290,7 +290,7 @@ export default function MobileShopFilter({
           <div className="p-4 border-t border-neutral-200 bg-white safe-area-inset-bottom">
             <button
               onClick={handleApplyAndClose}
-              className="w-full py-3 px-4 bg-accent-burgundy-600 text-white font-medium rounded-lg hover:bg-accent-burgundy-700 transition-colors"
+              className="w-full py-3 px-4 bg-primary-600 text-white font-medium rounded-lg hover:bg-primary-700 transition-colors"
             >
               {language === 'mk'
                 ? `Прикажи ${filteredCount} производи`

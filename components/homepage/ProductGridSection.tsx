@@ -154,7 +154,7 @@ function ProductGridCard({
 
         <div className="mt-4 space-y-2 text-left">
           <p className="text-ds-body-sm uppercase tracking-eyebrow text-ink-muted">{categoryName}</p>
-          <h3 className="font-heading text-ds-body-lg text-ink-strong text-balance transition-colors group-hover:text-accent-coral">
+          <h3 className="font-heading text-ds-body-lg text-ink-strong text-balance transition-colors group-hover:text-primary-500">
             {name}
           </h3>
           {showPrice && (currentPrice || product.price_text) && (

@@ -445,6 +445,7 @@ export type Database = {
           tagline_mk: string
           tagline_en: string
           image_url: string
+          url: string
           is_active: boolean
           display_order: number
           created_at: string
@@ -458,6 +459,7 @@ export type Database = {
           tagline_mk?: string
           tagline_en?: string
           image_url: string
+          url?: string
           is_active?: boolean
           display_order?: number
           created_at?: string
@@ -471,6 +473,7 @@ export type Database = {
           tagline_mk?: string
           tagline_en?: string
           image_url?: string
+          url?: string
           is_active?: boolean
           display_order?: number
           created_at?: string

@@ -64,6 +64,15 @@ export const translations = {
       category: 'Категорија',
       relatedProducts: 'Слични производи',
       moreFromCategory: 'Повеќе од оваа категорија',
+      handmade: 'Рачно изработено',
+      madeToOrder: 'По нарачка',
+    },
+
+    // WhatsApp CTAs
+    cta: {
+      whatsapp_order: 'Порачај преку WhatsApp',
+      whatsapp_ask: 'Прашај за детали',
+      whatsapp_greeting: 'Здраво! Ме интересираат вашите производи.',
     },
 
     // Homepage
@@ -76,6 +85,28 @@ export const translations = {
       exploreCategories: 'Истражи категории',
       shopNow: 'Купи сега',
       discoverMore: 'Открij повеќе',
+      handmadeWithLove: 'Рачно изработено со љубов',
+      mostPopular: 'Најпопуларни',
+      craftStoryTitle: 'Секој производ е уникатен',
+      craftStoryText: 'Секој производ е уникатен и рачно изработен само за вас. Со внимание кон деталите и љубов кон занаетот, создаваме подароци кои носат емоција.',
+      tabNew: 'Најнови',
+      tabPopular: 'Популарни',
+      tabBestSellers: 'Бестселери',
+      viewAllProducts: 'Погледни ги сите',
+      ctaHeading: 'Порачај го твојот уникатен подарок',
+      ctaSubtitle: 'Секој подарок е рачно изработен со љубов, специјално за тебе.',
+      ctaBrowse: 'Разгледај производи',
+      newTrending: 'Ново во тренд',
+      trendingProducts: 'Трендовски производи',
+      newCollection: 'Нова колекција',
+      serviceHandmade: 'Рачна изработка',
+      serviceHandmadeDesc: 'Секој производ е уникатен и изработен со грижа',
+      serviceWhatsapp: 'WhatsApp поддршка',
+      serviceWhatsappDesc: 'Контактирај не директно за брза помош',
+      serviceGiftWrap: 'Подарочно пакување',
+      serviceGiftWrapDesc: 'Секој подарок убаво завиткан со љубов',
+      serviceDelivery: 'Брза достава',
+      serviceDeliveryDesc: 'Брза и сигурна достава до вашата врата',
     },
 
     // About
@@ -213,6 +244,15 @@ export const translations = {
       category: 'Category',
       relatedProducts: 'Related Products',
       moreFromCategory: 'More from this category',
+      handmade: 'Handmade',
+      madeToOrder: 'Made to order',
+    },
+
+    // WhatsApp CTAs
+    cta: {
+      whatsapp_order: 'Order via WhatsApp',
+      whatsapp_ask: 'Ask about details',
+      whatsapp_greeting: 'Hi! I\'m interested in your products.',
     },
 
     // Homepage
@@ -225,6 +265,28 @@ export const translations = {
       exploreCategories: 'Explore Categories',
       shopNow: 'Shop Now',
       discoverMore: 'Discover More',
+      handmadeWithLove: 'Handmade with love',
+      mostPopular: 'Most Popular',
+      craftStoryTitle: 'Every piece is unique',
+      craftStoryText: 'Every piece is unique and handmade just for you. With attention to detail and a love for the craft, we create gifts that carry emotion.',
+      tabNew: 'New',
+      tabPopular: 'Popular',
+      tabBestSellers: 'Best Sellers',
+      viewAllProducts: 'View All',
+      ctaHeading: 'Order your unique gift',
+      ctaSubtitle: 'Every gift is handmade with love, specially for you.',
+      ctaBrowse: 'Browse Products',
+      newTrending: 'New Trending',
+      trendingProducts: 'Trending Products',
+      newCollection: 'New Collection',
+      serviceHandmade: 'Handmade',
+      serviceHandmadeDesc: 'Every piece is unique and crafted with care',
+      serviceWhatsapp: 'WhatsApp Support',
+      serviceWhatsappDesc: 'Contact us directly for quick assistance',
+      serviceGiftWrap: 'Gift Wrapping',
+      serviceGiftWrapDesc: 'Every gift beautifully wrapped with love',
+      serviceDelivery: 'Fast Delivery',
+      serviceDeliveryDesc: 'Quick and secure delivery to your door',
     },
 
     // About

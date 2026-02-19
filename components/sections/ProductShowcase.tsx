@@ -58,7 +58,7 @@ function ProductCard({ product, language }: { product: Product; language: 'mk' |
   return (
     <Link
       href={`/product/${product.id}`}
-      className="group flex flex-col transition-transform duration-300 hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-burgundy-500 focus-visible:ring-offset-2 rounded-2xl"
+      className="group flex flex-col transition-transform duration-300 hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 rounded-2xl"
     >
       <div className="relative aspect-[5/6] w-full max-w-[216px] mx-auto overflow-hidden rounded-2xl shadow-card transition-shadow duration-300 group-hover:shadow-lift">
         {product.image_url ? (
@@ -70,7 +70,7 @@ function ProductCard({ product, language }: { product: Product; language: 'mk' |
             sizes="(max-width: 768px) 50vw, 280px"
           />
         ) : (
-          <div className="flex h-full w-full flex-col items-center justify-center bg-accent-burgundy-50/50 text-accent-burgundy-500/40 gap-2">
+          <div className="flex h-full w-full flex-col items-center justify-center bg-primary-50/50 text-primary-500/40 gap-2">
             <svg className="h-12 w-12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 21c2.5-2 4-4 4-6s-1.5-4-4-4-4 2-4 4 1.5 4 4 6z" />
               <circle cx="12" cy="7" r="3" />
@@ -80,19 +80,19 @@ function ProductCard({ product, language }: { product: Product; language: 'mk' |
           </div>
         )}
         {hasSale && (
-          <span className="absolute top-3 left-3 rounded-full bg-accent-burgundy-500 px-3 py-1 text-[11px] font-semibold text-white shadow-sm">
+          <span className="absolute top-3 left-3 rounded-full bg-primary-500 px-3 py-1 text-[11px] font-semibold text-white shadow-sm">
             -{Math.max(5, Math.min(40, Math.round(((product.price || 0) - (product.sale_price || 0)) / (product.price || 1) * 100)))}%
           </span>
         )}
       </div>
       <div className="mt-3 space-y-0.5 text-center">
-        <p className="font-body text-ds-body-sm font-medium text-ink-strong line-clamp-2 group-hover:text-accent-burgundy-500 transition-colors duration-200">
+        <p className="font-body text-ds-body-sm font-medium text-ink-strong line-clamp-2 group-hover:text-primary-500 transition-colors duration-200">
           {title}
         </p>
         <div className="flex items-baseline justify-center gap-2">
           {hasSale && salePrice ? (
             <>
-              <span className="font-body text-ds-body-sm font-semibold text-accent-burgundy-500">{salePrice}</span>
+              <span className="font-body text-ds-body-sm font-semibold text-primary-500">{salePrice}</span>
               <span className="font-body text-xs text-ink-muted line-through">{price}</span>
             </>
           ) : price ? (
@@ -121,10 +121,10 @@ export default function ProductShowcase({ products, language }: ProductShowcaseP
               {(['latest', 'popular', 'best'] as const).map((tab) => (
                 <button
                   key={tab}
-                  className={`pb-2 font-normal transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-burgundy-500 focus-visible:ring-offset-2 ${
+                  className={`pb-2 font-normal transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 ${
                     activeTab === tab
-                      ? 'text-accent-burgundy-500 border-b-2 border-accent-burgundy-500'
-                      : 'text-ink-strong hover:text-accent-burgundy-500/70'
+                      ? 'text-primary-500 border-b-2 border-primary-500'
+                      : 'text-ink-strong hover:text-primary-500/70'
                   }`}
                   onClick={() => setActiveTab(tab)}
                 >
@@ -136,14 +136,14 @@ export default function ProductShowcase({ products, language }: ProductShowcaseP
           <div className="flex gap-3">
             <button
               aria-label={language === 'mk' ? 'Претходна категорија' : 'Previous category'}
-              className="h-9 w-9 rounded-full bg-neutral-100 text-neutral-500 hover:text-accent-burgundy-500 hover:bg-neutral-200 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-burgundy-500 focus-visible:ring-offset-2"
+              className="h-9 w-9 rounded-full bg-neutral-100 text-neutral-500 hover:text-primary-500 hover:bg-neutral-200 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
               onClick={() => setActiveTab((prev) => (prev === 'latest' ? 'best' : prev === 'popular' ? 'latest' : 'popular'))}
             >
               ←
             </button>
             <button
               aria-label={language === 'mk' ? 'Следна категорија' : 'Next category'}
-              className="h-9 w-9 rounded-full bg-neutral-100 text-neutral-500 hover:text-accent-burgundy-500 hover:bg-neutral-200 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-burgundy-500 focus-visible:ring-offset-2"
+              className="h-9 w-9 rounded-full bg-neutral-100 text-neutral-500 hover:text-primary-500 hover:bg-neutral-200 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
               onClick={() => setActiveTab((prev) => (prev === 'latest' ? 'popular' : prev === 'popular' ? 'best' : 'latest'))}
             >
               →

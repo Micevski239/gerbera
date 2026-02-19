@@ -1,13 +1,13 @@
 import { createClient } from '@/lib/supabase/server'
 import HomePageClient from './HomePageClient'
-import type { Category, Product, Occasion, SiteStat } from '@/lib/supabase/types'
+import type { Category, Product, Occasion, SiteStat, HeroTile } from '@/lib/supabase/types'
 
 export const revalidate = 3600 // Cache for 1 hour
 
 async function getHomepageData() {
   const supabase = await createClient()
 
-  const [categoriesResult, latestProductsResult, popularProductsResult, bestSellersResult, occasionsResult, statsResult] = await Promise.all([
+  const [categoriesResult, latestProductsResult, popularProductsResult, bestSellersResult, occasionsResult, statsResult, heroTilesResult] = await Promise.all([
     supabase
       .from('categories')
       .select('id, name, name_en, name_mk, slug, category_image_path, description, description_mk, description_en')
@@ -45,6 +45,11 @@ async function getHomepageData() {
       .select('*')
       .eq('is_visible', true)
       .order('display_order', { ascending: true }),
+    supabase
+      .from('hero_tiles')
+      .select('*')
+      .eq('is_active', true)
+      .order('display_order', { ascending: true }),
   ])
 
   if (categoriesResult.error) {
@@ -65,15 +70,20 @@ async function getHomepageData() {
   if (statsResult.error) {
     console.error('Failed to load stats', statsResult.error.message)
   }
+  if (heroTilesResult.error) {
+    console.error('Failed to load hero tiles', heroTilesResult.error.message)
+  }
 
   const categories = (categoriesResult.data || []) as Category[]
   const occasions = (occasionsResult.data || []) as Occasion[]
   const stats = (statsResult.data || []) as SiteStat[]
+  const heroTiles = (heroTilesResult.data || []) as HeroTile[]
 
   return {
     categories,
     occasions,
     stats,
+    heroTiles,
     productHighlights: {
       latest: (latestProductsResult.data || []) as Product[],
       popular: (popularProductsResult.data || []) as Product[],
@@ -83,7 +93,7 @@ async function getHomepageData() {
 }
 
 export default async function HomePage() {
-  const { categories, occasions, stats, productHighlights } = await getHomepageData()
+  const { categories, occasions, stats, productHighlights, heroTiles } = await getHomepageData()
 
   return (
     <HomePageClient
@@ -91,6 +101,7 @@ export default async function HomePage() {
       occasions={occasions}
       stats={stats}
       productHighlights={productHighlights}
+      heroTiles={heroTiles}
     />
   )
 }
