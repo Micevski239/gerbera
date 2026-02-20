@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import ProductDetailClient from './ProductDetailClient'
 import type { Product, ProductImage, Category } from '@/lib/supabase/types'
 
-export const revalidate = 3600
+export const revalidate = 60
 
 interface ProductPageProps {
   params: Promise<{ id: string }>
@@ -46,7 +46,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
       .eq('status', 'published')
       .neq('id', product.id)
       .order('display_order')
-      .limit(4),
+      .limit(8),
   ])
 
   return (

@@ -160,11 +160,26 @@ const config: Config = {
           '0%': { transform: 'scale(1)', opacity: '1' },
           '100%': { transform: 'scale(1.4)', opacity: '0' },
         },
+        'slide-up': {
+          '0%': { opacity: '0', transform: 'translateY(22px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        'blink': {
+          '0%, 100%': { opacity: '1' },
+          '50%': { opacity: '0' },
+        },
+        'splash-logo': {
+          '0%': { opacity: '0', transform: 'scale(0.92)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
       },
       animation: {
         'subtle-scale': 'subtle-scale 3s ease-in-out infinite',
         'fade-in': 'fade-in 0.3s ease-in',
         'pulse-ring': 'pulse-ring 1.5s ease-out infinite',
+        'slide-up': 'slide-up 0.7s ease-out both',
+        'blink': 'blink 0.9s step-end infinite',
+        'splash-logo': 'splash-logo 0.8s ease-out both',
       },
     },
   },

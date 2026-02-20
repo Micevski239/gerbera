@@ -149,7 +149,7 @@ export const translations = {
       rights: 'Сите права се задржани',
       madeWith: 'Изработено со',
       inMacedonia: 'во Македонија',
-      quickLinks: 'Брзи врски',
+      quickLinks: 'Навигација',
       followUs: 'Следи не',
       newsletter: 'Билтен',
       newsletterPlaceholder: 'Твојата е-пошта',

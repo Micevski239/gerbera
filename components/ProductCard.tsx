@@ -51,10 +51,7 @@ export default function ProductCard({
 
   const formatPrice = (price: number | null) => {
     if (!price) return null
-    return new Intl.NumberFormat(language === 'mk' ? 'mk-MK' : 'en-US', {
-      style: 'currency',
-      currency: 'EUR',
-    }).format(price)
+    return `€${price.toFixed(2)}`
   }
 
   const currentPrice = formatPrice(product.is_on_sale && product.sale_price ? product.sale_price : product.price)

@@ -107,11 +107,13 @@ export default function HeroBentoGrid({ heroTiles, categories, language }: HeroB
                 sizes="(max-width: 768px) 100vw, 50vw"
                 priority
               />
-              <div className="relative z-10 p-6 md:p-8 lg:p-10">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.15em] text-ink-muted mb-2 font-body">
+              {/* gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent z-10" />
+              <div className="absolute bottom-0 left-0 right-0 z-20 p-6 md:p-8 lg:p-10">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.15em] text-white/70 mb-2 font-body">
                   {eyebrow}
                 </p>
-                <h2 className="font-heading text-2xl md:text-3xl lg:text-4xl text-ink-strong leading-tight mb-5 max-w-[280px]">
+                <h2 className="font-heading text-2xl md:text-3xl lg:text-4xl text-white leading-tight mb-5 max-w-[280px]">
                   {tiles[0].label}
                 </h2>
                 <span className="inline-flex items-center justify-center bg-white text-ink-strong text-[11px] font-semibold px-6 py-2.5 rounded-full group-hover:bg-neutral-100 transition-colors uppercase tracking-widest">
@@ -137,11 +139,12 @@ export default function HeroBentoGrid({ heroTiles, categories, language }: HeroB
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                   sizes="(max-width: 768px) 100vw, 50vw"
                 />
-                <div className="relative z-10 p-5 md:p-6">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.15em] text-ink-muted mb-1.5 font-body">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent z-10" />
+                <div className="absolute bottom-0 left-0 right-0 z-20 p-5 md:p-6">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.15em] text-white/70 mb-1.5 font-body">
                     {eyebrow}
                   </p>
-                  <h3 className="font-heading text-lg md:text-xl lg:text-2xl text-ink-strong leading-tight">
+                  <h3 className="font-heading text-lg md:text-xl lg:text-2xl text-white leading-tight">
                     {tiles[1].label}
                   </h3>
                 </div>
@@ -162,11 +165,12 @@ export default function HeroBentoGrid({ heroTiles, categories, language }: HeroB
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                     sizes="(max-width: 768px) 50vw, 25vw"
                   />
-                  <div className="relative z-10 p-4 md:p-5">
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-ink-muted mb-1 font-body">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent z-10" />
+                  <div className="absolute bottom-0 left-0 right-0 z-20 p-4 md:p-5">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-white/70 mb-1 font-body">
                       {eyebrow}
                     </p>
-                    <h3 className="font-heading text-sm md:text-base lg:text-lg text-ink-strong leading-tight">
+                    <h3 className="font-heading text-sm md:text-base lg:text-lg text-white leading-tight">
                       {tiles[2].label}
                     </h3>
                   </div>
@@ -185,8 +189,9 @@ export default function HeroBentoGrid({ heroTiles, categories, language }: HeroB
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                     sizes="(max-width: 768px) 50vw, 25vw"
                   />
-                  <div className="relative z-10 p-4 md:p-5">
-                    <h3 className="font-heading text-sm md:text-base lg:text-lg text-ink-strong leading-tight">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent z-10" />
+                  <div className="absolute bottom-0 left-0 right-0 z-20 p-4 md:p-5">
+                    <h3 className="font-heading text-sm md:text-base lg:text-lg text-white leading-tight">
                       {tiles[3].label}
                     </h3>
                   </div>

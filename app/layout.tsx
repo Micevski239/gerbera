@@ -49,7 +49,7 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${playfair.variable} ${poppins.variable}`}
     >
-      <body className="min-h-screen bg-canvas-100 text-ink-base font-body">
+      <body className="min-h-screen bg-canvas-100 text-ink-base font-body" suppressHydrationWarning>
         <LanguageProvider>
           {children}
           <FloatingWhatsApp />
