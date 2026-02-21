@@ -1,7 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react'
-import Image from 'next/image'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { useLanguage } from '@/context/LanguageContext'
 import HeroBentoGrid from '@/components/HeroBentoGrid'
@@ -10,6 +9,55 @@ import TestimonialsShowcase from '@/components/sections/TestimonialsShowcase'
 import ProductCard from '@/components/ProductCard'
 import SplashScreen from '@/components/SplashScreen'
 import type { Category, Product, Occasion, SiteStat, HeroTile } from '@/lib/supabase/types'
+
+/* ─── Parallax Image ──────────────────────────────────────────────── */
+function ParallaxImage({ src, alt }: { src: string; alt: string }) {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const imgRef = useRef<HTMLImageElement | null>(null)
+  const ticking = useRef(false)
+
+  const onScroll = useCallback(() => {
+    if (ticking.current) return
+    ticking.current = true
+    requestAnimationFrame(() => {
+      const container = containerRef.current
+      const img = imgRef.current
+      if (!container || !img) { ticking.current = false; return }
+
+      const rect = container.getBoundingClientRect()
+      const windowH = window.innerHeight
+      // 0 when section enters viewport bottom, 1 when it leaves top
+      const progress = Math.min(Math.max(
+        1 - (rect.bottom / (windowH + rect.height)), 0), 1)
+      // image is 250% tall — slide up at 20% speed for subtle reveal
+      const maxTravel = img.offsetHeight - rect.height
+      img.style.transform = `translate3d(0, ${-progress * maxTravel * 0.3}px, 0)`
+
+      ticking.current = false
+    })
+  }, [])
+
+  useEffect(() => {
+    window.addEventListener('scroll', onScroll, { passive: true })
+    onScroll()
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [onScroll])
+
+  return (
+    <div ref={containerRef} className="relative h-64 md:h-[480px] overflow-hidden">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        ref={imgRef}
+        src={src}
+        alt={alt}
+        className="absolute top-0 left-0 w-full object-cover object-center will-change-transform"
+        style={{ height: '250%' }}
+      />
+      {/* Dark gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent pointer-events-none" />
+    </div>
+  )
+}
 
 interface HomePageClientProps {
   categories: Category[]
@@ -50,16 +98,11 @@ export default function HomePageClient({
       <div className="animate-slide-up" style={{ animationDelay: '0.25s' }}>
         <section className="bg-softPink">
           <div className="split-banner">
-            {/* Left — Image */}
-            <div className="relative h-64 md:h-[480px] overflow-hidden">
-              <Image
-                src="/images/gerbera.jpg"
-                alt={t('home.craftStoryTitle')}
-                fill
-                className="object-cover img-warm animate-subtle-scale"
-                sizes="(max-width: 768px) 100vw, 50vw"
-              />
-            </div>
+            {/* Left — Image with parallax scroll */}
+            <ParallaxImage
+              src="/images/gerbera.webp"
+              alt={t('home.craftStoryTitle')}
+            />
             {/* Right — Text */}
             <div className="flex flex-col justify-center px-8 py-10 md:px-16 md:py-20">
               <p className="eyebrow font-body mb-2">
