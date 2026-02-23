@@ -90,7 +90,7 @@ export type Database = {
           id: string
           name: string
           name_mk: string
-          name_en: string
+          name_en: string | null
           slug: string
           description: string | null
           description_mk: string | null
@@ -105,7 +105,7 @@ export type Database = {
           id?: string
           name: string
           name_mk: string
-          name_en: string
+          name_en?: string | null
           slug: string
           description?: string | null
           description_mk?: string | null
@@ -120,7 +120,7 @@ export type Database = {
           id?: string
           name?: string
           name_mk?: string
-          name_en?: string
+          name_en?: string | null
           slug?: string
           description?: string | null
           description_mk?: string | null
@@ -138,7 +138,7 @@ export type Database = {
           category_id: string
           name: string
           name_mk: string
-          name_en: string
+          name_en: string | null
           description: string | null
           description_mk: string | null
           description_en: string | null
@@ -159,7 +159,7 @@ export type Database = {
           category_id: string
           name: string
           name_mk: string
-          name_en: string
+          name_en?: string | null
           description?: string | null
           description_mk?: string | null
           description_en?: string | null
@@ -247,7 +247,7 @@ export type Database = {
         Row: {
           id: string
           title_mk: string
-          title_en: string
+          title_en: string | null
           subtitle_mk: string | null
           subtitle_en: string | null
           button_text_mk: string | null
@@ -262,7 +262,7 @@ export type Database = {
         Insert: {
           id?: string
           title_mk: string
-          title_en: string
+          title_en?: string | null
           subtitle_mk?: string | null
           subtitle_en?: string | null
           button_text_mk?: string | null
@@ -329,7 +329,7 @@ export type Database = {
         Row: {
           id: string
           title_mk: string
-          title_en: string
+          title_en: string | null
           subtitle_mk: string | null
           subtitle_en: string | null
           image_path: string
@@ -343,7 +343,7 @@ export type Database = {
         Insert: {
           id?: string
           title_mk: string
-          title_en: string
+          title_en?: string | null
           subtitle_mk?: string | null
           subtitle_en?: string | null
           image_path: string
@@ -373,7 +373,7 @@ export type Database = {
         Row: {
           id: string
           text_mk: string
-          text_en: string
+          text_en: string | null
           display_order: number
           is_active: boolean
           created_at: string
@@ -382,7 +382,7 @@ export type Database = {
         Insert: {
           id?: string
           text_mk: string
-          text_en: string
+          text_en?: string | null
           display_order?: number
           is_active?: boolean
           created_at?: string
@@ -402,7 +402,7 @@ export type Database = {
         Row: {
           id: string
           title_mk: string
-          title_en: string
+          title_en: string | null
           shape: SectionShape
           category_id: string
           product_limit: number
@@ -414,7 +414,7 @@ export type Database = {
         Insert: {
           id?: string
           title_mk: string
-          title_en: string
+          title_en?: string | null
           shape?: SectionShape
           category_id: string
           product_limit?: number
@@ -441,9 +441,9 @@ export type Database = {
           id: string
           slot: string
           label_mk: string
-          label_en: string
+          label_en: string | null
           tagline_mk: string
-          tagline_en: string
+          tagline_en: string | null
           image_url: string
           url: string
           is_active: boolean
@@ -455,9 +455,9 @@ export type Database = {
           id?: string
           slot: string
           label_mk: string
-          label_en: string
+          label_en?: string | null
           tagline_mk?: string
-          tagline_en?: string
+          tagline_en?: string | null
           image_url: string
           url?: string
           is_active?: boolean
@@ -485,7 +485,7 @@ export type Database = {
           id: string
           value: string
           label_mk: string
-          label_en: string
+          label_en: string | null
           icon: string | null
           display_order: number
           is_active: boolean
@@ -496,7 +496,7 @@ export type Database = {
           id?: string
           value: string
           label_mk: string
-          label_en: string
+          label_en?: string | null
           icon?: string | null
           display_order?: number
           is_active?: boolean
@@ -507,7 +507,7 @@ export type Database = {
           id?: string
           value?: string
           label_mk?: string
-          label_en?: string
+          label_en?: string | null
           icon?: string | null
           display_order?: number
           is_active?: boolean
@@ -522,7 +522,7 @@ export type Database = {
           title_mk: string | null
           title_en: string | null
           content_mk: string
-          content_en: string
+          content_en: string | null
           author_mk: string | null
           author_en: string | null
           image_path: string | null
@@ -536,7 +536,7 @@ export type Database = {
           title_mk?: string | null
           title_en?: string | null
           content_mk: string
-          content_en: string
+          content_en?: string | null
           author_mk?: string | null
           author_en?: string | null
           image_path?: string | null
@@ -598,7 +598,7 @@ export type Database = {
           customer_location_mk: string | null
           customer_location_en: string | null
           content_mk: string
-          content_en: string
+          content_en: string | null
           rating: number
           avatar_path: string | null
           is_featured: boolean
@@ -612,7 +612,7 @@ export type Database = {
           customer_location_mk?: string | null
           customer_location_en?: string | null
           content_mk: string
-          content_en: string
+          content_en?: string | null
           rating?: number
           avatar_path?: string | null
           is_featured?: boolean
@@ -749,7 +749,7 @@ export type Database = {
           id: string
           name: string
           name_mk: string
-          name_en: string
+          name_en: string | null
           slug: string
           icon: string | null
           occasion_image_path: string | null
@@ -764,7 +764,7 @@ export type Database = {
           id?: string
           name: string
           name_mk: string
-          name_en: string
+          name_en?: string | null
           slug: string
           icon?: string | null
           occasion_image_path?: string | null
@@ -795,7 +795,7 @@ export type Database = {
         Row: {
           id: string
           label_mk: string
-          label_en: string
+          label_en: string | null
           value: string
           suffix_mk: string | null
           suffix_en: string | null
@@ -808,7 +808,7 @@ export type Database = {
         Insert: {
           id?: string
           label_mk: string
-          label_en: string
+          label_en?: string | null
           value: string
           suffix_mk?: string | null
           suffix_en?: string | null
@@ -839,7 +839,7 @@ export type Database = {
           id: string
           name: string
           name_mk: string
-          name_en: string
+          name_en: string | null
           description: string | null
           description_mk: string | null
           description_en: string | null
@@ -856,7 +856,7 @@ export type Database = {
           category_id: string
           category_name: string
           category_name_mk: string
-          category_name_en: string
+          category_name_en: string | null
           category_slug: string
           primary_image_path: string | null
         }
@@ -959,5 +959,7 @@ export type SiteStatUpdate = Database['public']['Tables']['site_stats']['Update'
 
 // Helper type for getting localized content
 export type LocalizedField<T extends string> = {
-  [K in `${T}_mk` | `${T}_en`]: string
+  [K in `${T}_mk`]: string
+} & {
+  [K in `${T}_en`]: string | null
 }
