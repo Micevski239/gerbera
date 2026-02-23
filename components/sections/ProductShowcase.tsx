@@ -44,7 +44,7 @@ const fallbackProducts: Product[] = Array.from({ length: 5 }).map((_, index) => 
 
 function formatPrice(value: number | null | undefined) {
   if (typeof value !== 'number') return null
-  return `€${value.toFixed(0)}`
+  return `${value.toFixed(0)} ден`
 }
 
 function ProductCard({ product, language }: { product: Product; language: 'mk' | 'en' }) {

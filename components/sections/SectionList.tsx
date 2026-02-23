@@ -11,7 +11,7 @@ interface SectionListProps {
 const currencyFormatter = (locale: Language) =>
   new Intl.NumberFormat(locale === 'mk' ? 'mk-MK' : 'en-US', {
     style: 'currency',
-    currency: 'EUR',
+    currency: 'MKD',
     minimumFractionDigits: 0,
   })
 

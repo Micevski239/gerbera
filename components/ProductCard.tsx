@@ -51,7 +51,7 @@ export default function ProductCard({
 
   const formatPrice = (price: number | null) => {
     if (!price) return null
-    return `€${price.toFixed(2)}`
+    return `${price.toFixed(0)} ден`
   }
 
   const currentPrice = formatPrice(product.is_on_sale && product.sale_price ? product.sale_price : product.price)

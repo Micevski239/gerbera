@@ -37,7 +37,7 @@ export default function CategorySection({
     if (!price) return null
     return new Intl.NumberFormat(language === 'mk' ? 'mk-MK' : 'en-US', {
       style: 'currency',
-      currency: 'EUR',
+      currency: 'MKD',
     }).format(price)
   }
 

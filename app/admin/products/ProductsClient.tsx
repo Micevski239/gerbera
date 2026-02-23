@@ -467,20 +467,20 @@ export default function ProductsClient({ products, categories, occasions, produc
               </select>
             </div>
             <div>
-              <label className="label">Price (€)</label>
+              <label className="label">Price (ден)</label>
               <input
                 type="number"
-                step="0.01"
+                step="1"
                 className="input"
                 value={newProduct.price}
                 onChange={(e) => setNewProduct((prev) => ({ ...prev, price: e.target.value }))}
               />
             </div>
             <div>
-              <label className="label">Sale Price (€)</label>
+              <label className="label">Sale Price (ден)</label>
               <input
                 type="number"
-                step="0.01"
+                step="1"
                 className="input"
                 value={newProduct.sale_price}
                 onChange={(e) => setNewProduct((prev) => ({ ...prev, sale_price: e.target.value }))}
@@ -578,7 +578,7 @@ export default function ProductsClient({ products, categories, occasions, produc
                     {form.price && (
                       <>
                         <span className="text-neutral-400">•</span>
-                        <span className="text-primary-600 font-medium">€{form.price}</span>
+                        <span className="text-primary-600 font-medium">{form.price} ден</span>
                       </>
                     )}
                   </div>
@@ -675,20 +675,20 @@ export default function ProductsClient({ products, categories, occasions, produc
                       </select>
                     </div>
                     <div>
-                      <label className="label">Price (€)</label>
+                      <label className="label">Price (ден)</label>
                       <input
                         type="number"
-                        step="0.01"
+                        step="1"
                         className="input"
                         value={form.price}
                         onChange={(e) => handleFormChange(product.id, 'price', e.target.value)}
                       />
                     </div>
                     <div>
-                      <label className="label">Sale Price (€)</label>
+                      <label className="label">Sale Price (ден)</label>
                       <input
                         type="number"
-                        step="0.01"
+                        step="1"
                         className="input"
                         value={form.sale_price}
                         onChange={(e) => handleFormChange(product.id, 'sale_price', e.target.value)}
