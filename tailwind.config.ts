@@ -95,7 +95,7 @@ const config: Config = {
       },
       fontFamily: {
         heading: ['var(--font-playfair)', 'Playfair Display', 'serif'],
-        body: ['var(--font-poppins)', 'Poppins', 'sans-serif'],
+        body: ['var(--font-nunito)', 'Nunito', 'sans-serif'],
         handwriting: ['var(--font-handwriting)', 'Bad Script', 'cursive'],
       },
       fontSize: {

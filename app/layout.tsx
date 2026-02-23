@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Playfair_Display, Poppins, Bad_Script } from 'next/font/google'
+import { Playfair_Display, Nunito, Bad_Script } from 'next/font/google'
 import { LanguageProvider } from '@/context/LanguageContext'
 import FloatingWhatsApp from '@/components/FloatingWhatsApp'
 import './globals.css'
@@ -11,10 +11,10 @@ const playfair = Playfair_Display({
   display: 'swap',
 })
 
-const poppins = Poppins({
-  subsets: ['latin', 'latin-ext'],
+const nunito = Nunito({
+  subsets: ['latin', 'latin-ext', 'cyrillic'],
   weight: ['300', '400', '500', '600', '700'],
-  variable: '--font-poppins',
+  variable: '--font-nunito',
   display: 'swap',
 })
 
@@ -54,7 +54,7 @@ export default function RootLayout({
     <html
       lang="mk"
       suppressHydrationWarning
-      className={`${playfair.variable} ${poppins.variable} ${badScript.variable}`}
+      className={`${playfair.variable} ${nunito.variable} ${badScript.variable}`}
     >
       <body className="min-h-screen bg-canvas-100 text-ink-base font-body" suppressHydrationWarning>
         <LanguageProvider>
