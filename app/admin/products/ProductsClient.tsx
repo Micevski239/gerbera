@@ -205,7 +205,7 @@ export default function ProductsClient({ products, categories, occasions, produc
         .update({
           name: form.name_mk,
           name_mk: form.name_mk,
-          name_en: form.name_en,
+          name_en: form.name_en.trim() || null,
           description: form.description_mk,
           description_mk: form.description_mk,
           description_en: form.description_en,
@@ -275,7 +275,7 @@ export default function ProductsClient({ products, categories, occasions, produc
         .insert({
           name: newProduct.name_mk,
           name_mk: newProduct.name_mk,
-          name_en: newProduct.name_en,
+          name_en: newProduct.name_en.trim() || null,
           description: newProduct.description_mk,
           description_mk: newProduct.description_mk,
           description_en: newProduct.description_en,
