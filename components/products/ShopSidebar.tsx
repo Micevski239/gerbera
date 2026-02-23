@@ -115,7 +115,7 @@ export default function ShopSidebar({
                       : 'text-neutral-600 hover:bg-neutral-100'
                   }`}
                 >
-                  <span className="line-clamp-1">{name}</span>
+                  <span className="line-clamp-1 font-handwriting text-lg">{name}</span>
                   <span className={`text-sm ${isActive ? 'text-primary-500' : 'text-neutral-400'}`}>
                     {count}
                   </span>
@@ -147,7 +147,7 @@ export default function ShopSidebar({
                           : 'text-neutral-600 hover:bg-neutral-100'
                       }`}
                     >
-                      <span className="line-clamp-1">{label}</span>
+                      <span className="line-clamp-1 font-handwriting text-lg">{label}</span>
                     </Link>
                   )
                 })}

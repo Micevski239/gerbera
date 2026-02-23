@@ -41,7 +41,7 @@ function OccasionCard({ occasion, language }: { occasion: Occasion; language: 'm
       </div>
 
       {/* Label below circle */}
-      <h3 className="font-body text-sm font-medium text-ink-base text-center leading-snug line-clamp-2 group-hover:text-ink-strong transition-colors">
+      <h3 className="font-handwriting text-lg text-ink-base text-center leading-snug line-clamp-2 group-hover:text-ink-strong transition-colors">
         {label}
       </h3>
     </Link>

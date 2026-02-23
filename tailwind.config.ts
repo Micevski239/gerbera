@@ -96,6 +96,7 @@ const config: Config = {
       fontFamily: {
         heading: ['var(--font-playfair)', 'Playfair Display', 'serif'],
         body: ['var(--font-poppins)', 'Poppins', 'sans-serif'],
+        handwriting: ['var(--font-handwriting)', 'Bad Script', 'cursive'],
       },
       fontSize: {
         'ds-display': ['2.75rem', { lineHeight: '1.1', letterSpacing: '-0.02em' }],
