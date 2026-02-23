@@ -40,7 +40,7 @@ export default function StatsClient({ stats }: StatsClientProps) {
     stats.forEach((stat) => {
       map[stat.id] = {
         label_mk: stat.label_mk,
-        label_en: stat.label_en,
+        label_en: stat.label_en || '',
         value: stat.value,
         suffix_mk: stat.suffix_mk ?? '',
         suffix_en: stat.suffix_en ?? '',

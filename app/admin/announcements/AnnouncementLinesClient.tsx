@@ -82,7 +82,7 @@ export default function AnnouncementLinesClient({ announcements }: AnnouncementL
 
   const handleEdit = (line: AnnouncementLine) => {
     setEditingId(line.id)
-    setFormData({ text_mk: line.text_mk, text_en: line.text_en })
+    setFormData({ text_mk: line.text_mk, text_en: line.text_en || '' })
     setShowForm(false)
   }
 

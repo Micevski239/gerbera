@@ -30,7 +30,7 @@ export default function SectionsClient({ sections, categories }: SectionsClientP
     sections.forEach((section) => {
       values[section.id] = {
         title_mk: section.title_mk,
-        title_en: section.title_en,
+        title_en: section.title_en || '',
         shape: section.shape,
         category_id: section.category_id,
         product_limit: section.product_limit,

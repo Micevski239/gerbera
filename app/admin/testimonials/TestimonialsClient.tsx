@@ -61,7 +61,7 @@ export default function TestimonialsClient({ testimonials }: TestimonialsClientP
         customer_location_mk: t.customer_location_mk || '',
         customer_location_en: t.customer_location_en || '',
         content_mk: t.content_mk,
-        content_en: t.content_en,
+        content_en: t.content_en || '',
         rating: t.rating,
         avatar_path: t.avatar_path || '',
         is_featured: t.is_featured,

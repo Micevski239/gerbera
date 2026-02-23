@@ -51,7 +51,7 @@ export default function ProductsClient({ products, categories, occasions, produc
     products.forEach((product) => {
       map[product.id] = {
         name_mk: product.name_mk,
-        name_en: product.name_en,
+        name_en: product.name_en || '',
         description_mk: product.description_mk,
         description_en: product.description_en,
         image_url: product.image_url,
@@ -193,8 +193,8 @@ export default function ProductsClient({ products, categories, occasions, produc
       return
     }
 
-    if (!form.name_mk.trim() || !form.name_en.trim()) {
-      alert('Provide Macedonian and English names.')
+    if (!form.name_mk.trim()) {
+      alert('Provide a Macedonian name.')
       return
     }
 
@@ -203,7 +203,7 @@ export default function ProductsClient({ products, categories, occasions, produc
       const { error } = await supabase
         .from('products')
         .update({
-          name: form.name_mk || form.name_en,
+          name: form.name_mk,
           name_mk: form.name_mk,
           name_en: form.name_en,
           description: form.description_mk,
@@ -259,8 +259,8 @@ export default function ProductsClient({ products, categories, occasions, produc
       alert('Select a category for the product.')
       return
     }
-    if (!newProduct.name_mk.trim() || !newProduct.name_en.trim()) {
-      alert('Provide Macedonian and English names.')
+    if (!newProduct.name_mk.trim()) {
+      alert('Provide a Macedonian name.')
       return
     }
     if (!newProduct.image_url.trim()) {
@@ -273,7 +273,7 @@ export default function ProductsClient({ products, categories, occasions, produc
       const { data, error } = await supabase
         .from('products')
         .insert({
-          name: newProduct.name_mk || newProduct.name_en,
+          name: newProduct.name_mk,
           name_mk: newProduct.name_mk,
           name_en: newProduct.name_en,
           description: newProduct.description_mk,
@@ -565,7 +565,7 @@ export default function ProductsClient({ products, categories, occasions, produc
                 {/* Image */}
                 <div className="relative h-14 w-14 overflow-hidden rounded-xl border border-neutral-200 bg-neutral-50 flex-shrink-0">
                   {form.image_url ? (
-                    <img src={form.image_url} alt={product.name_en} className="h-full w-full object-cover" />
+                    <img src={form.image_url} alt={product.name_en || product.name_mk} className="h-full w-full object-cover" />
                   ) : (
                     <div className="flex h-full w-full items-center justify-center text-xs text-neutral-400">?</div>
                   )}

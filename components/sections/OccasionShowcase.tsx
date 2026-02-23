@@ -11,7 +11,7 @@ interface OccasionShowcaseProps {
 }
 
 function OccasionCard({ occasion, language }: { occasion: Occasion; language: 'mk' | 'en' }) {
-  const label = language === 'mk' ? occasion.name_mk : occasion.name_en
+  const label = language === 'mk' ? occasion.name_mk : (occasion.name_en || occasion.name_mk)
   const imageSrc = occasion.occasion_image_path ? getImageUrl(occasion.occasion_image_path) : null
 
   return (

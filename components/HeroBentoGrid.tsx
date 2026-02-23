@@ -62,8 +62,8 @@ export default function HeroBentoGrid({ heroTiles, categories, language }: HeroB
     if (ht) {
       const tileUrl = ht.url || '/products'
       return {
-        label: language === 'mk' ? ht.label_mk : ht.label_en,
-        tagline: language === 'mk' ? ht.tagline_mk : ht.tagline_en,
+        label: language === 'mk' ? ht.label_mk : (ht.label_en || ht.label_mk),
+        tagline: language === 'mk' ? ht.tagline_mk : (ht.tagline_en || ht.tagline_mk),
         image: ht.image_url,
         href: tileUrl,
         isExternal: tileUrl.startsWith('http'),

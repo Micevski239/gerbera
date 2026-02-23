@@ -34,7 +34,7 @@ export default function OccasionsClient({ occasions }: OccasionsClientProps) {
     occasions.forEach((occasion) => {
       map[occasion.id] = {
         name_mk: occasion.name_mk,
-        name_en: occasion.name_en,
+        name_en: occasion.name_en || '',
         slug: occasion.slug,
         icon: occasion.icon ?? '',
         occasion_image_path: occasion.occasion_image_path ?? '',
@@ -421,7 +421,7 @@ export default function OccasionsClient({ occasions }: OccasionsClientProps) {
                 {/* Image/Icon */}
                 <div className="relative h-14 w-14 overflow-hidden rounded-full border border-neutral-200 bg-neutral-50 flex-shrink-0">
                   {occasionImageUrl ? (
-                    <img src={occasionImageUrl} alt={occasion.name_en} className="h-full w-full object-cover" />
+                    <img src={occasionImageUrl} alt={occasion.name_en || occasion.name_mk} className="h-full w-full object-cover" />
                   ) : occasion.icon ? (
                     <div className="flex h-full w-full items-center justify-center text-2xl bg-primary-50">{occasion.icon}</div>
                   ) : (

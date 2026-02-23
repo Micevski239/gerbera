@@ -33,7 +33,7 @@ export default function CategoriesClient({ categories }: CategoriesClientProps) 
     categories.forEach((category) => {
       map[category.id] = {
         name_mk: category.name_mk,
-        name_en: category.name_en,
+        name_en: category.name_en || '',
         slug: category.slug,
         description_mk: category.description_mk,
         description_en: category.description_en,
@@ -409,7 +409,7 @@ export default function CategoriesClient({ categories }: CategoriesClientProps) 
                 {/* Image */}
                 <div className="relative h-14 w-14 overflow-hidden rounded-xl border border-neutral-200 bg-neutral-50 flex-shrink-0">
                   {categoryImageUrl ? (
-                    <img src={categoryImageUrl} alt={category.name_en} className="h-full w-full object-cover" />
+                    <img src={categoryImageUrl} alt={category.name_en || category.name_mk} className="h-full w-full object-cover" />
                   ) : (
                     <div className="flex h-full w-full items-center justify-center text-xs text-neutral-400">?</div>
                   )}
