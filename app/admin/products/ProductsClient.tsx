@@ -444,7 +444,6 @@ export default function ProductsClient({ products, categories, occasions, produc
                 className="input"
                 value={newProduct.name_en}
                 onChange={(e) => setNewProduct((prev) => ({ ...prev, name_en: e.target.value }))}
-                required
               />
             </div>
           </div>
