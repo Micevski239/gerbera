@@ -94,7 +94,7 @@ const config: Config = {
         softPink: '#FFE0D6',
       },
       fontFamily: {
-        heading: ['var(--font-playfair)', 'Playfair Display', 'serif'],
+        heading: ['var(--font-nunito)', 'Nunito', 'sans-serif'],
         body: ['var(--font-nunito)', 'Nunito', 'sans-serif'],
         handwriting: ['var(--font-handwriting)', 'Bad Script', 'cursive'],
       },

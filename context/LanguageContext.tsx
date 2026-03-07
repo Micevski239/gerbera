@@ -28,22 +28,15 @@ export function getLocalizedField<T extends object>(
 import { translations } from '@/i18n/translations'
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguageState] = useState<Language>('mk')
+  const language: Language = 'mk'
   const [mounted, setMounted] = useState(false)
 
-  // Load language from localStorage on mount
   useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY) as Language | null
-    if (stored && (stored === 'mk' || stored === 'en')) {
-      setLanguageState(stored)
-    }
     setMounted(true)
   }, [])
 
-  // Save language to localStorage
-  const setLanguage = (lang: Language) => {
-    setLanguageState(lang)
-    localStorage.setItem(STORAGE_KEY, lang)
+  const setLanguage = (_lang: Language) => {
+    // Language switching disabled — hardcoded to 'mk'
   }
 
   // Translation function

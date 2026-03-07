@@ -115,7 +115,7 @@ export default function ProductDetailClient({
           <div className="space-y-4 lg:sticky lg:top-24 lg:self-start">
             {/* Main image */}
             <div
-              className="relative aspect-square overflow-hidden bg-surface-base border border-border-soft rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="group/zoom relative aspect-square overflow-hidden bg-surface-base border border-border-soft rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500 cursor-zoom-in"
               tabIndex={0}
               role="region"
               aria-label={images.length > 1 ? `Image gallery, ${selectedImageIndex + 1} of ${images.length}` : 'Product image'}
@@ -128,21 +128,22 @@ export default function ProductDetailClient({
                   src={selectedImageUrl}
                   alt={selectedImage?.alt_text || name}
                   fill
-                  className="object-cover img-warm"
+                  className="object-cover img-warm transition-transform duration-500 ease-out group-hover/zoom:scale-110"
                   sizes="(max-width: 1024px) 100vw, 50vw"
                   priority
                   onError={() => setImageError(true)}
                 />
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-neutral-300">
-                  <svg className="w-24 h-24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                <div className="w-full h-full flex flex-col items-center justify-center bg-neutral-50 text-neutral-300">
+                  <svg className="w-20 h-20 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
+                  <span className="text-sm text-neutral-400">{language === 'mk' ? 'Нема слика' : 'No image'}</span>
                 </div>
               )}
 
               {/* Status badges */}
-              <div className="absolute top-3 left-3 flex flex-col gap-1.5">
+              <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
                 {product.is_on_sale && (
                   <span className="badge-sale">
                     {language === 'mk' ? 'Попуст' : 'Sale'}
@@ -159,6 +160,24 @@ export default function ProductDetailClient({
                   </span>
                 )}
               </div>
+
+              {/* Mobile image dots indicator */}
+              {images.length > 1 && (
+                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-10 lg:hidden">
+                  {images.map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={(e) => { e.stopPropagation(); setSelectedImageIndex(i); setImageError(false) }}
+                      className={`rounded-full transition-all ${
+                        i === selectedImageIndex
+                          ? 'w-6 h-2 bg-white'
+                          : 'w-2 h-2 bg-white/60'
+                      }`}
+                      aria-label={`Image ${i + 1}`}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Thumbnail gallery */}

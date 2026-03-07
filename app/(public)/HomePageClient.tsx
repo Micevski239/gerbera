@@ -29,9 +29,9 @@ function ParallaxImage({ src, alt }: { src: string; alt: string }) {
       // 0 when section enters viewport bottom, 1 when it leaves top
       const progress = Math.min(Math.max(
         1 - (rect.bottom / (windowH + rect.height)), 0), 1)
-      // image is 250% tall — slide up at 20% speed for subtle reveal
+      // image is 250% tall — slide up as user scrolls
       const maxTravel = img.offsetHeight - rect.height
-      img.style.transform = `translate3d(0, ${-progress * maxTravel * 0.3}px, 0)`
+      img.style.transform = `translate3d(0, ${-progress * maxTravel * 0.6}px, 0)`
 
       ticking.current = false
     })

@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import Link from 'next/link'
 import { useLanguage, getLocalizedField } from '@/context/LanguageContext'
 import type { Category, Occasion } from '@/lib/supabase/types'
 
@@ -11,6 +10,7 @@ interface ShopSidebarProps {
   selectedCategory: string | null
   selectedOccasion: string | null
   onCategoryChange: (slug: string | null) => void
+  onOccasionChange: (slug: string | null) => void
   priceRange: { min: number | null; max: number | null }
   onPriceChange: (range: { min: number | null; max: number | null }) => void
   showOnSale: boolean
@@ -29,6 +29,7 @@ export default function ShopSidebar({
   selectedCategory,
   selectedOccasion,
   onCategoryChange,
+  onOccasionChange,
   priceRange,
   onPriceChange,
   showOnSale,
@@ -115,7 +116,7 @@ export default function ShopSidebar({
                       : 'text-neutral-600 hover:bg-neutral-100'
                   }`}
                 >
-                  <span className="line-clamp-1 font-handwriting text-lg">{name}</span>
+                  <span className="line-clamp-1 font-body text-sm">{name}</span>
                   <span className={`text-sm ${isActive ? 'text-primary-500' : 'text-neutral-400'}`}>
                     {count}
                   </span>
@@ -138,17 +139,17 @@ export default function ShopSidebar({
                   const label = getLocalizedField(occasion, 'name', language)
                   const isActive = selectedOccasion === occasion.slug
                   return (
-                    <Link
+                    <button
                       key={occasion.id}
-                      href={`/products?occasion=${occasion.slug}`}
+                      onClick={() => onOccasionChange(isActive ? null : occasion.slug)}
                       className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-left transition-all duration-200 ${
                         isActive
                           ? 'bg-primary-50 text-primary-700 font-medium'
                           : 'text-neutral-600 hover:bg-neutral-100'
                       }`}
                     >
-                      <span className="line-clamp-1 font-handwriting text-lg">{label}</span>
-                    </Link>
+                      <span className="line-clamp-1 font-body text-sm">{label}</span>
+                    </button>
                   )
                 })}
               </div>

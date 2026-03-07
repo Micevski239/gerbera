@@ -14,7 +14,7 @@ interface HeaderProps {
 export default function Header({ categories = [] }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const pathname = usePathname()
-  const { language, setLanguage, t } = useLanguage()
+  const { language, t } = useLanguage()
 
   const isActive = (href: string) => {
     if (href === '/') return pathname === '/'
@@ -115,15 +115,6 @@ export default function Header({ categories = [] }: HeaderProps) {
               </svg>
             </a>
 
-            {/* Language toggle */}
-            <button
-              onClick={() => setLanguage(language === 'mk' ? 'en' : 'mk')}
-              className="hidden md:flex p-2 text-xs font-semibold text-ink-muted hover:text-ink-strong transition-colors w-8 justify-center"
-              aria-label="Toggle language"
-            >
-              {language.toUpperCase()}
-            </button>
-
             {/* Mobile menu button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -212,29 +203,6 @@ export default function Header({ categories = [] }: HeaderProps) {
             </div>
           </div>
 
-          {/* Language toggle — mobile */}
-          <div className="flex gap-2 px-4 mt-4">
-            <button
-              onClick={() => setLanguage('mk')}
-              className={`flex-1 py-2.5 rounded-full text-sm font-medium transition-colors ${
-                language === 'mk'
-                  ? 'bg-ink-strong text-white'
-                  : 'border border-border-soft text-ink-base hover:bg-state-hover'
-              }`}
-            >
-              Македонски
-            </button>
-            <button
-              onClick={() => setLanguage('en')}
-              className={`flex-1 py-2.5 rounded-full text-sm font-medium transition-colors ${
-                language === 'en'
-                  ? 'bg-ink-strong text-white'
-                  : 'border border-border-soft text-ink-base hover:bg-state-hover'
-              }`}
-            >
-              English
-            </button>
-          </div>
         </nav>
       </div>
     </header>

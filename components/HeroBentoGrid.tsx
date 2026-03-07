@@ -113,7 +113,7 @@ export default function HeroBentoGrid({ heroTiles, categories, language }: HeroB
                 <p className="text-[11px] font-semibold uppercase tracking-[0.15em] text-white/70 mb-2 font-body">
                   {eyebrow}
                 </p>
-                <h2 className="font-heading text-2xl md:text-3xl lg:text-4xl text-white leading-tight mb-5 max-w-[280px]">
+                <h2 className="font-heading text-2xl md:text-3xl lg:text-4xl text-white leading-tight mb-5 max-w-[400px]">
                   {tiles[0].label}
                 </h2>
                 <span className="inline-flex items-center justify-center bg-white text-ink-strong text-[11px] font-semibold px-6 py-2.5 rounded-full group-hover:bg-neutral-100 transition-colors uppercase tracking-widest">
