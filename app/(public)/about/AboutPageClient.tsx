@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useLanguage } from '@/context/LanguageContext'
+import ScrollReveal from '@/components/ScrollReveal'
 
 export default function AboutPageClient() {
   const { language } = useLanguage()
@@ -78,30 +79,48 @@ export default function AboutPageClient() {
 
   return (
     <div className="bg-canvas-100 text-ink-base">
-      {/* Intro */}
-      <div className="container-custom pt-14 pb-10 md:pt-20 md:pb-14 max-w-2xl text-center">
-        <p className="eyebrow font-body mb-3">Gerbera Gifts</p>
-        <h1 className="font-heading text-4xl md:text-5xl text-ink-strong mb-6 leading-tight">
-          {mk ? 'За нас' : 'About us'}
-        </h1>
-        <p className="text-ink-base text-lg leading-relaxed mb-3">
-          {mk
-            ? 'Gerbera Gifts е бренд роден од страст кон уметноста на давање. Веруваме дека секој подарок треба да раскаже приказна.'
-            : 'Gerbera Gifts is a brand born from a passion for the art of giving. We believe every gift should tell a story.'}
-        </p>
-        <p className="text-ink-muted leading-relaxed">
-          {mk
-            ? 'Секој производ е рачно изработен со внимание на деталите — за да го направиме вашиот момент уште поспецијален.'
-            : 'Every product is handcrafted with attention to detail — to make your moment even more special.'}
-        </p>
-      </div>
+      {/* Hero */}
+      <section
+        className="bg-secondary-50 relative overflow-hidden"
+        style={{
+          backgroundImage: "url('/images/hero-background.png')",
+          backgroundSize: '400px 400px',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'repeat',
+        }}
+      >
+        <div className="container-custom py-12 md:py-16 text-center relative z-10">
+          <span className="inline-block px-4 py-1.5 bg-surface-base/80 backdrop-blur-sm rounded-full text-xs font-medium uppercase tracking-wider text-primary-600 mb-4">
+            Gerbera Gifts
+          </span>
+          <h1 className="font-heading text-4xl md:text-5xl text-ink-strong mb-3">
+            {mk ? 'За нас' : 'About us'}
+          </h1>
+          <p className="text-ink-muted max-w-md mx-auto">
+            {mk
+              ? 'Gerbera Gifts е бренд роден од страст кон уметноста на давање. Веруваме дека секој подарок треба да раскаже приказна.'
+              : 'Gerbera Gifts is a brand born from a passion for the art of giving. We believe every gift should tell a story.'}
+          </p>
+        </div>
+      </section>
 
-      {/* Thin divider */}
-      <div className="w-12 h-px bg-ink-muted/30 mx-auto" />
+      {/* Intro text */}
+      <ScrollReveal>
+        <div className="container-custom pt-10 pb-10 md:pt-12 md:pb-14 max-w-2xl text-center">
+          <h2 className="font-heading text-2xl md:text-3xl text-ink-strong mb-6 leading-tight">
+            {mk ? 'За нас' : 'About us'}
+          </h2>
+          <p className="text-ink-muted leading-relaxed">
+            {mk
+              ? 'Секој производ е рачно изработен со внимание на деталите — за да го направиме вашиот момент уште поспецијален.'
+              : 'Every product is handcrafted with attention to detail — to make your moment even more special.'}
+          </p>
+        </div>
+      </ScrollReveal>
 
       {/* Values grid */}
       <div className="container-custom py-12 md:py-16">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <ScrollReveal stagger={100} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {values.map((v, i) => (
             <div
               key={i}
@@ -116,10 +135,11 @@ export default function AboutPageClient() {
               </div>
             </div>
           ))}
-        </div>
+        </ScrollReveal>
       </div>
 
       {/* CTA */}
+      <ScrollReveal>
       <div className="container-custom pb-16 text-center">
         <Link
           href="/products"
@@ -131,6 +151,7 @@ export default function AboutPageClient() {
           </svg>
         </Link>
       </div>
+      </ScrollReveal>
     </div>
   )
 }

@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import type { Occasion } from '@/lib/supabase/types'
 import { getImageUrl } from '@/lib/supabase/client'
+import ScrollReveal from '@/components/ScrollReveal'
 
 interface OccasionShowcaseProps {
   language: 'mk' | 'en'
@@ -67,7 +68,10 @@ export default function OccasionShowcase({ language, occasions }: OccasionShowca
         </div>
 
         {/* Horizontally scrollable on mobile, centered wrap on desktop */}
-        <div className="flex flex-wrap justify-center gap-6 sm:gap-8">
+        <ScrollReveal
+          stagger={100}
+          className="flex flex-wrap justify-center gap-6 sm:gap-8"
+        >
           {occasions.map((occasion) => (
             <OccasionCard
               key={occasion.id}
@@ -75,7 +79,7 @@ export default function OccasionShowcase({ language, occasions }: OccasionShowca
               language={language}
             />
           ))}
-        </div>
+        </ScrollReveal>
       </div>
     </section>
   )

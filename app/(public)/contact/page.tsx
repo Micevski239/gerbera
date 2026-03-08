@@ -2,6 +2,7 @@
 
 import { useLanguage } from '@/context/LanguageContext'
 import { SOCIAL } from '@/lib/social'
+import ScrollReveal from '@/components/ScrollReveal'
 
 export default function ContactPage() {
   const { language } = useLanguage()
@@ -44,18 +45,6 @@ export default function ContactPage() {
       ),
       iconBg: 'bg-blue-600',
     }] : []),
-    ...(process.env.NEXT_PUBLIC_CONTACT_EMAIL ? [{
-      label: mk ? 'Е-пошта' : 'Email',
-      desc: mk ? 'Испратете ни порака' : 'Send us a message',
-      value: process.env.NEXT_PUBLIC_CONTACT_EMAIL,
-      href: `mailto:${process.env.NEXT_PUBLIC_CONTACT_EMAIL}`,
-      icon: (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-        </svg>
-      ),
-      iconBg: 'bg-ink-strong',
-    }] : []),
   ]
 
   return (
@@ -87,15 +76,17 @@ export default function ContactPage() {
 
       {/* Contact channels */}
       <div className="container-custom py-12 md:py-16 max-w-3xl">
-        <div className="text-center mb-10">
-          <p className="eyebrow font-body mb-2">{mk ? 'Поврзете се со нас' : 'Get in touch'}</p>
-          <h2 className="font-heading text-ds-section text-ink-strong">
-            {mk ? 'Пишете ни' : 'Reach out'}
-          </h2>
-          <div className="w-12 h-px bg-ink-muted/40 mx-auto mt-4" />
-        </div>
+        <ScrollReveal>
+          <div className="text-center mb-10">
+            <p className="eyebrow font-body mb-2">{mk ? 'Поврзете се со нас' : 'Get in touch'}</p>
+            <h2 className="font-heading text-ds-section text-ink-strong">
+              {mk ? 'Пишете ни' : 'Reach out'}
+            </h2>
+            <div className="w-12 h-px bg-ink-muted/40 mx-auto mt-4" />
+          </div>
+        </ScrollReveal>
 
-        <div className="flex flex-col gap-4">
+        <ScrollReveal stagger={100} className="flex flex-col gap-4">
           {channels.map((ch) => (
             <a
               key={ch.label}
@@ -116,7 +107,7 @@ export default function ContactPage() {
               </svg>
             </a>
           ))}
-        </div>
+        </ScrollReveal>
       </div>
     </div>
   )

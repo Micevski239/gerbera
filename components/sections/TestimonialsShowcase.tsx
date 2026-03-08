@@ -1,6 +1,7 @@
 'use client'
 
 import { useTestimonials } from '@/hooks/useTestimonials'
+import ScrollReveal from '@/components/ScrollReveal'
 import type { Testimonial } from '@/lib/supabase/types'
 
 interface TestimonialsShowcaseProps {
@@ -27,7 +28,10 @@ export default function TestimonialsShowcase({ language }: TestimonialsShowcaseP
         </p>
 
         {/* Testimonials row */}
-        <div className="grid grid-cols-2 lg:grid-cols-5 gap-0">
+        <ScrollReveal
+          stagger={80}
+          className="grid grid-cols-2 lg:grid-cols-5 gap-0"
+        >
           {testimonials.map((t, i) => {
             const content = getContent(t)
             const location = getLocation(t)
@@ -70,7 +74,7 @@ export default function TestimonialsShowcase({ language }: TestimonialsShowcaseP
               </div>
             )
           })}
-        </div>
+        </ScrollReveal>
       </div>
     </section>
   )

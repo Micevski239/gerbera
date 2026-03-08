@@ -8,6 +8,7 @@ import OccasionShowcase from '@/components/sections/OccasionShowcase'
 import TestimonialsShowcase from '@/components/sections/TestimonialsShowcase'
 import ProductCard from '@/components/ProductCard'
 import SplashScreen from '@/components/SplashScreen'
+import ScrollReveal from '@/components/ScrollReveal'
 import type { Category, Product, Occasion, SiteStat, HeroTile } from '@/lib/supabase/types'
 
 /* ─── Parallax Image ──────────────────────────────────────────────── */
@@ -84,18 +85,16 @@ export default function HomePageClient({
     <div className="bg-canvas-100 text-ink-base">
       <SplashScreen />
 
-      {/* Hero Bento Grid */}
-      <div className="animate-slide-up" style={{ animationDelay: '0.05s' }}>
-        <HeroBentoGrid heroTiles={heroTiles} categories={categories} language={language} />
-      </div>
+      {/* Hero — no animation, immediately visible */}
+      <HeroBentoGrid heroTiles={heroTiles} categories={categories} language={language} />
 
       {/* Shop by Occasion */}
-      <div className="animate-slide-up" style={{ animationDelay: '0.15s' }}>
+      <ScrollReveal>
         <OccasionShowcase language={language} occasions={occasions} />
-      </div>
+      </ScrollReveal>
 
       {/* Info Banner — Craft Story */}
-      <div className="animate-slide-up" style={{ animationDelay: '0.25s' }}>
+      <ScrollReveal>
         <section className="bg-softPink">
           <div className="split-banner">
             {/* Left — Image with parallax scroll */}
@@ -123,21 +122,21 @@ export default function HomePageClient({
             </div>
           </div>
         </section>
-      </div>
+      </ScrollReveal>
 
       {/* New Collection */}
-      <div className="animate-slide-up" style={{ animationDelay: '0.35s' }}>
+      <ScrollReveal>
         <NewCollectionSection
           productHighlights={productHighlights}
           language={language}
           t={t}
         />
-      </div>
+      </ScrollReveal>
 
       {/* Testimonials */}
-      <div className="animate-slide-up" style={{ animationDelay: '0.45s' }}>
+      <ScrollReveal>
         <TestimonialsShowcase language={language} />
-      </div>
+      </ScrollReveal>
 
     </div>
   )
@@ -200,11 +199,14 @@ function NewCollectionSection({
         </div>
 
         {/* 2-row × 4-column product grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5">
+        <ScrollReveal
+          stagger={80}
+          className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5"
+        >
           {products.slice(0, 8).map((product) => (
             <ProductCard key={product.id} product={product} variant="shop" />
           ))}
-        </div>
+        </ScrollReveal>
 
         {/* Centered View All button */}
         <div className="text-center mt-8 md:mt-10">

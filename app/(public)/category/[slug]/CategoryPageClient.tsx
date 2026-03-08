@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import ProductCard from '@/components/ProductCard'
+import ScrollReveal from '@/components/ScrollReveal'
 import { useLanguage, getLocalizedField } from '@/context/LanguageContext'
 import type { ProductWithDetails, Category } from '@/lib/supabase/types'
 
@@ -107,11 +108,11 @@ export default function CategoryPageClient({
             </Link>
           </div>
         ) : (
-          <div className="product-grid-4">
+          <ScrollReveal stagger={80} className="product-grid-4">
             {products.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
-          </div>
+          </ScrollReveal>
         )}
       </div>
     </div>
