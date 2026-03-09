@@ -110,7 +110,7 @@ export default function ProductGridControls({
               <button
                 key={mode.value}
                 onClick={() => onViewModeChange(mode.value)}
-                className={`p-2 rounded-lg transition-all ${
+                className={`p-2 rounded-lg transition-[color,background-color,box-shadow] ${
                   viewMode === mode.value
                     ? 'bg-white shadow-sm text-primary-600'
                     : 'text-neutral-500 hover:text-neutral-700'

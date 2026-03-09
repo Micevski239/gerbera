@@ -146,7 +146,7 @@ export default function NokshiHeroCarousel({ categories, language }: NokshiHeroC
             <button
               key={index}
               onClick={() => goTo(index)}
-              className={`w-2.5 h-2.5 rounded-full transition-all ${
+              className={`w-2.5 h-2.5 rounded-full transition-[width,background-color] ${
                 index === current
                   ? 'bg-ink-strong w-6'
                   : 'bg-ink-strong/30 hover:bg-ink-strong/50'

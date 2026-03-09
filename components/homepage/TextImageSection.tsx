@@ -52,10 +52,9 @@ export default function TextImageSection({ section }: TextImageSectionProps) {
           <h2 className="heading-2 mb-6">{title}</h2>
         )}
         {content && (
-          <div
-            className="body-text leading-relaxed mb-8"
-            dangerouslySetInnerHTML={{ __html: content.replace(/\n/g, '<br/>') }}
-          />
+          <div className="body-text leading-relaxed mb-8 whitespace-pre-line">
+            {content}
+          </div>
         )}
         {ctaText && config.cta_link && (
           <Link href={config.cta_link} className="btn btn-outline">

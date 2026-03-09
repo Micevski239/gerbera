@@ -80,7 +80,7 @@ export default function CategorySection({
               <Link
                 key={product.id}
                 href={`/product/${product.id}`}
-                className="group flex flex-col rounded-xl border border-border-soft bg-surface-base shadow-soft overflow-hidden transition-all duration-300 hover:shadow-card hover:-translate-y-1"
+                className="group flex flex-col rounded-xl border border-border-soft bg-surface-base shadow-soft overflow-hidden transition-[transform,box-shadow] duration-300 hover:shadow-card hover:-translate-y-1"
               >
                 {/* Product Image */}
                 <div className="relative aspect-square overflow-hidden bg-canvas-200">

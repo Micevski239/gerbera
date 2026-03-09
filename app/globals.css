@@ -284,7 +284,7 @@
 
   /* Hover lift effect */
   .hover-lift {
-    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-lift;
+    @apply transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-lift;
   }
 
   /* Smooth link transitions */
@@ -294,7 +294,7 @@
 
   /* Navigation link with underline animation */
   .nav-link {
-    @apply relative px-3 py-2 transition-colors duration-200 hover:text-primary-500;
+    @apply relative px-3 py-2 transition-colors duration-200 hover:text-primary-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 rounded-sm;
   }
 
   .nav-link::after {
@@ -302,18 +302,19 @@
   }
 
   .nav-link:hover::after,
+  .nav-link:focus-visible::after,
   .nav-link.active::after {
     @apply scale-x-100;
   }
 
   /* Icon button */
   .icon-btn {
-    @apply flex h-11 w-11 items-center justify-center rounded-full text-neutral-500 hover:text-primary-500 hover:bg-primary-50 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2;
+    @apply flex h-11 w-11 items-center justify-center rounded-full text-neutral-500 hover:text-primary-500 hover:bg-primary-50 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2;
   }
 
   /* Arrow navigation button */
   .arrow-btn {
-    @apply h-9 w-9 rounded-full border border-neutral-200 text-neutral-500 hover:text-primary-500 hover:border-primary-500/50 transition-all duration-200 disabled:opacity-30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2;
+    @apply h-9 w-9 rounded-full border border-neutral-200 text-neutral-500 hover:text-primary-500 hover:border-primary-500/50 transition-colors duration-200 disabled:opacity-30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2;
   }
 
   /* Decorative blob shapes */

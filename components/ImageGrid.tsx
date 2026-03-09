@@ -46,7 +46,7 @@ export default function ImageGrid({ images, variant = 'uniform' }: ImageGridProp
                     )}
                     {image.link && (
                       <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
-                        <span className="opacity-0 group-hover:opacity-100 bg-white/90 px-4 py-2 rounded-xl text-sm font-medium transform translate-y-2 group-hover:translate-y-0 transition-all">
+                        <span className="opacity-0 group-hover:opacity-100 bg-white/90 px-4 py-2 rounded-xl text-sm font-medium transform translate-y-2 group-hover:translate-y-0 transition-[opacity,transform]">
                           View
                         </span>
                       </div>
@@ -79,7 +79,7 @@ export default function ImageGrid({ images, variant = 'uniform' }: ImageGridProp
                 {...wrapperProps as any}
                 className="block group"
               >
-                <div className="relative aspect-square overflow-hidden rounded-2xl bg-neutral-200 hover-lift shadow-soft hover:shadow-card-hover transition-all duration-300">
+                <div className="relative aspect-square overflow-hidden rounded-2xl bg-neutral-200 hover-lift shadow-soft hover:shadow-card-hover transition-[transform,box-shadow] duration-300">
                   {imageUrl && (
                     <Image
                       src={imageUrl}

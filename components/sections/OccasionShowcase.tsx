@@ -21,7 +21,7 @@ function OccasionCard({ occasion, language }: { occasion: Occasion; language: 'm
       className="group flex flex-col items-center gap-3 w-[120px] sm:w-[140px] md:w-[160px] flex-shrink-0"
     >
       {/* Circle image */}
-      <div className="relative aspect-square w-full overflow-hidden rounded-full border-2 border-border-soft shadow-card transition-all duration-300 group-hover:shadow-lift group-hover:-translate-y-1 group-hover:border-primary-300">
+      <div className="relative aspect-square w-full overflow-hidden rounded-full border-2 border-border-soft shadow-card transition-[transform,box-shadow,border-color] duration-300 group-hover:shadow-lift group-hover:-translate-y-1 group-hover:border-primary-300">
         {imageSrc ? (
           <Image
             src={imageSrc}

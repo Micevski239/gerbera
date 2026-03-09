@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { compressImage } from '@/lib/utils'
+import { processImage, isImageFile, sanitizeFilename } from '@/lib/utils'
 import type { Category, Product, ProductOccasion, Occasion, ProductStatus } from '@/lib/supabase/types'
 
 interface ProductsClientProps {
@@ -133,20 +133,25 @@ export default function ProductsClient({ products, categories, occasions, produc
   }
 
   const uploadProductImage = async (file: File, productId: string | null) => {
-    const optimized = await compressImage(file, 1600)
-    const safeName = file.name.toLowerCase().replace(/[^a-z0-9.]+/g, '-')
-    const prefix = productId ?? 'new'
-    const path = `${prefix}/${Date.now()}-${safeName}`
-    const { error } = await supabase.storage.from(PRODUCT_BUCKET).upload(path, optimized, {
-      cacheControl: '3600',
-      upsert: true,
-    })
-
-    if (error) {
-      throw new Error(error.message)
+    if (!isImageFile(file)) {
+      throw new Error('Only JPEG, PNG, and WebP images are allowed.')
     }
+    const { full, thumbnail } = await processImage(file, 1200)
+    const safeName = sanitizeFilename(file.name)
+    const prefix = productId ?? 'new'
+    const timestamp = Date.now()
+    const fullPath = `${prefix}/${timestamp}-${safeName}`
+    const thumbPath = `${prefix}/${timestamp}-${safeName.replace('.webp', '_thumb.webp')}`
 
-    const { data } = supabase.storage.from(PRODUCT_BUCKET).getPublicUrl(path)
+    const [fullResult, thumbResult] = await Promise.all([
+      supabase.storage.from(PRODUCT_BUCKET).upload(fullPath, full, { cacheControl: '3600', upsert: true }),
+      supabase.storage.from(PRODUCT_BUCKET).upload(thumbPath, thumbnail, { cacheControl: '3600', upsert: true }),
+    ])
+
+    if (fullResult.error) throw new Error(fullResult.error.message)
+    if (thumbResult.error) throw new Error(thumbResult.error.message)
+
+    const { data } = supabase.storage.from(PRODUCT_BUCKET).getPublicUrl(fullPath)
     return data.publicUrl
   }
 

@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient, getImageUrl } from '@/lib/supabase/client'
 import type { Category } from '@/lib/supabase/types'
-import { compressImage, slugify } from '@/lib/utils'
+import { processImage, slugify, isImageFile, sanitizeFilename } from '@/lib/utils'
 
 interface CategoriesClientProps {
   categories: Category[]
@@ -99,20 +99,25 @@ export default function CategoriesClient({ categories }: CategoriesClientProps) 
   }
 
   const uploadCategoryImage = async (categoryId: string | null, file: File) => {
-    const optimized = await compressImage(file, 1600)
-    const safeName = file.name.toLowerCase().replace(/[^a-z0-9.]+/g, '-')
-    const prefix = categoryId ?? 'new'
-    const path = `${CATEGORY_FOLDER}/${prefix}/${Date.now()}-${safeName}`
-
-    const { error } = await supabase.storage
-      .from(CATEGORY_BUCKET)
-      .upload(path, optimized, { cacheControl: '3600', upsert: true })
-
-    if (error) {
-      throw new Error(error.message)
+    if (!isImageFile(file)) {
+      throw new Error('Only JPEG, PNG, and WebP images are allowed.')
     }
+    const { full, thumbnail } = await processImage(file, 1200)
+    const safeName = sanitizeFilename(file.name)
+    const prefix = categoryId ?? 'new'
+    const timestamp = Date.now()
+    const fullPath = `${CATEGORY_FOLDER}/${prefix}/${timestamp}-${safeName}`
+    const thumbPath = `${CATEGORY_FOLDER}/${prefix}/${timestamp}-${safeName.replace('.webp', '_thumb.webp')}`
 
-    return path
+    const [fullResult, thumbResult] = await Promise.all([
+      supabase.storage.from(CATEGORY_BUCKET).upload(fullPath, full, { cacheControl: '3600', upsert: true }),
+      supabase.storage.from(CATEGORY_BUCKET).upload(thumbPath, thumbnail, { cacheControl: '3600', upsert: true }),
+    ])
+
+    if (fullResult.error) throw new Error(fullResult.error.message)
+    if (thumbResult.error) throw new Error(thumbResult.error.message)
+
+    return fullPath
   }
 
   const handleImageSelect = async (categoryId: string | null, files: FileList | null) => {

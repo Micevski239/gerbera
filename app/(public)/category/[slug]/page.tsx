@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import CategoryPageClient from './CategoryPageClient'
@@ -9,11 +10,33 @@ interface CategoryPageProps {
   params: Promise<{ slug: string }>
 }
 
+export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
+  const { slug } = await params
+  const supabase = await createClient()
+  const { data: category } = await supabase
+    .from('categories')
+    .select('name, name_en, name_mk, description_en')
+    .eq('slug', slug)
+    .eq('is_visible', true)
+    .single()
+
+  if (!category) {
+    return { title: 'Category Not Found | Gerbera Gifts' }
+  }
+
+  const name = category.name_en || category.name_mk || category.name
+  const description = category.description_en || `Browse ${name} — handmade personalized gifts from Gerbera.`
+
+  return {
+    title: `${name} | Gerbera Gifts`,
+    description,
+  }
+}
+
 export default async function CategoryPage({ params }: CategoryPageProps) {
   const { slug } = await params
   const supabase = await createClient()
 
-  // Run all queries in parallel with single client
   const [categoriesResult, categoryResult] = await Promise.all([
     supabase
       .from('categories')
@@ -35,7 +58,6 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     notFound()
   }
 
-  // Get products for this category
   const { data: products } = await supabase
     .from('products_with_details')
     .select('*')

@@ -121,7 +121,7 @@ export default function ProductShowcase({ products, language }: ProductShowcaseP
               {(['latest', 'popular', 'best'] as const).map((tab) => (
                 <button
                   key={tab}
-                  className={`pb-2 font-normal transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 ${
+                  className={`pb-2 font-normal transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 ${
                     activeTab === tab
                       ? 'text-primary-500 border-b-2 border-primary-500'
                       : 'text-ink-strong hover:text-primary-500/70'

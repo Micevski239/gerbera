@@ -28,7 +28,7 @@ function RecipientCard({ category, language, fallback }: { category: Category; l
   return (
     <Link
       href={`/category/${category.slug}`}
-      className="group relative mx-auto block aspect-square w-full max-w-[216px] overflow-hidden rounded-full shadow-card transition-all duration-300 hover:shadow-lift hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
+      className="group relative mx-auto block aspect-square w-full max-w-[216px] overflow-hidden rounded-full shadow-card transition-[transform,box-shadow] duration-300 hover:shadow-lift hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
     >
       {/* Background Image */}
       <Image
@@ -51,7 +51,7 @@ function RecipientCard({ category, language, fallback }: { category: Category; l
       </div>
 
       {/* Arrow indicator on hover */}
-      <span className="pointer-events-none absolute left-1/2 bottom-5 -translate-x-1/2 flex h-9 w-9 items-center justify-center rounded-full border border-white/40 bg-white/10 text-white backdrop-blur-sm opacity-0 translate-y-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+      <span className="pointer-events-none absolute left-1/2 bottom-5 -translate-x-1/2 flex h-9 w-9 items-center justify-center rounded-full border border-white/40 bg-white/10 text-white backdrop-blur-sm opacity-0 translate-y-2 transition-[opacity,transform] duration-300 group-hover:opacity-100 group-hover:translate-y-0">
         <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
         </svg>

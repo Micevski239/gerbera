@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient, getImageUrl } from '@/lib/supabase/client'
 import type { Occasion } from '@/lib/supabase/types'
-import { compressImage, slugify } from '@/lib/utils'
+import { processImage, slugify, isImageFile, sanitizeFilename } from '@/lib/utils'
 
 interface OccasionsClientProps {
   occasions: Occasion[]
@@ -102,20 +102,25 @@ export default function OccasionsClient({ occasions }: OccasionsClientProps) {
   }
 
   const uploadOccasionImage = async (occasionId: string | null, file: File) => {
-    const optimized = await compressImage(file, 1600)
-    const safeName = file.name.toLowerCase().replace(/[^a-z0-9.]+/g, '-')
-    const prefix = occasionId ?? 'new'
-    const path = `${OCCASION_FOLDER}/${prefix}/${Date.now()}-${safeName}`
-
-    const { error } = await supabase.storage
-      .from(OCCASION_BUCKET)
-      .upload(path, optimized, { cacheControl: '3600', upsert: true })
-
-    if (error) {
-      throw new Error(error.message)
+    if (!isImageFile(file)) {
+      throw new Error('Only JPEG, PNG, and WebP images are allowed.')
     }
+    const { full, thumbnail } = await processImage(file, 1200)
+    const safeName = sanitizeFilename(file.name)
+    const prefix = occasionId ?? 'new'
+    const timestamp = Date.now()
+    const fullPath = `${OCCASION_FOLDER}/${prefix}/${timestamp}-${safeName}`
+    const thumbPath = `${OCCASION_FOLDER}/${prefix}/${timestamp}-${safeName.replace('.webp', '_thumb.webp')}`
 
-    return path
+    const [fullResult, thumbResult] = await Promise.all([
+      supabase.storage.from(OCCASION_BUCKET).upload(fullPath, full, { cacheControl: '3600', upsert: true }),
+      supabase.storage.from(OCCASION_BUCKET).upload(thumbPath, thumbnail, { cacheControl: '3600', upsert: true }),
+    ])
+
+    if (fullResult.error) throw new Error(fullResult.error.message)
+    if (thumbResult.error) throw new Error(thumbResult.error.message)
+
+    return fullPath
   }
 
   const handleImageSelect = async (occasionId: string | null, files: FileList | null) => {

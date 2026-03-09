@@ -88,7 +88,7 @@ export default function ShopSidebar({
             {/* All Products */}
             <button
               onClick={() => onCategoryChange(null)}
-              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-left transition-all duration-200 ${
+              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-left transition-colors duration-200 ${
                 selectedCategory === null
                   ? 'bg-primary-50 text-primary-700 font-medium'
                   : 'text-neutral-600 hover:bg-neutral-100'
@@ -110,7 +110,7 @@ export default function ShopSidebar({
                 <button
                   key={category.id}
                   onClick={() => onCategoryChange(category.slug)}
-                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-left transition-all duration-200 ${
+                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-left transition-colors duration-200 ${
                     isActive
                       ? 'bg-primary-50 text-primary-700 font-medium'
                       : 'text-neutral-600 hover:bg-neutral-100'
@@ -142,7 +142,7 @@ export default function ShopSidebar({
                     <button
                       key={occasion.id}
                       onClick={() => onOccasionChange(isActive ? null : occasion.slug)}
-                      className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-left transition-all duration-200 ${
+                      className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-left transition-colors duration-200 ${
                         isActive
                           ? 'bg-primary-50 text-primary-700 font-medium'
                           : 'text-neutral-600 hover:bg-neutral-100'

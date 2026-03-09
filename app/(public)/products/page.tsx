@@ -1,8 +1,14 @@
+import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import ShopPageClient from './ShopPageClient'
 import type { Category, Product, Occasion, ProductOccasion } from '@/lib/supabase/types'
 
 export const dynamic = 'force-dynamic'
+
+export const metadata: Metadata = {
+  title: 'Shop | Gerbera Gifts',
+  description: 'Browse our collection of handmade personalized gifts. Filter by category, occasion, and price.',
+}
 
 // Extended product type with category info
 interface ProductWithCategory extends Product {
@@ -28,7 +34,7 @@ async function getShopData() {
   const [categoriesResult, productsResult, occasionsResult, productOccasionsResult] = await Promise.all([
     supabase
       .from('categories')
-      .select('*')
+      .select('id, name, name_mk, name_en, slug, category_image_path, description, description_mk, description_en, display_order')
       .eq('is_visible', true)
       .order('display_order'),
     supabase
@@ -47,7 +53,7 @@ async function getShopData() {
       .order('display_order'),
     supabase
       .from('occasions')
-      .select('*')
+      .select('id, name, name_mk, name_en, slug, icon, occasion_image_path, display_order')
       .eq('is_visible', true)
       .order('display_order'),
     supabase

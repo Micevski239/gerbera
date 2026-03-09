@@ -102,7 +102,7 @@ export default function HeroCarousel({ slides }: HeroCarouselProps) {
                 <button
                   key={index}
                   onClick={() => goToSlide(index)}
-                  className={`h-2 rounded-pill transition-all ${
+                  className={`h-2 rounded-pill transition-[width,background-color] ${
                     index === currentSlide ? 'w-8 bg-ink-strong' : 'w-2 bg-ink-muted/50 hover:bg-ink-muted'
                   }`}
                   aria-label={`Go to slide ${index + 1}`}

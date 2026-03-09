@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import ProductDetailClient from './ProductDetailClient'
@@ -9,11 +10,38 @@ interface ProductPageProps {
   params: Promise<{ id: string }>
 }
 
+export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
+  const { id } = await params
+  const supabase = await createClient()
+  const { data: product } = await supabase
+    .from('products')
+    .select('name, name_en, name_mk, description_en, image_url')
+    .eq('id', id)
+    .eq('is_visible', true)
+    .single()
+
+  if (!product) {
+    return { title: 'Product Not Found | Gerbera Gifts' }
+  }
+
+  const name = product.name_en || product.name_mk || product.name
+  const description = product.description_en || `${name} — handmade personalized gift from Gerbera Gifts.`
+
+  return {
+    title: `${name} | Gerbera Gifts`,
+    description,
+    openGraph: {
+      title: name,
+      description,
+      images: product.image_url ? [product.image_url] : [],
+    },
+  }
+}
+
 export default async function ProductPage({ params }: ProductPageProps) {
   const { id } = await params
   const supabase = await createClient()
 
-  // First get the product
   const { data: product } = await supabase
     .from('products')
     .select('*')
@@ -25,7 +53,6 @@ export default async function ProductPage({ params }: ProductPageProps) {
     notFound()
   }
 
-  // Then run remaining queries in parallel with single client
   const [imagesResult, categoryResult, relatedResult] = await Promise.all([
     supabase
       .from('product_images')

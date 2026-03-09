@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { getImageUrl } from '@/lib/supabase/client'
+import { getThumbnailUrl } from '@/lib/utils'
 import { useLanguage, getLocalizedField } from '@/context/LanguageContext'
 import type { ProductWithDetails, Product } from '@/lib/supabase/types'
 
@@ -38,6 +39,8 @@ export default function ProductCard({
   const imageUrl = isProductWithDetails(product)
     ? getImageUrl(product.primary_image_path)
     : product.image_url
+
+  const thumbUrl = imageUrl ? getThumbnailUrl(imageUrl) : null
 
   const name = isProductWithDetails(product)
     ? getLocalizedField(product, 'name', language)
@@ -164,7 +167,7 @@ export default function ProductCard({
         <div className="relative aspect-square overflow-hidden bg-neutral-100 rounded-2xl mb-3">
           {imageUrl ? (
             <Image
-              src={imageUrl}
+              src={thumbUrl || imageUrl}
               alt={name}
               fill
               className="object-cover img-warm transition-transform duration-500 group-hover:scale-105"
@@ -244,7 +247,7 @@ export default function ProductCard({
         <div className="relative aspect-square overflow-hidden bg-canvas-200 border border-border-soft rounded mb-2">
           {imageUrl ? (
             <Image
-              src={imageUrl}
+              src={thumbUrl || imageUrl}
               alt={name}
               fill
               className="object-cover img-warm transition-transform duration-300 group-hover:scale-105"
@@ -316,7 +319,7 @@ export default function ProductCard({
           <div className={`relative overflow-hidden bg-canvas-200 ${getImageAspectClass()}`}>
             {imageUrl ? (
               <Image
-                src={imageUrl}
+                src={thumbUrl || imageUrl}
                 alt={name}
                 fill
                 className="object-cover img-warm transition-transform duration-500 group-hover:scale-105"
@@ -374,7 +377,7 @@ export default function ProductCard({
       <div className={`relative overflow-hidden bg-canvas-200 ${getImageAspectClass()}`}>
         {imageUrl ? (
           <Image
-            src={imageUrl}
+            src={thumbUrl || imageUrl}
             alt={name}
             fill
             className="object-cover img-warm transition-transform duration-500 group-hover:scale-105"

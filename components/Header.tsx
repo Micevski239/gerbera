@@ -137,7 +137,7 @@ export default function Header({ categories = [] }: HeaderProps) {
 
       {/* Mobile Navigation — full-width overlay below header */}
       <div
-        className={`md:hidden fixed inset-x-0 top-16 bottom-0 bg-white z-40 transition-all duration-300 ease-in-out ${
+        className={`md:hidden fixed inset-x-0 top-16 bottom-0 bg-white z-40 transition-[opacity,transform] duration-300 ease-in-out ${
           mobileMenuOpen
             ? 'opacity-100 translate-y-0 pointer-events-auto'
             : 'opacity-0 -translate-y-2 pointer-events-none'

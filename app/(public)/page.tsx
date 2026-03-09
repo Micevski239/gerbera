@@ -15,21 +15,21 @@ async function getHomepageData() {
       .order('display_order'),
     supabase
       .from('products')
-      .select('*')
+      .select('id, name, name_mk, name_en, image_url, price, sale_price, price_text, is_on_sale, is_best_seller, status, category_id, display_order, created_at')
       .eq('is_visible', true)
       .eq('status', 'published')
       .order('created_at', { ascending: false })
       .limit(8),
     supabase
       .from('products')
-      .select('*')
+      .select('id, name, name_mk, name_en, image_url, price, sale_price, price_text, is_on_sale, is_best_seller, status, category_id, display_order, created_at')
       .eq('is_visible', true)
       .eq('status', 'published')
       .order('display_order', { ascending: true })
       .limit(8),
     supabase
       .from('products')
-      .select('*')
+      .select('id, name, name_mk, name_en, image_url, price, sale_price, price_text, is_on_sale, is_best_seller, status, category_id, display_order, created_at')
       .eq('is_visible', true)
       .eq('status', 'published')
       .eq('is_best_seller', true)
@@ -37,17 +37,17 @@ async function getHomepageData() {
       .limit(8),
     supabase
       .from('occasions')
-      .select('*')
+      .select('id, name, name_mk, name_en, slug, icon, occasion_image_path, display_order')
       .eq('is_visible', true)
       .order('display_order', { ascending: true }),
     supabase
       .from('site_stats')
-      .select('*')
+      .select('id, label_mk, label_en, value, suffix_mk, suffix_en, icon, display_order')
       .eq('is_visible', true)
       .order('display_order', { ascending: true }),
     supabase
       .from('hero_tiles')
-      .select('*')
+      .select('id, slot, label_mk, label_en, tagline_mk, tagline_en, image_url, url, display_order')
       .eq('is_active', true)
       .order('display_order', { ascending: true }),
   ])

@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { compressImage } from '@/lib/utils'
+import { processImage, isImageFile, sanitizeFilename } from '@/lib/utils'
 import type { HeroTile } from '@/lib/supabase/types'
 import { HERO_TILE_SLOTS, type HeroTileSlot } from '@/types/hero'
 
@@ -102,7 +102,10 @@ export default function HeroTilesClient({ tiles }: HeroTilesClientProps) {
         tagline_mk: form.tagline_mk.trim(),
         tagline_en: form.tagline_en.trim(),
         image_url: form.image_url.trim(),
-        url: form.url.trim() || '/products',
+        url: (() => {
+          const u = form.url.trim()
+          return (u.startsWith('/') || u.startsWith('https://')) ? u : '/products'
+        })(),
         is_active: form.is_active,
         display_order: meta.order,
       }
@@ -132,19 +135,24 @@ export default function HeroTilesClient({ tiles }: HeroTilesClientProps) {
   }
 
   const uploadTileImage = async (slot: HeroTileSlot, file: File) => {
-    const optimized = await compressImage(file, 1600)
-    const safeName = file.name.toLowerCase().replace(/[^a-z0-9.]+/g, '-')
-    const path = `${slot}/${Date.now()}-${safeName}`
-
-    const { error } = await supabase.storage
-      .from(HERO_TILE_BUCKET)
-      .upload(path, optimized, { cacheControl: '3600', upsert: true })
-
-    if (error) {
-      throw new Error(error.message)
+    if (!isImageFile(file)) {
+      throw new Error('Only JPEG, PNG, and WebP images are allowed.')
     }
+    const { full, thumbnail } = await processImage(file, 1200)
+    const safeName = sanitizeFilename(file.name)
+    const timestamp = Date.now()
+    const fullPath = `hero-tiles/${slot}/${timestamp}-${safeName}`
+    const thumbPath = `hero-tiles/${slot}/${timestamp}-${safeName.replace('.webp', '_thumb.webp')}`
 
-    const { data } = supabase.storage.from(HERO_TILE_BUCKET).getPublicUrl(path)
+    const [fullResult, thumbResult] = await Promise.all([
+      supabase.storage.from(HERO_TILE_BUCKET).upload(fullPath, full, { cacheControl: '3600', upsert: true }),
+      supabase.storage.from(HERO_TILE_BUCKET).upload(thumbPath, thumbnail, { cacheControl: '3600', upsert: true }),
+    ])
+
+    if (fullResult.error) throw new Error(fullResult.error.message)
+    if (thumbResult.error) throw new Error(thumbResult.error.message)
+
+    const { data } = supabase.storage.from(HERO_TILE_BUCKET).getPublicUrl(fullPath)
     return data.publicUrl
   }
 

@@ -81,7 +81,7 @@ export default function ProductGallery({
                   e.stopPropagation()
                   onSelectImage(i)
                 }}
-                className={`rounded-full transition-all ${
+                className={`rounded-full transition-[width,background-color] ${
                   i === selectedImageIndex
                     ? 'w-6 h-2 bg-white'
                     : 'w-2 h-2 bg-white/60'
@@ -105,7 +105,7 @@ export default function ProductGallery({
                 onClick={() => onSelectImage(index)}
                 aria-label={`${language === 'mk' ? 'Прикажи слика' : 'View image'} ${index + 1} ${language === 'mk' ? 'од' : 'of'} ${images.length}`}
                 aria-pressed={index === selectedImageIndex}
-                className={`relative w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden transition-all ${
+                className={`relative w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden transition-[opacity,box-shadow] ${
                   index === selectedImageIndex
                     ? 'ring-2 ring-primary-500 ring-offset-2'
                     : 'opacity-70 hover:opacity-100'

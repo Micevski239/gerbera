@@ -42,7 +42,7 @@ export default function CategorySidebar({
         {/* All products */}
         <button
           onClick={() => onSelectCategory(null)}
-          className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-left transition-all duration-200 ${
+          className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-left transition-colors duration-200 ${
             selectedSlug === null
               ? 'bg-primary-100 text-primary-700 font-medium'
               : 'text-neutral-600 hover:bg-neutral-100'
@@ -63,7 +63,7 @@ export default function CategorySidebar({
             <button
               key={category.id}
               onClick={() => onSelectCategory(category.slug)}
-              className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-left transition-all duration-200 ${
+              className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-left transition-colors duration-200 ${
                 isActive
                   ? 'bg-primary-100 text-primary-700 font-medium'
                   : 'text-neutral-600 hover:bg-neutral-100'

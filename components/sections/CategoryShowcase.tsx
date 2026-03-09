@@ -96,7 +96,7 @@ export default function CategoryShowcase({ language }: CategoryShowcaseProps) {
           <div className="flex gap-3">
             <button
               aria-label={language === 'mk' ? 'Претходни категории' : 'Previous categories'}
-              className="h-9 w-9 rounded-full border border-border-soft text-ink-muted hover:bg-state-hover hover:text-primary-500 hover:border-primary-500/50 transition-all duration-200 disabled:opacity-30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
+              className="h-9 w-9 rounded-full border border-border-soft text-ink-muted hover:bg-state-hover hover:text-primary-500 hover:border-primary-500/50 transition-colors duration-200 disabled:opacity-30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
               onClick={handlePrev}
               disabled={currentIndex === 0}
             >
@@ -104,7 +104,7 @@ export default function CategoryShowcase({ language }: CategoryShowcaseProps) {
             </button>
             <button
               aria-label={language === 'mk' ? 'Следни категории' : 'Next categories'}
-              className="h-9 w-9 rounded-full border border-border-soft text-ink-muted hover:bg-state-hover hover:text-primary-500 hover:border-primary-500/50 transition-all duration-200 disabled:opacity-30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
+              className="h-9 w-9 rounded-full border border-border-soft text-ink-muted hover:bg-state-hover hover:text-primary-500 hover:border-primary-500/50 transition-colors duration-200 disabled:opacity-30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
               onClick={handleNext}
               disabled={currentIndex === maxIndex}
             >
@@ -120,7 +120,7 @@ export default function CategoryShowcase({ language }: CategoryShowcaseProps) {
               href={category.slug ? `/category/${category.slug}` : '/categories'}
               className="group flex flex-col items-center gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-4 rounded-xl"
             >
-              <div className="relative h-44 w-44 overflow-hidden rounded-full border-2 border-border-soft bg-surface-base shadow-card transition-all duration-300 group-hover:shadow-lift group-hover:border-primary-200 group-hover:scale-105">
+              <div className="relative h-44 w-44 overflow-hidden rounded-full border-2 border-border-soft bg-surface-base shadow-card transition-[transform,box-shadow,border-color] duration-300 group-hover:shadow-lift group-hover:border-primary-200 group-hover:scale-105">
                 {category.image ? (
                   <Image
                     src={category.image}

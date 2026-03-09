@@ -24,14 +24,14 @@ export default function Footer() {
             <Link href="/" className="inline-block mb-3">
               <span className="font-heading text-xl text-white">Gerbera</span>
             </Link>
-            <p className="text-white/50 text-sm leading-relaxed max-w-sm">
+            <p className="text-white/70 text-sm leading-relaxed max-w-sm">
               {t('home.craftStoryText')}
             </p>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-xs font-semibold text-white/40 uppercase tracking-wider mb-4">
+            <h3 className="text-xs font-semibold text-white/60 uppercase tracking-wider mb-4">
               {t('footer.quickLinks')}
             </h3>
             <ul className="space-y-2">
@@ -47,7 +47,7 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <h3 className="text-xs font-semibold text-white/40 uppercase tracking-wider mb-4">
+            <h3 className="text-xs font-semibold text-white/60 uppercase tracking-wider mb-4">
               {t('contact.title')}
             </h3>
             <div className="flex gap-2">
@@ -77,7 +77,7 @@ export default function Footer() {
       {/* Bottom bar */}
       <div className="border-t border-white/10">
         <div className="container-custom py-4">
-          <p className="text-center text-xs text-white/30">
+          <p className="text-center text-xs text-white/60">
             &copy; {currentYear} Gerbera. {t('footer.rights')}.
           </p>
         </div>

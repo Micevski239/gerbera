@@ -31,6 +31,12 @@ export default function AdminNav() {
         { href: '/admin/stats', label: 'Site Stats', icon: 'chart' },
       ],
     },
+    {
+      label: 'Tools',
+      items: [
+        { href: '/admin/image-optimizer', label: 'Image Optimizer', icon: 'images' },
+      ],
+    },
   ]
 
   const getIcon = (icon: string) => {
@@ -142,7 +148,7 @@ export default function AdminNav() {
                   href={item.href}
                   onClick={() => setMobileOpen(false)}
                   className={cn(
-                    'flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all',
+                    'flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors',
                     pathname === item.href || pathname.startsWith(item.href + '/')
                       ? 'bg-primary-100 text-primary-700'
                       : 'text-neutral-600 hover:bg-neutral-100'
@@ -164,7 +170,7 @@ export default function AdminNav() {
           href="/"
           target="_blank"
           className={cn(
-            'flex items-center gap-3 px-3 py-2.5 rounded-xl text-neutral-600 hover:bg-neutral-100 transition-all',
+            'flex items-center gap-3 px-3 py-2.5 rounded-xl text-neutral-600 hover:bg-neutral-100 transition-colors',
             collapsed && 'justify-center'
           )}
           title={collapsed ? 'View Site' : undefined}
@@ -177,7 +183,7 @@ export default function AdminNav() {
         <button
           onClick={handleLogout}
           className={cn(
-            'flex items-center gap-3 px-3 py-2.5 rounded-xl text-neutral-600 hover:bg-red-50 hover:text-red-600 transition-all w-full',
+            'flex items-center gap-3 px-3 py-2.5 rounded-xl text-neutral-600 hover:bg-red-50 hover:text-red-600 transition-colors w-full',
             collapsed && 'justify-center'
           )}
           title={collapsed ? 'Log Out' : undefined}
@@ -240,7 +246,7 @@ export default function AdminNav() {
       {/* Desktop sidebar */}
       <aside
         className={cn(
-          'hidden lg:flex fixed top-0 left-0 h-full bg-white border-r border-neutral-200 z-30 flex-col transition-all duration-300',
+          'hidden lg:flex fixed top-0 left-0 h-full bg-white border-r border-neutral-200 z-30 flex-col transition-[width] duration-300',
           collapsed ? 'w-20' : 'w-64'
         )}
       >
