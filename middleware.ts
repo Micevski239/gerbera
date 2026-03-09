@@ -30,7 +30,7 @@ export async function middleware(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser()
 
-  if (!user || user.app_metadata?.is_admin !== true) {
+  if (!user || (user.user_metadata?.is_admin !== true && user.app_metadata?.is_admin !== true)) {
     const loginUrl = new URL('/admin/login', request.url)
     return NextResponse.redirect(loginUrl)
   }

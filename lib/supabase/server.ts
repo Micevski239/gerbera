@@ -47,7 +47,7 @@ export async function isAdmin() {
   const user = await getCurrentUser()
   if (!user) return false
 
-  return user.app_metadata?.is_admin === true
+  return user.user_metadata?.is_admin === true || user.app_metadata?.is_admin === true
 }
 
 // Helper to require admin (throw if not)
