@@ -235,23 +235,22 @@ export default function MobileShopFilter({
                 Цена
               </h3>
               <div className="space-y-3">
-                <div className="flex items-center gap-2">
+                <div className="grid grid-cols-1 gap-2">
                   <input
                     type="number"
                     value={minInput}
                     onChange={(e) => handleMinChange(e.target.value)}
-                    placeholder="Мин"
-                    className="flex-1 px-3 py-3 text-base border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    placeholder="Мин цена"
+                    className="w-full px-3 py-3 text-base border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                     min="0"
                     inputMode="numeric"
                   />
-                  <span className="text-neutral-400">-</span>
                   <input
                     type="number"
                     value={maxInput}
                     onChange={(e) => handleMaxChange(e.target.value)}
-                    placeholder="Макс"
-                    className="flex-1 px-3 py-3 text-base border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    placeholder="Макс цена"
+                    className="w-full px-3 py-3 text-base border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                     min="0"
                     inputMode="numeric"
                   />
