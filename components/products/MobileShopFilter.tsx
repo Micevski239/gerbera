@@ -1,13 +1,16 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useLanguage, getLocalizedField } from '@/context/LanguageContext'
-import type { Category } from '@/lib/supabase/types'
+import { getLocalizedField } from '@/context/LanguageContext'
+import type { Category, Occasion } from '@/lib/supabase/types'
 
 interface MobileShopFilterProps {
   categories: Category[]
+  occasions: Occasion[]
   selectedCategory: string | null
+  selectedOccasion: string | null
   onCategoryChange: (slug: string | null) => void
+  onOccasionChange: (slug: string | null) => void
   priceRange: { min: number | null; max: number | null }
   onPriceChange: (range: { min: number | null; max: number | null }) => void
   showOnSale: boolean
@@ -25,8 +28,11 @@ interface MobileShopFilterProps {
 
 export default function MobileShopFilter({
   categories,
+  occasions,
   selectedCategory,
+  selectedOccasion,
   onCategoryChange,
+  onOccasionChange,
   priceRange,
   onPriceChange,
   showOnSale,
@@ -41,7 +47,6 @@ export default function MobileShopFilter({
   onClose,
   filteredCount,
 }: MobileShopFilterProps) {
-  const { language, t } = useLanguage()
   const [minInput, setMinInput] = useState(priceRange.min?.toString() || '')
   const [maxInput, setMaxInput] = useState(priceRange.max?.toString() || '')
 
@@ -72,25 +77,28 @@ export default function MobileShopFilter({
     return () => document.removeEventListener('keydown', handleEscape)
   }, [onClose])
 
-  const handlePriceApply = () => {
-    const min = minInput ? parseFloat(minInput) : null
-    const max = maxInput ? parseFloat(maxInput) : null
-    onPriceChange({ min, max })
+  // Apply price immediately so the count updates live
+  const applyPrice = (min: string, max: string) => {
+    onPriceChange({
+      min: min ? parseFloat(min) : null,
+      max: max ? parseFloat(max) : null,
+    })
+  }
+
+  const handleMinChange = (value: string) => {
+    setMinInput(value)
+    applyPrice(value, maxInput)
+  }
+
+  const handleMaxChange = (value: string) => {
+    setMaxInput(value)
+    applyPrice(minInput, value)
   }
 
   const handleClearPrice = () => {
     setMinInput('')
     setMaxInput('')
     onPriceChange({ min: null, max: null })
-  }
-
-  const handleCategorySelect = (slug: string | null) => {
-    onCategoryChange(slug)
-  }
-
-  const handleApplyAndClose = () => {
-    handlePriceApply()
-    onClose()
   }
 
   if (!isOpen) return null
@@ -141,12 +149,11 @@ export default function MobileShopFilter({
             {/* Categories Section */}
             <div>
               <h3 className="text-sm font-semibold text-neutral-900 uppercase tracking-wider mb-3">
-                {t('nav.categories')}
+                Категории
               </h3>
               <div className="space-y-1">
-                {/* All Products */}
                 <button
-                  onClick={() => handleCategorySelect(null)}
+                  onClick={() => onCategoryChange(null)}
                   className={`w-full flex items-center justify-between px-3 py-3 rounded-lg text-left transition-colors duration-200 ${
                     selectedCategory === null
                       ? 'bg-primary-50 text-primary-700 font-medium'
@@ -154,19 +161,11 @@ export default function MobileShopFilter({
                   }`}
                 >
                   <span>Сите производи</span>
-                  <div className="flex items-center gap-2">
-                    <span className={`text-sm ${selectedCategory === null ? 'text-primary-500' : 'text-neutral-400'}`}>
-                      {totalProducts}
-                    </span>
-                    {selectedCategory === null && (
-                      <svg className="w-5 h-5 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                    )}
-                  </div>
+                  <span className={`text-sm ${selectedCategory === null ? 'text-primary-500' : 'text-neutral-400'}`}>
+                    {totalProducts}
+                  </span>
                 </button>
 
-                {/* Category List */}
                 {categories.map((category) => {
                   const name = getLocalizedField(category, 'name')
                   const count = getCategoryCount(category.slug)
@@ -175,7 +174,7 @@ export default function MobileShopFilter({
                   return (
                     <button
                       key={category.id}
-                      onClick={() => handleCategorySelect(category.slug)}
+                      onClick={() => onCategoryChange(category.slug)}
                       className={`w-full flex items-center justify-between px-3 py-3 rounded-lg text-left transition-colors duration-200 ${
                         isActive
                           ? 'bg-primary-50 text-primary-700 font-medium'
@@ -183,23 +182,51 @@ export default function MobileShopFilter({
                       }`}
                     >
                       <span className="line-clamp-1 font-body text-sm">{name}</span>
-                      <div className="flex items-center gap-2">
-                        <span className={`text-sm ${isActive ? 'text-primary-500' : 'text-neutral-400'}`}>
-                          {count}
-                        </span>
-                        {isActive && (
-                          <svg className="w-5 h-5 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                          </svg>
-                        )}
-                      </div>
+                      <span className={`text-sm ${isActive ? 'text-primary-500' : 'text-neutral-400'}`}>
+                        {count}
+                      </span>
                     </button>
                   )
                 })}
               </div>
             </div>
 
-            {/* Divider */}
+            {/* Occasions Section */}
+            {occasions.length > 0 && (
+              <>
+                <div className="border-t border-neutral-200" />
+                <div>
+                  <h3 className="text-sm font-semibold text-neutral-900 uppercase tracking-wider mb-3">
+                    Пригоди
+                  </h3>
+                  <div className="space-y-1">
+                    {occasions.map((occasion) => {
+                      const label = getLocalizedField(occasion, 'name')
+                      const isActive = selectedOccasion === occasion.slug
+                      return (
+                        <button
+                          key={occasion.id}
+                          onClick={() => onOccasionChange(isActive ? null : occasion.slug)}
+                          className={`w-full flex items-center justify-between px-3 py-3 rounded-lg text-left transition-colors duration-200 ${
+                            isActive
+                              ? 'bg-primary-50 text-primary-700 font-medium'
+                              : 'text-neutral-600 hover:bg-neutral-100'
+                          }`}
+                        >
+                          <span className="line-clamp-1 font-body text-sm">{label}</span>
+                          {isActive && (
+                            <svg className="w-5 h-5 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                            </svg>
+                          )}
+                        </button>
+                      )
+                    })}
+                  </div>
+                </div>
+              </>
+            )}
+
             <div className="border-t border-neutral-200" />
 
             {/* Price Range Section */}
@@ -209,27 +236,25 @@ export default function MobileShopFilter({
               </h3>
               <div className="space-y-3">
                 <div className="flex items-center gap-2">
-                  <div className="relative flex-1">
-                    <input
-                      type="number"
-                      value={minInput}
-                      onChange={(e) => setMinInput(e.target.value)}
-                      placeholder="Мин"
-                      className="w-full px-3 py-3 text-base border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                      min="0"
-                    />
-                  </div>
+                  <input
+                    type="number"
+                    value={minInput}
+                    onChange={(e) => handleMinChange(e.target.value)}
+                    placeholder="Мин"
+                    className="flex-1 px-3 py-3 text-base border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    min="0"
+                    inputMode="numeric"
+                  />
                   <span className="text-neutral-400">-</span>
-                  <div className="relative flex-1">
-                    <input
-                      type="number"
-                      value={maxInput}
-                      onChange={(e) => setMaxInput(e.target.value)}
-                      placeholder="Макс"
-                      className="w-full px-3 py-3 text-base border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                      min="0"
-                    />
-                  </div>
+                  <input
+                    type="number"
+                    value={maxInput}
+                    onChange={(e) => handleMaxChange(e.target.value)}
+                    placeholder="Макс"
+                    className="flex-1 px-3 py-3 text-base border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    min="0"
+                    inputMode="numeric"
+                  />
                 </div>
                 {(priceRange.min !== null || priceRange.max !== null) && (
                   <button
@@ -242,7 +267,6 @@ export default function MobileShopFilter({
               </div>
             </div>
 
-            {/* Divider */}
             <div className="border-t border-neutral-200" />
 
             {/* Tags Section */}
@@ -251,7 +275,6 @@ export default function MobileShopFilter({
                 Ознаки
               </h3>
               <div className="space-y-2">
-                {/* On Sale Checkbox */}
                 <label className="flex items-center gap-3 px-3 py-3 rounded-lg cursor-pointer hover:bg-neutral-50 transition-colors">
                   <input
                     type="checkbox"
@@ -267,7 +290,6 @@ export default function MobileShopFilter({
                   </span>
                 </label>
 
-                {/* Best Seller Checkbox */}
                 <label className="flex items-center gap-3 px-3 py-3 rounded-lg cursor-pointer hover:bg-neutral-50 transition-colors">
                   <input
                     type="checkbox"
@@ -289,12 +311,10 @@ export default function MobileShopFilter({
           {/* Footer */}
           <div className="p-4 border-t border-neutral-200 bg-white safe-area-inset-bottom">
             <button
-              onClick={handleApplyAndClose}
+              onClick={onClose}
               className="w-full py-3 px-4 bg-primary-600 text-white font-medium rounded-lg hover:bg-primary-700 transition-colors"
             >
-              {language === 'mk'
-                ? `Прикажи ${filteredCount} производи`
-                : `Show ${filteredCount} Products`}
+              Прикажи {filteredCount} производи
             </button>
           </div>
         </div>

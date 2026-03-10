@@ -14,10 +14,10 @@ interface ProductShowcaseProps {
   language: 'mk'
 }
 
-const tabLabels: Record<'latest' | 'popular' | 'best', { mk: string; en: string }> = {
-  latest: { mk: 'Најнови', en: 'Latest Item' },
-  popular: { mk: 'Популарни', en: 'Popular Item' },
-  best: { mk: 'Топ продажба', en: 'Best Seller' },
+const tabLabels: Record<'latest' | 'popular' | 'best', { mk: string }> = {
+  latest: { mk: 'Најнови' },
+  popular: { mk: 'Популарни' },
+  best: { mk: 'Најпродавани' },
 }
 
 const fallbackProducts: Product[] = Array.from({ length: 5 }).map((_, index) => ({

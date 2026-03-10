@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { useLanguage, getLocalizedField } from '@/context/LanguageContext'
+import { useState, useEffect } from 'react'
+import { getLocalizedField } from '@/context/LanguageContext'
 import type { Category, Occasion } from '@/lib/supabase/types'
 
 interface ShopSidebarProps {
@@ -41,9 +41,14 @@ export default function ShopSidebar({
   onClearFilters,
   hasActiveFilters,
 }: ShopSidebarProps) {
-  const { t } = useLanguage()
   const [minInput, setMinInput] = useState(priceRange.min?.toString() || '')
   const [maxInput, setMaxInput] = useState(priceRange.max?.toString() || '')
+
+  // Sync local inputs when price is cleared externally
+  useEffect(() => {
+    setMinInput(priceRange.min?.toString() || '')
+    setMaxInput(priceRange.max?.toString() || '')
+  }, [priceRange])
 
   const handlePriceApply = () => {
     const min = minInput ? parseFloat(minInput) : null
@@ -82,7 +87,7 @@ export default function ShopSidebar({
         {/* Categories Section */}
         <div>
           <h3 className="text-sm font-semibold text-neutral-900 uppercase tracking-wider mb-3">
-            {t('nav.categories')}
+            Категории
           </h3>
           <div className="space-y-1">
             <button

@@ -17,8 +17,10 @@ interface ScrollRevealProps {
   rootMargin?: string
 }
 
+const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
+
 const INITIAL_STYLES: Record<Animation, CSSProperties> = {
-  'fade-up': { opacity: 0, transform: 'translateY(24px)' },
+  'fade-up': { opacity: 0, transform: `translateY(${isMobile ? 12 : 24}px)` },
   'fade-in': { opacity: 0 },
   'scale-in': { opacity: 0, transform: 'scale(0.95)' },
 }

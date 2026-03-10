@@ -59,17 +59,15 @@ export default function ContactPageClient() {
           backgroundRepeat: 'repeat',
         }}
       >
-        <div className="container-custom py-12 md:py-16 text-center relative z-10">
+        <div className="container-custom h-48 md:h-56 flex flex-col items-center justify-center text-center relative z-10">
           <span className="inline-block px-4 py-1.5 bg-surface-base/80 backdrop-blur-sm rounded-full text-xs font-medium uppercase tracking-wider text-primary-600 mb-4">
             Gerbera Gifts
           </span>
           <h1 className="font-heading text-4xl md:text-5xl text-ink-strong mb-3">
-            {mk ? 'Контакт' : 'Contact'}
+            Контакт
           </h1>
           <p className="text-ink-muted max-w-md mx-auto">
-            {mk
-              ? 'Секогаш сме тука за вас — пишете ни!'
-              : 'We are always here for you — reach out!'}
+            Секогаш сме тука за вас — пишете ни!
           </p>
         </div>
       </section>

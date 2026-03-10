@@ -26,11 +26,11 @@ export default function FloatingWhatsApp() {
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="fixed bottom-5 right-5 z-50 flex items-center gap-3 focus-visible:outline-none"
+      className="fixed bottom-5 right-5 z-30 flex items-center gap-3 focus-visible:outline-none"
       aria-label="Контактирај не на WhatsApp"
     >
       {/* Text bubble */}
-      <span className="bg-white text-ink-strong text-sm font-medium px-4 py-2 rounded-full shadow-md whitespace-nowrap">
+      <span className="hidden sm:block bg-white text-ink-strong text-sm font-medium px-4 py-2 rounded-full shadow-md whitespace-nowrap">
         Дали сакаш да нарачаш?
       </span>
 

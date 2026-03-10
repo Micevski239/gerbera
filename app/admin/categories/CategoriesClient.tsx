@@ -2,9 +2,9 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { createClient, getImageUrl } from '@/lib/supabase/client'
+import { createClient } from '@/lib/supabase/client'
 import type { Category } from '@/lib/supabase/types'
-import { processImage, slugify, isImageFile, sanitizeFilename } from '@/lib/utils'
+import { slugify } from '@/lib/utils'
 
 interface CategoriesClientProps {
   categories: Category[]
@@ -16,11 +16,7 @@ interface CategoryFormState {
   description_mk: string | null
   display_order: number
   is_visible: boolean
-  category_image_path: string
 }
-
-const CATEGORY_BUCKET = 'product-images'
-const CATEGORY_FOLDER = 'categories'
 
 export default function CategoriesClient({ categories }: CategoriesClientProps) {
   const supabase = createClient()
@@ -35,7 +31,6 @@ export default function CategoriesClient({ categories }: CategoriesClientProps) 
         description_mk: category.description_mk,
         display_order: category.display_order,
         is_visible: category.is_visible,
-        category_image_path: category.category_image_path ?? '',
       }
     })
     return map
@@ -47,7 +42,6 @@ export default function CategoriesClient({ categories }: CategoriesClientProps) 
   const [movingId, setMovingId] = useState<string | null>(null)
   const [creating, setCreating] = useState(false)
   const [showCreateForm, setShowCreateForm] = useState(false)
-  const [uploadingImageId, setUploadingImageId] = useState<string | null>(null)
 
   const nextOrder = useMemo(() => {
     if (categories.length === 0) return 10
@@ -60,10 +54,7 @@ export default function CategoriesClient({ categories }: CategoriesClientProps) 
     description_mk: '',
     display_order: nextOrder,
     is_visible: true,
-    category_image_path: '',
   })
-
-  const newCategoryImageUrl = getImageUrl(newCategory.category_image_path)
 
   useEffect(() => {
     setForms(defaultForms)
@@ -90,54 +81,6 @@ export default function CategoriesClient({ categories }: CategoriesClientProps) 
     const form = forms[categoryId]
     if (!form) return
     handleFormChange(categoryId, 'slug', slugify(form.name_mk || ''))
-  }
-
-  const uploadCategoryImage = async (categoryId: string | null, file: File) => {
-    if (!isImageFile(file)) {
-      throw new Error('Дозволени се само JPEG, PNG и WebP слики.')
-    }
-    const { full, thumbnail } = await processImage(file, 1200)
-    const safeName = sanitizeFilename(file.name)
-    const prefix = categoryId ?? 'new'
-    const timestamp = Date.now()
-    const fullPath = `${CATEGORY_FOLDER}/${prefix}/${timestamp}-${safeName}`
-    const thumbPath = `${CATEGORY_FOLDER}/${prefix}/${timestamp}-${safeName.replace('.webp', '_thumb.webp')}`
-
-    const [fullResult, thumbResult] = await Promise.all([
-      supabase.storage.from(CATEGORY_BUCKET).upload(fullPath, full, { cacheControl: '3600', upsert: true }),
-      supabase.storage.from(CATEGORY_BUCKET).upload(thumbPath, thumbnail, { cacheControl: '3600', upsert: true }),
-    ])
-
-    if (fullResult.error) throw new Error(fullResult.error.message)
-    if (thumbResult.error) throw new Error(thumbResult.error.message)
-
-    return fullPath
-  }
-
-  const handleImageSelect = async (categoryId: string | null, files: FileList | null) => {
-    if (!files || files.length === 0) return
-    const file = files[0]
-
-    setUploadingImageId(categoryId ?? 'new')
-    try {
-      const path = await uploadCategoryImage(categoryId, file)
-      if (categoryId) {
-        setForms((prev) => ({
-          ...prev,
-          [categoryId]: {
-            ...prev[categoryId],
-            category_image_path: path,
-          },
-        }))
-      } else {
-        setNewCategory((prev) => ({ ...prev, category_image_path: path }))
-      }
-    } catch (error) {
-      console.error(error)
-      alert('Неуспешно прикачување на сликата.')
-    } finally {
-      setUploadingImageId(null)
-    }
   }
 
   const resetForm = (categoryId: string) => {
@@ -169,7 +112,6 @@ export default function CategoriesClient({ categories }: CategoriesClientProps) 
           description_mk: form.description_mk,
           description_en: null,
           description: form.description_mk,
-          category_image_path: form.category_image_path || null,
           display_order: form.display_order,
           is_visible: form.is_visible,
         } as never)
@@ -207,7 +149,6 @@ export default function CategoriesClient({ categories }: CategoriesClientProps) 
           description_mk: newCategory.description_mk,
           description_en: null,
           description: newCategory.description_mk,
-          category_image_path: newCategory.category_image_path || null,
           display_order: newCategory.display_order,
           is_visible: newCategory.is_visible,
         } as never)
@@ -220,7 +161,6 @@ export default function CategoriesClient({ categories }: CategoriesClientProps) 
         description_mk: '',
         display_order: nextOrder + 10,
         is_visible: true,
-        category_image_path: '',
       })
       setShowCreateForm(false)
       router.refresh()
@@ -350,27 +290,6 @@ export default function CategoriesClient({ categories }: CategoriesClientProps) 
             </div>
           </div>
 
-          <div className="flex flex-wrap gap-4 items-start">
-            <div className="relative h-24 w-24 overflow-hidden rounded-xl border border-neutral-200 bg-neutral-50 flex-shrink-0">
-              {newCategoryImageUrl ? (
-                <img src={newCategoryImageUrl} alt="Преглед" className="h-full w-full object-cover" />
-              ) : (
-                <div className="flex h-full w-full items-center justify-center text-xs text-neutral-400">Нема слика</div>
-              )}
-            </div>
-            <div className="flex-1 space-y-2">
-              <label className={`btn btn-secondary cursor-pointer text-sm ${uploadingImageId === 'new' ? 'pointer-events-none opacity-60' : ''}`}>
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={(e) => { void handleImageSelect(null, e.target.files); e.target.value = '' }}
-                />
-                {uploadingImageId === 'new' ? 'Прикачување...' : 'Прикачи слика'}
-              </label>
-            </div>
-          </div>
-
           <div className="flex gap-3">
             <button type="submit" className="btn btn-primary" disabled={creating}>
               {creating ? 'Креирање...' : 'Креирај категорија'}
@@ -388,21 +307,11 @@ export default function CategoriesClient({ categories }: CategoriesClientProps) 
           const form = forms[category.id]
           if (!form) return null
           const isEditing = editingId === category.id
-          const categoryImageUrl = getImageUrl(form.category_image_path)
 
           return (
             <div key={category.id} className="rounded-xl bg-white shadow-card overflow-hidden">
               {/* Collapsed View */}
               <div className="flex items-center gap-4 p-4">
-                {/* Image */}
-                <div className="relative h-14 w-14 overflow-hidden rounded-xl border border-neutral-200 bg-neutral-50 flex-shrink-0">
-                  {categoryImageUrl ? (
-                    <img src={categoryImageUrl} alt={category.name_mk} className="h-full w-full object-cover" />
-                  ) : (
-                    <div className="flex h-full w-full items-center justify-center text-xs text-neutral-400">?</div>
-                  )}
-                </div>
-
                 {/* Info */}
                 <div className="flex-1 min-w-0">
                   <h3 className="font-semibold text-neutral-800 truncate">{category.name_mk}</h3>
@@ -480,30 +389,6 @@ export default function CategoriesClient({ categories }: CategoriesClientProps) 
                           Gen
                         </button>
                       </div>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="label">Слика</label>
-                    <div className="flex gap-2">
-                      <label className={`btn btn-secondary cursor-pointer text-sm flex-1 ${uploadingImageId === category.id ? 'pointer-events-none opacity-60' : ''}`}>
-                        <input
-                          type="file"
-                          accept="image/*"
-                          className="hidden"
-                          onChange={(e) => { void handleImageSelect(category.id, e.target.files); e.target.value = '' }}
-                        />
-                        {uploadingImageId === category.id ? 'Прикачување...' : 'Прикачи'}
-                      </label>
-                      {form.category_image_path && (
-                        <button
-                          type="button"
-                          className="btn btn-outline text-sm"
-                          onClick={() => handleFormChange(category.id, 'category_image_path', '')}
-                        >
-                          Избриши
-                        </button>
-                      )}
                     </div>
                   </div>
 

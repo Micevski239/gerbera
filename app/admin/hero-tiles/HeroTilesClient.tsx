@@ -66,6 +66,7 @@ export default function HeroTilesClient({ tiles }: HeroTilesClientProps) {
   const [forms, setForms] = useState<Record<HeroTileSlot, HeroTileFormState>>(defaultForms)
   const [savingSlot, setSavingSlot] = useState<HeroTileSlot | null>(null)
   const [uploadingSlot, setUploadingSlot] = useState<HeroTileSlot | null>(null)
+  const [expandedSlot, setExpandedSlot] = useState<HeroTileSlot | null>(null)
 
   useEffect(() => {
     setForms(defaultForms)
@@ -114,6 +115,7 @@ export default function HeroTilesClient({ tiles }: HeroTilesClientProps) {
         throw new Error(error.message)
       }
 
+      setExpandedSlot(null)
       router.refresh()
     } catch (error) {
       console.error(error)
@@ -128,6 +130,7 @@ export default function HeroTilesClient({ tiles }: HeroTilesClientProps) {
       ...prev,
       [slot]: defaultForms[slot],
     }))
+    setExpandedSlot(null)
   }
 
   const uploadTileImage = async (slot: HeroTileSlot, file: File) => {
@@ -197,129 +200,177 @@ export default function HeroTilesClient({ tiles }: HeroTilesClientProps) {
         </div>
       </div>
 
-      {/* Tile forms */}
-      <div className="grid gap-6 lg:grid-cols-2">
+      {/* Tile cards */}
+      <div className="grid gap-4 lg:grid-cols-2">
         {HERO_TILE_SLOTS.map((slot) => {
           const form = forms[slot]
           const meta = slotMeta[slot]
+          const isExpanded = expandedSlot === slot
+
           return (
-            <div key={slot} className="rounded-2xl bg-white shadow-card p-6 space-y-5 border border-neutral-100">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-semibold uppercase tracking-wide text-neutral-400">{meta.title}</p>
-                  <p className="text-sm text-neutral-500">{meta.helper}</p>
-                </div>
-                <span className="text-xs font-semibold text-neutral-400">{slot.replace(/_/g, ' ')}</span>
-              </div>
-
-              <div className="relative h-40 w-full overflow-hidden rounded-2xl border border-neutral-100">
-                {form.image_url ? (
-                  <Image
-                    src={form.image_url}
-                    alt={form.label_mk || meta.title}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 1024px) 100vw, 400px"
-                  />
-                ) : (
-                  <div className="absolute inset-0 flex items-center justify-center text-neutral-400 text-sm bg-neutral-50">
-                    Нема слика
-                  </div>
-                )}
-                {uploadingSlot === slot && (
-                  <div className="absolute inset-0 bg-white/70 flex items-center justify-center text-sm font-semibold text-neutral-500">
-                    Прикачување…
-                  </div>
-                )}
-              </div>
-
-              <div>
-                <label className="label">Наслов</label>
-                <input
-                  className="input"
-                  value={form.label_mk}
-                  onChange={(e) => handleFormChange(slot, 'label_mk', e.target.value)}
-                  placeholder="Наслов"
-                />
-              </div>
-
-              <div>
-                <label className="label">Краток опис</label>
-                <input
-                  className="input"
-                  value={form.tagline_mk}
-                  onChange={(e) => handleFormChange(slot, 'tagline_mk', e.target.value)}
-                  placeholder="Краток опис"
-                />
-              </div>
-
-              <div>
-                <label className="label">Слика</label>
-                <div className="flex flex-wrap gap-3">
-                  <label className={`btn btn-secondary cursor-pointer ${uploadingSlot === slot ? 'opacity-70 pointer-events-none' : ''}`}>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={(e) => {
-                        void handleFileSelect(slot, e.target.files)
-                        e.target.value = ''
-                      }}
+            <div key={slot} className="rounded-2xl bg-white shadow-card border border-neutral-100 overflow-hidden">
+              {/* Collapsed header */}
+              <button
+                type="button"
+                onClick={() => setExpandedSlot(isExpanded ? null : slot)}
+                className="w-full flex items-center gap-4 p-4 text-left hover:bg-neutral-50 transition-colors"
+              >
+                {/* Thumbnail */}
+                <div className="relative h-12 w-12 overflow-hidden rounded-xl border border-neutral-200 bg-neutral-50 flex-shrink-0">
+                  {form.image_url ? (
+                    <Image
+                      src={form.image_url}
+                      alt={form.label_mk || meta.title}
+                      fill
+                      className="object-cover"
+                      sizes="48px"
                     />
-                    {uploadingSlot === slot ? 'Прикачување…' : 'Прикачи слика'}
-                  </label>
-                  <input
-                    className="input flex-1 min-w-[200px]"
-                    value={form.image_url}
-                    onChange={(e) => handleFormChange(slot, 'image_url', e.target.value)}
-                    placeholder="https://..."
-                  />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center text-[10px] text-neutral-400">
+                      ?
+                    </div>
+                  )}
                 </div>
-                <p className="text-xs text-neutral-500 mt-1">
-                  Прикачете датотека (зачувана во Supabase) или залепете јавен URL на слика.
-                </p>
-              </div>
 
-              <div>
-                <label className="label">Линк URL</label>
-                <input
-                  className="input"
-                  value={form.url}
-                  onChange={(e) => handleFormChange(slot, 'url', e.target.value)}
-                  placeholder="/products или https://instagram.com/..."
-                />
-                <p className="text-xs text-neutral-500 mt-1">
-                  Каде води плочката. Користете /products за интерни страници или целосен URL за надворешни.
-                </p>
-              </div>
+                {/* Info */}
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-semibold text-neutral-800 truncate">
+                    {meta.title}
+                  </p>
+                  <p className="text-xs text-neutral-500 truncate">
+                    {form.label_mk || 'Без наслов'}
+                  </p>
+                </div>
 
-              <label className="flex items-center gap-3 text-sm text-neutral-600">
-                <input
-                  type="checkbox"
-                  className="w-5 h-5 text-primary-600"
-                  checked={form.is_active}
-                  onChange={(e) => handleFormChange(slot, 'is_active', e.target.checked)}
-                />
-                Видлива на сајтот
-              </label>
-
-              <div className="flex flex-wrap gap-3">
-                <button
-                  className="btn btn-primary"
-                  onClick={() => handleSave(slot)}
-                  disabled={savingSlot === slot}
+                {/* Status */}
+                <span
+                  className={`px-2 py-1 text-xs font-medium rounded-full flex-shrink-0 ${
+                    form.is_active
+                      ? 'bg-emerald-100 text-emerald-700'
+                      : 'bg-neutral-100 text-neutral-500'
+                  }`}
                 >
-                  {savingSlot === slot ? 'Зачувување…' : 'Зачувај'}
-                </button>
-                <button
-                  className="btn btn-secondary"
-                  type="button"
-                  onClick={() => handleReset(slot)}
-                  disabled={savingSlot === slot}
+                  {form.is_active ? 'Активна' : 'Неактивна'}
+                </span>
+
+                {/* Chevron */}
+                <svg
+                  className={`w-5 h-5 text-neutral-400 transition-transform flex-shrink-0 ${isExpanded ? 'rotate-180' : ''}`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
-                  Ресетирај
-                </button>
-              </div>
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              {/* Expanded edit form */}
+              {isExpanded && (
+                <div className="border-t border-neutral-100 p-5 space-y-5">
+                  <div className="relative h-40 w-full overflow-hidden rounded-2xl border border-neutral-100">
+                    {form.image_url ? (
+                      <Image
+                        src={form.image_url}
+                        alt={form.label_mk || meta.title}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 1024px) 100vw, 400px"
+                      />
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center text-neutral-400 text-sm bg-neutral-50">
+                        Нема слика
+                      </div>
+                    )}
+                    {uploadingSlot === slot && (
+                      <div className="absolute inset-0 bg-white/70 flex items-center justify-center text-sm font-semibold text-neutral-500">
+                        Прикачување…
+                      </div>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="label">Наслов</label>
+                    <input
+                      className="input"
+                      value={form.label_mk}
+                      onChange={(e) => handleFormChange(slot, 'label_mk', e.target.value)}
+                      placeholder="Наслов"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="label">Краток опис</label>
+                    <input
+                      className="input"
+                      value={form.tagline_mk}
+                      onChange={(e) => handleFormChange(slot, 'tagline_mk', e.target.value)}
+                      placeholder="Краток опис"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="label">Слика</label>
+                    <div className="flex flex-wrap gap-3">
+                      <label className={`btn btn-secondary cursor-pointer ${uploadingSlot === slot ? 'opacity-70 pointer-events-none' : ''}`}>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(e) => {
+                            void handleFileSelect(slot, e.target.files)
+                            e.target.value = ''
+                          }}
+                        />
+                        {uploadingSlot === slot ? 'Прикачување…' : 'Прикачи слика'}
+                      </label>
+                      <input
+                        className="input flex-1 min-w-[200px]"
+                        value={form.image_url}
+                        onChange={(e) => handleFormChange(slot, 'image_url', e.target.value)}
+                        placeholder="https://..."
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="label">Линк URL</label>
+                    <input
+                      className="input"
+                      value={form.url}
+                      onChange={(e) => handleFormChange(slot, 'url', e.target.value)}
+                      placeholder="/products или https://instagram.com/..."
+                    />
+                  </div>
+
+                  <label className="flex items-center gap-3 text-sm text-neutral-600">
+                    <input
+                      type="checkbox"
+                      className="w-5 h-5 text-primary-600"
+                      checked={form.is_active}
+                      onChange={(e) => handleFormChange(slot, 'is_active', e.target.checked)}
+                    />
+                    Видлива на сајтот
+                  </label>
+
+                  <div className="flex flex-wrap gap-3">
+                    <button
+                      className="btn btn-primary"
+                      onClick={() => handleSave(slot)}
+                      disabled={savingSlot === slot}
+                    >
+                      {savingSlot === slot ? 'Зачувување…' : 'Зачувај'}
+                    </button>
+                    <button
+                      className="btn btn-secondary"
+                      type="button"
+                      onClick={() => handleReset(slot)}
+                      disabled={savingSlot === slot}
+                    >
+                      Откажи
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           )
         })}

@@ -87,7 +87,7 @@ export default function ProductCard({
 
           {showBadge && hasSale && discountPercent > 0 && (
             <span className="absolute top-3 left-3 bg-primary-400 text-white text-[11px] font-semibold px-2.5 py-1 rounded-full">
-              {discountPercent}% OFF
+              -{discountPercent}%
             </span>
           )}
 
@@ -148,7 +148,7 @@ export default function ProductCard({
             blurDataURL={BLUR_DATA_URL}
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center text-ink-muted">No image</div>
+          <div className="flex h-full w-full items-center justify-center text-ink-muted">Нема слика</div>
         )}
         <div className="absolute inset-0 bg-ink-strong/0 transition-colors duration-500 group-hover:bg-ink-strong/5" />
         {showBadge && (

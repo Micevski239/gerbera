@@ -26,7 +26,7 @@ export default function AdminNav() {
         { href: '/admin/categories', label: 'Категории', icon: 'folder' },
         { href: '/admin/occasions', label: 'Пригоди', icon: 'gift' },
         { href: '/admin/products', label: 'Производи', icon: 'box' },
-        { href: '/admin/hero-tiles', label: 'Хиро банер', icon: 'image' },
+        { href: '/admin/hero-tiles', label: 'Главни слики', icon: 'image' },
         { href: '/admin/testimonials', label: 'Изјави', icon: 'star' },
         { href: '/admin/stats', label: 'Статистики', icon: 'chart' },
       ],

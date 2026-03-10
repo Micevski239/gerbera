@@ -64,8 +64,14 @@ export default function ShopPageClient({ categories, products, occasions, produc
     // Sidebar filters
     if (selectedCategory) result = result.filter(p => p.category_slug === selectedCategory)
     if (selectedOccasion) result = result.filter(p => productOccasionMap.get(p.id)?.has(selectedOccasion))
-    if (priceRange.min !== null) result = result.filter(p => (p.price || 0) >= priceRange.min!)
-    if (priceRange.max !== null) result = result.filter(p => (p.price || 0) <= priceRange.max!)
+    if (priceRange.min !== null) result = result.filter(p => {
+      const effective = (p.is_on_sale && p.sale_price) ? p.sale_price : (p.price || 0)
+      return effective >= priceRange.min!
+    })
+    if (priceRange.max !== null) result = result.filter(p => {
+      const effective = (p.is_on_sale && p.sale_price) ? p.sale_price : (p.price || 0)
+      return effective <= priceRange.max!
+    })
     if (showOnSale) result = result.filter(p => p.is_on_sale)
     if (showBestSeller) result = result.filter(p => p.is_best_seller)
 
@@ -74,8 +80,16 @@ export default function ShopPageClient({ categories, products, occasions, produc
       switch (sortBy) {
         case 'newest': return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
         case 'oldest': return new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
-        case 'priceAsc': return (a.price || 0) - (b.price || 0)
-        case 'priceDesc': return (b.price || 0) - (a.price || 0)
+        case 'priceAsc': {
+          const aPrice = (a.is_on_sale && a.sale_price) ? a.sale_price : (a.price || 0)
+          const bPrice = (b.is_on_sale && b.sale_price) ? b.sale_price : (b.price || 0)
+          return aPrice - bPrice
+        }
+        case 'priceDesc': {
+          const aPrice = (a.is_on_sale && a.sale_price) ? a.sale_price : (a.price || 0)
+          const bPrice = (b.is_on_sale && b.sale_price) ? b.sale_price : (b.price || 0)
+          return bPrice - aPrice
+        }
         case 'nameAsc': return (a.name || '').localeCompare(b.name || '')
         case 'nameDesc': return (b.name || '').localeCompare(a.name || '')
         default: return 0
@@ -170,7 +184,7 @@ export default function ShopPageClient({ categories, products, occasions, produc
           backgroundRepeat: 'repeat',
         }}
       >
-        <div className="container-custom py-12 md:py-16 text-center relative z-10">
+        <div className="container-custom h-48 md:h-56 flex flex-col items-center justify-center text-center relative z-10">
           <span className="inline-block px-4 py-1.5 bg-surface-base/80 backdrop-blur-sm rounded-full text-xs font-medium uppercase tracking-wider text-primary-600 mb-4">
             Нашата колекција
           </span>
@@ -300,8 +314,11 @@ export default function ShopPageClient({ categories, products, occasions, produc
 
       <MobileShopFilter
         categories={categories}
+        occasions={occasions}
         selectedCategory={selectedCategory}
+        selectedOccasion={selectedOccasion}
         onCategoryChange={handleCategoryChange}
+        onOccasionChange={handleOccasionChange}
         priceRange={priceRange}
         onPriceChange={setPriceRange}
         showOnSale={showOnSale}
