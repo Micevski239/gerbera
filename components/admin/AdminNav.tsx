@@ -21,20 +21,20 @@ export default function AdminNav() {
 
   const navGroups = [
     {
-      label: 'Management',
+      label: 'Управување',
       items: [
-        { href: '/admin/categories', label: 'Categories', icon: 'folder' },
-        { href: '/admin/occasions', label: 'Occasions', icon: 'gift' },
-        { href: '/admin/products', label: 'Products', icon: 'box' },
-        { href: '/admin/hero-tiles', label: 'Hero Tiles', icon: 'image' },
-        { href: '/admin/testimonials', label: 'Testimonials', icon: 'star' },
-        { href: '/admin/stats', label: 'Site Stats', icon: 'chart' },
+        { href: '/admin/categories', label: 'Категории', icon: 'folder' },
+        { href: '/admin/occasions', label: 'Пригоди', icon: 'gift' },
+        { href: '/admin/products', label: 'Производи', icon: 'box' },
+        { href: '/admin/hero-tiles', label: 'Хиро банер', icon: 'image' },
+        { href: '/admin/testimonials', label: 'Изјави', icon: 'star' },
+        { href: '/admin/stats', label: 'Статистики', icon: 'chart' },
       ],
     },
     {
-      label: 'Tools',
+      label: 'Алатки',
       items: [
-        { href: '/admin/image-optimizer', label: 'Image Optimizer', icon: 'images' },
+        { href: '/admin/image-optimizer', label: 'Оптимизатор на слики', icon: 'images' },
       ],
     },
   ]
@@ -173,12 +173,12 @@ export default function AdminNav() {
             'flex items-center gap-3 px-3 py-2.5 rounded-xl text-neutral-600 hover:bg-neutral-100 transition-colors',
             collapsed && 'justify-center'
           )}
-          title={collapsed ? 'View Site' : undefined}
+          title={collapsed ? 'Види сајт' : undefined}
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
           </svg>
-          {!collapsed && <span className="font-medium">View Site</span>}
+          {!collapsed && <span className="font-medium">Види сајт</span>}
         </Link>
         <button
           onClick={handleLogout}
@@ -186,12 +186,12 @@ export default function AdminNav() {
             'flex items-center gap-3 px-3 py-2.5 rounded-xl text-neutral-600 hover:bg-red-50 hover:text-red-600 transition-colors w-full',
             collapsed && 'justify-center'
           )}
-          title={collapsed ? 'Log Out' : undefined}
+          title={collapsed ? 'Одјава' : undefined}
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
           </svg>
-          {!collapsed && <span className="font-medium">Log Out</span>}
+          {!collapsed && <span className="font-medium">Одјава</span>}
         </button>
       </div>
     </>

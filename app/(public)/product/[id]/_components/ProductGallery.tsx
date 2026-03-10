@@ -7,10 +7,12 @@ import type { Product, ProductImage } from '@/lib/supabase/types'
 import ProductStatusBadges from './ProductStatusBadges'
 import { ImagePlaceholderIcon } from './ProductDetailIcons'
 
+const BLUR_DATA_URL =
+  'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNlZWVjZTgiLz48L3N2Zz4='
+
 interface ProductGalleryProps {
   product: Product
   images: ProductImage[]
-  language: 'mk' | 'en'
   productName: string
   selectedImageIndex: number
   imageError: boolean
@@ -24,7 +26,6 @@ interface ProductGalleryProps {
 export default function ProductGallery({
   product,
   images,
-  language,
   productName,
   selectedImageIndex,
   imageError,
@@ -46,8 +47,8 @@ export default function ProductGallery({
         tabIndex={0}
         role="region"
         aria-label={images.length > 1
-          ? `${language === 'mk' ? 'Галерија' : 'Image gallery'}, ${selectedImageIndex + 1} ${language === 'mk' ? 'од' : 'of'} ${images.length}`
-          : (language === 'mk' ? 'Слика од производ' : 'Product image')}
+          ? `Галерија, ${selectedImageIndex + 1} од ${images.length}`
+          : 'Слика од производ'}
         onKeyDown={onKeyDown}
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
@@ -60,19 +61,21 @@ export default function ProductGallery({
             className="object-cover img-warm transition-transform duration-500 ease-out group-hover/zoom:scale-110"
             sizes="(max-width: 1024px) 100vw, 50vw"
             priority
+            placeholder="blur"
+            blurDataURL={BLUR_DATA_URL}
             onError={onMainImageError}
           />
         ) : (
           <div className="w-full h-full flex flex-col items-center justify-center bg-neutral-50 text-neutral-300">
             <ImagePlaceholderIcon className="w-20 h-20 mb-2" />
-            <span className="text-sm text-neutral-400">{language === 'mk' ? 'Нема слика' : 'No image'}</span>
+            <span className="text-sm text-neutral-400">Нема слика</span>
           </div>
         )}
 
-        <ProductStatusBadges product={product} language={language} />
+        <ProductStatusBadges product={product} />
 
         {images.length > 1 && (
-          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-10 lg:hidden" aria-label={language === 'mk' ? 'Слики' : 'Images'}>
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-10 lg:hidden" aria-label="Слики">
             {images.map((image, i) => (
               <button
                 key={image.id}
@@ -86,7 +89,7 @@ export default function ProductGallery({
                     ? 'w-6 h-2 bg-white'
                     : 'w-2 h-2 bg-white/60'
                 }`}
-                aria-label={`${language === 'mk' ? 'Слика' : 'Image'} ${i + 1}`}
+                aria-label={`Слика ${i + 1}`}
                 aria-current={i === selectedImageIndex}
               />
             ))}
@@ -95,7 +98,7 @@ export default function ProductGallery({
       </div>
 
       {images.length > 1 && (
-        <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2" aria-label={language === 'mk' ? 'Преглед на слики' : 'Image previews'}>
+        <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2" aria-label="Преглед на слики">
           {images.map((image, index) => {
             const thumbUrl = getImageUrl(image.storage_path)
             return (
@@ -103,7 +106,7 @@ export default function ProductGallery({
                 key={image.id}
                 type="button"
                 onClick={() => onSelectImage(index)}
-                aria-label={`${language === 'mk' ? 'Прикажи слика' : 'View image'} ${index + 1} ${language === 'mk' ? 'од' : 'of'} ${images.length}`}
+                aria-label={`Прикажи слика ${index + 1} од ${images.length}`}
                 aria-pressed={index === selectedImageIndex}
                 className={`relative w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden transition-[opacity,box-shadow] ${
                   index === selectedImageIndex
@@ -118,6 +121,8 @@ export default function ProductGallery({
                     fill
                     className="object-cover"
                     sizes="80px"
+                    placeholder="blur"
+                    blurDataURL={BLUR_DATA_URL}
                   />
                 )}
               </button>

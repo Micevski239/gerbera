@@ -11,24 +11,22 @@ interface StatsClientProps {
 
 interface StatFormState {
   label_mk: string
-  label_en: string
   value: string
   suffix_mk: string
-  suffix_en: string
   icon: string
   display_order: number
   is_visible: boolean
 }
 
 const ICON_OPTIONS = [
-  { value: 'calendar', label: 'Calendar' },
-  { value: 'users', label: 'Users' },
-  { value: 'box', label: 'Box' },
-  { value: 'heart', label: 'Heart' },
-  { value: 'star', label: 'Star' },
-  { value: 'award', label: 'Award' },
-  { value: 'check', label: 'Check' },
-  { value: 'gift', label: 'Gift' },
+  { value: 'calendar', label: 'Календар' },
+  { value: 'users', label: 'Корисници' },
+  { value: 'box', label: 'Кутија' },
+  { value: 'heart', label: 'Срце' },
+  { value: 'star', label: 'Ѕвезда' },
+  { value: 'award', label: 'Награда' },
+  { value: 'check', label: 'Штикла' },
+  { value: 'gift', label: 'Подарок' },
 ]
 
 export default function StatsClient({ stats }: StatsClientProps) {
@@ -40,10 +38,8 @@ export default function StatsClient({ stats }: StatsClientProps) {
     stats.forEach((stat) => {
       map[stat.id] = {
         label_mk: stat.label_mk,
-        label_en: stat.label_en || '',
         value: stat.value,
         suffix_mk: stat.suffix_mk ?? '',
-        suffix_en: stat.suffix_en ?? '',
         icon: stat.icon ?? '',
         display_order: stat.display_order,
         is_visible: stat.is_visible,
@@ -66,10 +62,8 @@ export default function StatsClient({ stats }: StatsClientProps) {
 
   const [newStat, setNewStat] = useState<StatFormState>({
     label_mk: '',
-    label_en: '',
     value: '',
     suffix_mk: '',
-    suffix_en: '',
     icon: 'star',
     display_order: nextOrder,
     is_visible: true,
@@ -108,8 +102,8 @@ export default function StatsClient({ stats }: StatsClientProps) {
     const form = forms[statId]
     if (!form) return
 
-    if (!form.label_mk.trim() || !form.label_en.trim() || !form.value.trim()) {
-      alert('Labels (MK/EN) and value are required.')
+    if (!form.label_mk.trim() || !form.value.trim()) {
+      alert('Насловот и вредноста се задолжителни.')
       return
     }
 
@@ -119,10 +113,10 @@ export default function StatsClient({ stats }: StatsClientProps) {
         .from('site_stats')
         .update({
           label_mk: form.label_mk,
-          label_en: form.label_en,
+          label_en: null,
           value: form.value,
           suffix_mk: form.suffix_mk || null,
-          suffix_en: form.suffix_en || null,
+          suffix_en: null,
           icon: form.icon || null,
           display_order: form.display_order,
           is_visible: form.is_visible,
@@ -135,7 +129,7 @@ export default function StatsClient({ stats }: StatsClientProps) {
       router.refresh()
     } catch (error) {
       console.error(error)
-      alert('Failed to save stat changes.')
+      alert('Неуспешно зачувување на промените.')
     } finally {
       setSavingId(null)
     }
@@ -143,8 +137,8 @@ export default function StatsClient({ stats }: StatsClientProps) {
 
   const handleCreate = async (event: React.FormEvent) => {
     event.preventDefault()
-    if (!newStat.label_mk.trim() || !newStat.label_en.trim() || !newStat.value.trim()) {
-      alert('Provide labels (MK/EN) and a value.')
+    if (!newStat.label_mk.trim() || !newStat.value.trim()) {
+      alert('Насловот и вредноста се задолжителни.')
       return
     }
 
@@ -154,10 +148,10 @@ export default function StatsClient({ stats }: StatsClientProps) {
         .from('site_stats')
         .insert({
           label_mk: newStat.label_mk,
-          label_en: newStat.label_en,
+          label_en: null,
           value: newStat.value,
           suffix_mk: newStat.suffix_mk || null,
-          suffix_en: newStat.suffix_en || null,
+          suffix_en: null,
           icon: newStat.icon || null,
           display_order: newStat.display_order,
           is_visible: newStat.is_visible,
@@ -167,10 +161,8 @@ export default function StatsClient({ stats }: StatsClientProps) {
 
       setNewStat({
         label_mk: '',
-        label_en: '',
         value: '',
         suffix_mk: '',
-        suffix_en: '',
         icon: 'star',
         display_order: nextOrder + 1,
         is_visible: true,
@@ -179,14 +171,14 @@ export default function StatsClient({ stats }: StatsClientProps) {
       router.refresh()
     } catch (error) {
       console.error(error)
-      alert('Failed to create stat.')
+      alert('Неуспешно креирање на статистиката.')
     } finally {
       setCreating(false)
     }
   }
 
   const handleDelete = async (statId: string) => {
-    if (!confirm('Delete this stat? This action cannot be undone.')) return
+    if (!confirm('Избриши ја оваа статистика?')) return
 
     try {
       const { error } = await supabase
@@ -199,7 +191,7 @@ export default function StatsClient({ stats }: StatsClientProps) {
       router.refresh()
     } catch (error) {
       console.error(error)
-      alert('Failed to delete stat.')
+      alert('Неуспешно бришење на статистиката.')
     }
   }
 
@@ -231,7 +223,7 @@ export default function StatsClient({ stats }: StatsClientProps) {
       router.refresh()
     } catch (error) {
       console.error(error)
-      alert('Failed to reorder stats.')
+      alert('Неуспешно преместување на статистиките.')
     } finally {
       setMovingId(null)
     }
@@ -253,7 +245,7 @@ export default function StatsClient({ stats }: StatsClientProps) {
       router.refresh()
     } catch (error) {
       console.error(error)
-      alert('Failed to update visibility.')
+      alert('Неуспешна промена на видливоста.')
     }
   }
 
@@ -316,23 +308,23 @@ export default function StatsClient({ stats }: StatsClientProps) {
     <div className="space-y-6">
       {/* Header with Add Button */}
       <div className="flex items-center justify-between">
-        <p className="text-sm text-neutral-500">{stats.length} stat{stats.length !== 1 ? 's' : ''}</p>
+        <p className="text-sm text-neutral-500">{stats.length} статистик{stats.length !== 1 ? 'и' : 'а'}</p>
         <button
           onClick={() => setShowCreateForm(!showCreateForm)}
           className="btn btn-primary"
         >
-          {showCreateForm ? 'Cancel' : '+ Add Stat'}
+          {showCreateForm ? 'Откажи' : '+ Додај статистика'}
         </button>
       </div>
 
       {/* Create Form (collapsible) */}
       {showCreateForm && (
         <form onSubmit={handleCreate} className="rounded-2xl bg-white p-6 shadow-card space-y-4 border-2 border-primary-200">
-          <h2 className="text-xl font-semibold text-neutral-800">New Stat</h2>
+          <h2 className="text-xl font-semibold text-neutral-800">Нова статистика</h2>
 
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="grid gap-4 md:grid-cols-3">
             <div>
-              <label className="label">Label (MK)</label>
+              <label className="label">Наслов</label>
               <input
                 className="input"
                 value={newStat.label_mk}
@@ -342,20 +334,7 @@ export default function StatsClient({ stats }: StatsClientProps) {
               />
             </div>
             <div>
-              <label className="label">Label (EN)</label>
-              <input
-                className="input"
-                value={newStat.label_en}
-                onChange={(e) => setNewStat((prev) => ({ ...prev, label_en: e.target.value }))}
-                placeholder="Years Experience"
-                required
-              />
-            </div>
-          </div>
-
-          <div className="grid gap-4 md:grid-cols-3">
-            <div>
-              <label className="label">Value</label>
+              <label className="label">Вредност</label>
               <input
                 className="input"
                 value={newStat.value}
@@ -365,7 +344,7 @@ export default function StatsClient({ stats }: StatsClientProps) {
               />
             </div>
             <div>
-              <label className="label">Suffix (MK)</label>
+              <label className="label">Суфикс</label>
               <input
                 className="input"
                 value={newStat.suffix_mk}
@@ -373,19 +352,10 @@ export default function StatsClient({ stats }: StatsClientProps) {
                 placeholder="години, +, %"
               />
             </div>
-            <div>
-              <label className="label">Suffix (EN)</label>
-              <input
-                className="input"
-                value={newStat.suffix_en}
-                onChange={(e) => setNewStat((prev) => ({ ...prev, suffix_en: e.target.value }))}
-                placeholder="years, +, %"
-              />
-            </div>
           </div>
 
           <div>
-            <label className="label">Icon</label>
+            <label className="label">Икона</label>
             <div className="flex flex-wrap gap-2">
               {ICON_OPTIONS.map((option) => (
                 <button
@@ -407,10 +377,10 @@ export default function StatsClient({ stats }: StatsClientProps) {
 
           <div className="flex gap-3">
             <button type="submit" className="btn btn-primary" disabled={creating}>
-              {creating ? 'Creating...' : 'Create Stat'}
+              {creating ? 'Креирање...' : 'Креирај'}
             </button>
             <button type="button" className="btn btn-secondary" onClick={() => setShowCreateForm(false)}>
-              Cancel
+              Откажи
             </button>
           </div>
         </form>
@@ -436,13 +406,9 @@ export default function StatsClient({ stats }: StatsClientProps) {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
                     <span className="text-2xl font-bold text-primary-600">{stat.value}</span>
-                    <span className="text-lg text-neutral-500">{stat.suffix_en || stat.suffix_mk}</span>
+                    <span className="text-lg text-neutral-500">{stat.suffix_mk}</span>
                   </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <span className="text-neutral-700">{stat.label_en}</span>
-                    <span className="text-neutral-400">|</span>
-                    <span className="text-neutral-500">{stat.label_mk}</span>
-                  </div>
+                  <span className="text-sm text-neutral-700">{stat.label_mk}</span>
                 </div>
 
                 {/* Status & Actions */}
@@ -455,7 +421,7 @@ export default function StatsClient({ stats }: StatsClientProps) {
                         : 'bg-neutral-100 text-neutral-500 hover:bg-neutral-200'
                     }`}
                   >
-                    {form.is_visible ? 'Visible' : 'Hidden'}
+                    {form.is_visible ? 'Видлива' : 'Скриена'}
                   </button>
 
                   <div className="flex gap-1">
@@ -487,7 +453,7 @@ export default function StatsClient({ stats }: StatsClientProps) {
                         : 'bg-primary-100 text-primary-700 hover:bg-primary-200'
                     }`}
                   >
-                    {isEditing ? 'Close' : 'Edit'}
+                    {isEditing ? 'Затвори' : 'Уреди'}
                   </button>
                 </div>
               </div>
@@ -495,9 +461,9 @@ export default function StatsClient({ stats }: StatsClientProps) {
               {/* Expanded Edit Form */}
               {isEditing && (
                 <div className="border-t border-neutral-100 p-4 bg-neutral-50 space-y-4">
-                  <div className="grid gap-4 md:grid-cols-2">
+                  <div className="grid gap-4 md:grid-cols-3">
                     <div>
-                      <label className="label">Label (MK)</label>
+                      <label className="label">Наслов</label>
                       <input
                         className="input"
                         value={form.label_mk}
@@ -505,18 +471,7 @@ export default function StatsClient({ stats }: StatsClientProps) {
                       />
                     </div>
                     <div>
-                      <label className="label">Label (EN)</label>
-                      <input
-                        className="input"
-                        value={form.label_en}
-                        onChange={(e) => handleFormChange(stat.id, 'label_en', e.target.value)}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid gap-4 md:grid-cols-3">
-                    <div>
-                      <label className="label">Value</label>
+                      <label className="label">Вредност</label>
                       <input
                         className="input"
                         value={form.value}
@@ -524,7 +479,7 @@ export default function StatsClient({ stats }: StatsClientProps) {
                       />
                     </div>
                     <div>
-                      <label className="label">Suffix (MK)</label>
+                      <label className="label">Суфикс</label>
                       <input
                         className="input"
                         value={form.suffix_mk}
@@ -532,19 +487,10 @@ export default function StatsClient({ stats }: StatsClientProps) {
                         placeholder="години, +, %"
                       />
                     </div>
-                    <div>
-                      <label className="label">Suffix (EN)</label>
-                      <input
-                        className="input"
-                        value={form.suffix_en}
-                        onChange={(e) => handleFormChange(stat.id, 'suffix_en', e.target.value)}
-                        placeholder="years, +, %"
-                      />
-                    </div>
                   </div>
 
                   <div>
-                    <label className="label">Icon</label>
+                    <label className="label">Икона</label>
                     <div className="flex flex-wrap gap-2">
                       {ICON_OPTIONS.map((option) => (
                         <button
@@ -570,19 +516,19 @@ export default function StatsClient({ stats }: StatsClientProps) {
                       onClick={() => handleSave(stat.id)}
                       disabled={savingId === stat.id}
                     >
-                      {savingId === stat.id ? 'Saving...' : 'Save Changes'}
+                      {savingId === stat.id ? 'Зачувување...' : 'Зачувај'}
                     </button>
                     <button
                       className="btn btn-secondary"
                       onClick={() => resetForm(stat.id)}
                     >
-                      Cancel
+                      Откажи
                     </button>
                     <button
                       className="btn btn-danger ml-auto"
                       onClick={() => handleDelete(stat.id)}
                     >
-                      Delete
+                      Избриши
                     </button>
                   </div>
                 </div>
@@ -593,7 +539,7 @@ export default function StatsClient({ stats }: StatsClientProps) {
 
         {stats.length === 0 && (
           <div className="rounded-xl border-2 border-dashed border-neutral-200 p-8 text-center text-neutral-500">
-            No stats yet. Click "+ Add Stat" to create your first one.
+            Нема статистики. Кликнете „+ Додај статистика" за да ја креирате првата.
           </div>
         )}
       </div>

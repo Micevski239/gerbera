@@ -67,9 +67,9 @@ export default async function SectionsPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-neutral-800">Homepage Sections</h1>
+        <h1 className="text-3xl font-bold text-neutral-800">Секции на почетна</h1>
         <p className="text-neutral-600 mt-2">
-          Configure the product grids by assigning each section to a category and controlling the layout order.
+          Конфигурирајте ги секциите со производи, доделете категорија и контролирајте го редоследот.
         </p>
       </div>
 

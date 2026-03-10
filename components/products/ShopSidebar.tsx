@@ -41,7 +41,7 @@ export default function ShopSidebar({
   onClearFilters,
   hasActiveFilters,
 }: ShopSidebarProps) {
-  const { language, t } = useLanguage()
+  const { t } = useLanguage()
   const [minInput, setMinInput] = useState(priceRange.min?.toString() || '')
   const [maxInput, setMaxInput] = useState(priceRange.max?.toString() || '')
 
@@ -75,7 +75,7 @@ export default function ShopSidebar({
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
-            {language === 'mk' ? 'Исчисти филтри' : 'Clear Filters'}
+            Исчисти филтри
           </button>
         )}
 
@@ -85,7 +85,6 @@ export default function ShopSidebar({
             {t('nav.categories')}
           </h3>
           <div className="space-y-1">
-            {/* All Products */}
             <button
               onClick={() => onCategoryChange(null)}
               className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-left transition-colors duration-200 ${
@@ -94,15 +93,14 @@ export default function ShopSidebar({
                   : 'text-neutral-600 hover:bg-neutral-100'
               }`}
             >
-              <span>{language === 'mk' ? 'Сите производи' : 'All Products'}</span>
+              <span>Сите производи</span>
               <span className={`text-sm ${selectedCategory === null ? 'text-primary-500' : 'text-neutral-400'}`}>
                 {totalProducts}
               </span>
             </button>
 
-            {/* Category List */}
             {categories.map((category) => {
-              const name = getLocalizedField(category, 'name', language)
+              const name = getLocalizedField(category, 'name')
               const count = getCategoryCount(category.slug)
               const isActive = selectedCategory === category.slug
 
@@ -132,11 +130,11 @@ export default function ShopSidebar({
             <div className="border-t border-neutral-200" />
             <div>
               <h3 className="text-sm font-semibold text-neutral-900 uppercase tracking-wider mb-3">
-                {language === 'mk' ? 'Пригоди' : 'Occasions'}
+                Пригоди
               </h3>
               <div className="space-y-1">
                 {occasions.map((occasion) => {
-                  const label = getLocalizedField(occasion, 'name', language)
+                  const label = getLocalizedField(occasion, 'name')
                   const isActive = selectedOccasion === occasion.slug
                   return (
                     <button
@@ -157,13 +155,12 @@ export default function ShopSidebar({
           </>
         )}
 
-        {/* Divider */}
         <div className="border-t border-neutral-200" />
 
         {/* Price Range Section */}
         <div>
           <h3 className="text-sm font-semibold text-neutral-900 uppercase tracking-wider mb-3">
-            {language === 'mk' ? 'Цена' : 'Price'}
+            Цена
           </h3>
           <div className="space-y-3">
             <div className="flex items-center gap-2">
@@ -173,7 +170,7 @@ export default function ShopSidebar({
                   value={minInput}
                   onChange={(e) => setMinInput(e.target.value)}
                   onKeyDown={handlePriceKeyDown}
-                  placeholder={language === 'mk' ? 'Мин' : 'Min'}
+                  placeholder="Мин"
                   className="w-full px-3 py-2 text-sm border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   min="0"
                 />
@@ -185,7 +182,7 @@ export default function ShopSidebar({
                   value={maxInput}
                   onChange={(e) => setMaxInput(e.target.value)}
                   onKeyDown={handlePriceKeyDown}
-                  placeholder={language === 'mk' ? 'Макс' : 'Max'}
+                  placeholder="Макс"
                   className="w-full px-3 py-2 text-sm border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   min="0"
                 />
@@ -196,30 +193,28 @@ export default function ShopSidebar({
                 onClick={handlePriceApply}
                 className="flex-1 px-3 py-2 text-sm font-medium bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
               >
-                {language === 'mk' ? 'Примени' : 'Apply'}
+                Примени
               </button>
               {(priceRange.min !== null || priceRange.max !== null) && (
                 <button
                   onClick={handleClearPrice}
                   className="px-3 py-2 text-sm text-neutral-600 hover:text-neutral-800 hover:bg-neutral-100 rounded-lg transition-colors"
                 >
-                  {language === 'mk' ? 'Исчисти' : 'Clear'}
+                  Исчисти
                 </button>
               )}
             </div>
           </div>
         </div>
 
-        {/* Divider */}
         <div className="border-t border-neutral-200" />
 
         {/* Tags Section */}
         <div>
           <h3 className="text-sm font-semibold text-neutral-900 uppercase tracking-wider mb-3">
-            {language === 'mk' ? 'Ознаки' : 'Tags'}
+            Ознаки
           </h3>
           <div className="space-y-2">
-            {/* On Sale Checkbox */}
             <label className="flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer hover:bg-neutral-50 transition-colors">
               <input
                 type="checkbox"
@@ -229,13 +224,12 @@ export default function ShopSidebar({
               />
               <span className="flex items-center gap-2 text-neutral-700">
                 <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-700">
-                  {language === 'mk' ? 'Попуст' : 'Sale'}
+                  Попуст
                 </span>
-                {language === 'mk' ? 'На попуст' : 'On Sale'}
+                На попуст
               </span>
             </label>
 
-            {/* Best Seller Checkbox */}
             <label className="flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer hover:bg-neutral-50 transition-colors">
               <input
                 type="checkbox"
@@ -245,9 +239,9 @@ export default function ShopSidebar({
               />
               <span className="flex items-center gap-2 text-neutral-700">
                 <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-amber-100 text-amber-700">
-                  {language === 'mk' ? 'Топ' : 'Best'}
+                  Топ
                 </span>
-                {language === 'mk' ? 'Најпродаван' : 'Best Seller'}
+                Најпродаван
               </span>
             </label>
           </div>

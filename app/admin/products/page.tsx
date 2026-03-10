@@ -81,8 +81,8 @@ export default async function ProductsPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-neutral-800">Products</h1>
-        <p className="text-neutral-600 mt-2">Create and maintain the products displayed across the storefront.</p>
+        <h1 className="text-3xl font-bold text-neutral-800">Производи</h1>
+        <p className="text-neutral-600 mt-2">Креирајте и управувајте со производите прикажани на продавницата.</p>
       </div>
 
       <ProductsClient

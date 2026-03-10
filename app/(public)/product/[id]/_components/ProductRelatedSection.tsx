@@ -5,13 +5,11 @@ import type { Product } from '@/lib/supabase/types'
 
 interface ProductRelatedSectionProps {
   relatedProducts: Product[]
-  language: 'mk' | 'en'
   title: string
 }
 
 export default function ProductRelatedSection({
   relatedProducts,
-  language,
   title,
 }: ProductRelatedSectionProps) {
   if (relatedProducts.length === 0) return null
@@ -20,7 +18,7 @@ export default function ProductRelatedSection({
     <section className="mt-16 mb-8">
       <div className="text-center mb-8">
         <span className="text-xs font-medium uppercase tracking-wider text-secondary-600 font-body">
-          {language === 'mk' ? 'Слични производи' : 'Related Products'}
+          Слични производи
         </span>
         <h2 className="text-2xl md:text-3xl font-heading font-semibold text-ink-strong mt-2">
           {title}

@@ -32,8 +32,8 @@ export default async function TestimonialsAdminPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-neutral-800">Testimonials</h1>
-        <p className="text-neutral-600 mt-2">Manage what customers say on the homepage testimonials section.</p>
+        <h1 className="text-3xl font-bold text-neutral-800">Изјави на клиенти</h1>
+        <p className="text-neutral-600 mt-2">Управувајте со изјавите на клиентите прикажани на почетната страница.</p>
       </div>
 
       <TestimonialsClient testimonials={testimonials} />

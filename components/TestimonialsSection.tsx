@@ -128,9 +128,9 @@ export default function TestimonialsSection({ testimonials }: TestimonialsSectio
   )
 }
 
-function TestimonialCard({ testimonial, language }: { testimonial: Testimonial; language: 'mk' | 'en' }) {
-  const content = getLocalizedField(testimonial, 'content', language)
-  const location = getLocalizedField(testimonial, 'customer_location', language)
+function TestimonialCard({ testimonial, language }: { testimonial: Testimonial; language: 'mk' }) {
+  const content = getLocalizedField(testimonial, 'content')
+  const location = getLocalizedField(testimonial, 'customer_location')
   const avatarUrl = testimonial.avatar_path ? getImageUrl(testimonial.avatar_path) : null
 
   return (

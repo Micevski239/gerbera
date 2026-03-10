@@ -31,9 +31,9 @@ export default function ProductDetailClient({
   const { language, t } = useLanguage()
 
   const viewModel = useMemo<ProductDetailViewModel>(() => {
-    const name = getLocalizedField(product, 'name', language)
-    const description = getLocalizedField(product, 'description', language)
-    const categoryName = category ? getLocalizedField(category, 'name', language) : ''
+    const name = getLocalizedField(product, 'name')
+    const description = getLocalizedField(product, 'description')
+    const categoryName = category ? getLocalizedField(category, 'name') : ''
     const { currentPrice, originalPrice, displayPrice } = getProductDisplayPrices(product)
 
     return {
@@ -70,7 +70,6 @@ export default function ProductDetailClient({
             <ProductGallery
               product={product}
               images={images}
-              language={language}
               productName={viewModel.name}
               selectedImageIndex={selectedImageIndex}
               imageError={imageError}
@@ -93,14 +92,12 @@ export default function ProductDetailClient({
 
               <div className="lg:mt-auto">
                 <ProductTrustBadges
-                  language={language}
                   handmadeLabel={t('product.handmade')}
                 />
 
                 <div className="h-px bg-border-soft mb-6" />
 
                 <ProductOrderChannels
-                  language={language}
                   whatsappUrl={SOCIAL.whatsapp}
                   instagramUrl={SOCIAL.instagram}
                   facebookUrl={SOCIAL.facebook}
@@ -112,7 +109,6 @@ export default function ProductDetailClient({
           <ScrollReveal>
             <ProductRelatedSection
               relatedProducts={relatedProducts}
-              language={language}
               title={t('product.moreFromCategory')}
             />
           </ScrollReveal>

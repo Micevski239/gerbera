@@ -6,7 +6,7 @@ import type { Category } from '@/lib/supabase/types'
 import { getImageUrl } from '@/lib/supabase/client'
 
 interface RecipientShowcaseProps {
-  language: 'mk' | 'en'
+  language: 'mk'
   categories: Category[]
 }
 
@@ -19,7 +19,7 @@ const fallbacks = [
   'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=600&q=80',
 ]
 
-function RecipientCard({ category, language, fallback }: { category: Category; language: 'mk' | 'en'; fallback: string }) {
+function RecipientCard({ category, language, fallback }: { category: Category; language: 'mk'; fallback: string }) {
   const label = language === 'mk'
     ? category.name_mk || category.name || category.name_en || ''
     : category.name_en || category.name || category.name_mk || ''
@@ -66,7 +66,7 @@ export default function RecipientShowcase({ language, categories }: RecipientSho
     <section
       className="relative overflow-hidden"
       style={{
-        backgroundImage: "url('/images/hero-background.png')",
+        backgroundImage: "url('/images/hero-background.webp')",
         backgroundSize: '500px 500px',
         backgroundRepeat: 'repeat',
         backgroundAttachment: 'fixed',
@@ -76,15 +76,13 @@ export default function RecipientShowcase({ language, categories }: RecipientSho
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto">
           <p className="eyebrow font-body">
-            {language === 'mk' ? 'Купувај по категорија' : 'Shop by category'}
+            Купувај по категорија
           </p>
           <h2 className="font-heading text-ds-section text-ink-strong">
-            {language === 'mk' ? 'Подароци за секого' : 'Gifts for everyone'}
+            Подароци за секого
           </h2>
           <p className="mt-3 text-ds-body text-ink-muted">
-            {language === 'mk'
-              ? 'Пронајдете го идеалниот подарок за секоја личност во вашиот живот'
-              : 'Find the ideal gift for every person in your life'}
+            Пронајдете го идеалниот подарок за секоја личност во вашиот живот
           </p>
         </div>
 

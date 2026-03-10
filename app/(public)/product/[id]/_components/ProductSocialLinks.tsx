@@ -4,13 +4,11 @@ import type { ReactElement } from 'react'
 import { FacebookIcon, InstagramIcon } from './ProductDetailIcons'
 
 interface ProductSocialLinksProps {
-  language: 'mk' | 'en'
   instagramUrl?: string
   facebookUrl?: string
 }
 
 export default function ProductSocialLinks({
-  language,
   instagramUrl,
   facebookUrl,
 }: ProductSocialLinksProps) {
@@ -34,7 +32,7 @@ export default function ProductSocialLinks({
 
   return (
     <div className="flex items-center gap-3 mb-6">
-      <span className="text-xs text-ink-muted">{language === 'mk' ? 'Следете не:' : 'Follow us:'}</span>
+      <span className="text-xs text-ink-muted">Следете не:</span>
       {visibleLinks.map((link) => (
         <a
           key={link.key}

@@ -34,7 +34,7 @@ export default async function ImageOptimizerPage() {
         table: 'products',
         imageField: 'image_url',
         imageValue: p.image_url,
-        label: `Product: ${p.name_en || p.name_mk}`,
+        label: `Производ: ${p.name_mk || p.name_en}`,
       })
     }
   })
@@ -46,7 +46,7 @@ export default async function ImageOptimizerPage() {
         table: 'categories',
         imageField: 'category_image_path',
         imageValue: c.category_image_path,
-        label: `Category: ${c.name_en || c.name_mk}`,
+        label: `Категорија: ${c.name_mk || c.name_en}`,
       })
     }
   })
@@ -58,7 +58,7 @@ export default async function ImageOptimizerPage() {
         table: 'occasions',
         imageField: 'occasion_image_path',
         imageValue: o.occasion_image_path,
-        label: `Occasion: ${o.name_en || o.name_mk}`,
+        label: `Пригода: ${o.name_mk || o.name_en}`,
       })
     }
   })
@@ -70,7 +70,7 @@ export default async function ImageOptimizerPage() {
         table: 'hero_tiles',
         imageField: 'image_url',
         imageValue: h.image_url,
-        label: `Hero Tile: ${h.slot}`,
+        label: `Хиро плочка: ${h.slot}`,
       })
     }
   })
@@ -78,9 +78,9 @@ export default async function ImageOptimizerPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-neutral-800">Image Optimizer</h1>
+        <h1 className="text-3xl font-bold text-neutral-800">Оптимизатор на слики</h1>
         <p className="text-neutral-600 mt-2">
-          Reprocess all images to WebP format with thumbnails.
+          Репроцесирање на сите слики во WebP формат со миниатури.
         </p>
       </div>
       <ImageOptimizerClient images={images} />

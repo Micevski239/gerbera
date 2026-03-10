@@ -32,8 +32,8 @@ export default async function CategoriesPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-neutral-800">Categories</h1>
-        <p className="text-neutral-600 mt-2">Manage the category list that powers products and homepage sections.</p>
+        <h1 className="text-3xl font-bold text-neutral-800">Категории</h1>
+        <p className="text-neutral-600 mt-2">Управувајте со категориите што ги користат производите и секциите на почетната страница.</p>
       </div>
 
       <CategoriesClient categories={categories} />

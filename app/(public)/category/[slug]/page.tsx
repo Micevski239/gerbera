@@ -10,25 +10,36 @@ interface CategoryPageProps {
   params: Promise<{ slug: string }>
 }
 
+export async function generateStaticParams() {
+  const { createBuildClient } = await import('@/lib/supabase/server')
+  const supabase = createBuildClient()
+  const { data } = await supabase
+    .from('categories')
+    .select('slug')
+    .eq('is_visible', true)
+
+  return (data || []).map((category) => ({ slug: category.slug }))
+}
+
 export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
   const { slug } = await params
   const supabase = await createClient()
   const { data: category } = await supabase
     .from('categories')
-    .select('name, name_en, name_mk, description_en')
+    .select('name, name_mk, description_mk')
     .eq('slug', slug)
     .eq('is_visible', true)
     .single()
 
   if (!category) {
-    return { title: 'Category Not Found | Gerbera Gifts' }
+    return { title: 'Категорија не е пронајдена | Гербера Подароци' }
   }
 
-  const name = category.name_en || category.name_mk || category.name
-  const description = category.description_en || `Browse ${name} — handmade personalized gifts from Gerbera.`
+  const name = category.name_mk || category.name
+  const description = category.description_mk || `${name} — рачно изработени персонализирани подароци од Гербера.`
 
   return {
-    title: `${name} | Gerbera Gifts`,
+    title: `${name} | Гербера Подароци`,
     description,
   }
 }

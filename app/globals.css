@@ -34,10 +34,6 @@
 }
 
 @layer components {
-  .section-shell {
-    @apply mx-auto max-w-shell px-5 md:px-8;
-  }
-
   .container-custom {
     @apply mx-auto max-w-shell px-5 md:px-8;
   }
@@ -118,22 +114,6 @@
     @apply h-10 px-4 text-ds-body-sm;
   }
 
-  .lang-switcher {
-    @apply inline-flex gap-1 rounded-pill border border-border-soft bg-surface-base p-1;
-  }
-
-  .lang-btn {
-    @apply flex-1 rounded-pill px-3 py-1.5 text-ds-body-sm font-medium transition-colors;
-  }
-
-  .lang-btn-active {
-    @apply bg-ink-strong text-canvas-100 shadow-soft;
-  }
-
-  .lang-btn-inactive {
-    @apply text-ink-base hover:bg-state-hover;
-  }
-
   .input {
     @apply w-full rounded-md border border-border-soft bg-surface-base px-4 py-3 text-ds-body text-ink-base placeholder:text-ink-muted focus:border-ink-base focus:outline-none focus:ring-2 focus:ring-state-focus/40 focus:ring-offset-2 focus:ring-offset-surface-base;
   }
@@ -160,10 +140,6 @@
 
   .card-hover {
     @apply transition-shadow duration-200 hover:shadow-lift;
-  }
-
-  .card-bordered {
-    @apply card;
   }
 
   .card-elevated {
@@ -226,10 +202,6 @@
     @apply flex flex-col rounded-lg border border-border-soft bg-surface-base shadow-card transition-shadow hover:shadow-lift;
   }
 
-  .brand-pill {
-    @apply inline-flex items-center gap-2 rounded-pill border border-border-soft bg-surface-base px-4 py-2 text-ds-body-sm font-medium uppercase tracking-eyebrow text-ink-muted;
-  }
-
   .testimonial-card {
     @apply card flex h-full flex-col gap-4 p-6;
   }
@@ -244,15 +216,6 @@
 
   .testimonial-stars {
     @apply flex gap-1 text-accent-400;
-  }
-
-  /* Hero tile variants */
-  .hero-tile-primary {
-    @apply rounded-2xl bg-secondary-50 shadow-hero transition-transform duration-300 hover:scale-105;
-  }
-
-  .hero-tile-secondary {
-    @apply rounded-xl bg-surface-base shadow-card transition-transform duration-300 hover:scale-102;
   }
 
   /* Card variants */
@@ -292,21 +255,6 @@
     @apply transition-colors duration-200;
   }
 
-  /* Navigation link with underline animation */
-  .nav-link {
-    @apply relative px-3 py-2 transition-colors duration-200 hover:text-primary-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 rounded-sm;
-  }
-
-  .nav-link::after {
-    @apply content-[''] absolute bottom-0 left-3 right-3 h-0.5 bg-primary-500 transition-transform duration-200 origin-left scale-x-0;
-  }
-
-  .nav-link:hover::after,
-  .nav-link:focus-visible::after,
-  .nav-link.active::after {
-    @apply scale-x-100;
-  }
-
   /* Icon button */
   .icon-btn {
     @apply flex h-11 w-11 items-center justify-center rounded-full text-neutral-500 hover:text-primary-500 hover:bg-primary-50 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2;
@@ -315,20 +263,6 @@
   /* Arrow navigation button */
   .arrow-btn {
     @apply h-9 w-9 rounded-full border border-neutral-200 text-neutral-500 hover:text-primary-500 hover:border-primary-500/50 transition-colors duration-200 disabled:opacity-30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2;
-  }
-
-  /* Decorative blob shapes */
-  .blob-coral {
-    @apply bg-primary-100/30 rounded-full blur-3xl;
-  }
-
-  .blob-saffron {
-    @apply bg-accent-100/20 rounded-full blur-3xl;
-  }
-
-  /* Quote decoration */
-  .quote-mark {
-    @apply font-heading text-5xl text-primary-500/20 select-none leading-none;
   }
 
   /* Product grids */

@@ -60,3 +60,14 @@ export async function requireAdmin() {
 
 // Alias for convenience
 export const createClient = createServerSupabaseClient
+
+// Lightweight client for build-time use (generateStaticParams, sitemap)
+// Does not require cookies — uses anon key with no auth context
+import { createClient as createSupabaseClient } from '@supabase/supabase-js'
+
+export function createBuildClient() {
+  return createSupabaseClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+  )
+}

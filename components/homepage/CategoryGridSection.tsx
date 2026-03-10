@@ -13,8 +13,8 @@ interface CategoryGridSectionProps {
 export default function CategoryGridSection({ section }: CategoryGridSectionProps) {
   const { language } = useLanguage()
 
-  const title = getLocalizedField(section, 'title', language)
-  const subtitle = getLocalizedField(section, 'subtitle', language)
+  const title = getLocalizedField(section, 'title')
+  const subtitle = getLocalizedField(section, 'subtitle')
 
   // Filter active items and sort by display_order
   const items = (section.items || [])
@@ -66,8 +66,8 @@ interface CategoryGridItemProps {
 function CategoryGridItem({ item, shape }: CategoryGridItemProps) {
   const { language } = useLanguage()
 
-  const title = getLocalizedField(item, 'title', language)
-  const subtitle = getLocalizedField(item, 'subtitle', language)
+  const title = getLocalizedField(item, 'title')
+  const subtitle = getLocalizedField(item, 'subtitle')
   const imageUrl = getImageUrl(item.image_path)
 
   const isCircle = shape === 'circle'

@@ -53,7 +53,7 @@ export default function ContactPageClient() {
       <section
         className="bg-secondary-50 relative overflow-hidden"
         style={{
-          backgroundImage: "url('/images/hero-background.png')",
+          backgroundImage: "url('/images/hero-background.webp')",
           backgroundSize: '400px 400px',
           backgroundPosition: 'center',
           backgroundRepeat: 'repeat',

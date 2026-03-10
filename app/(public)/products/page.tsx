@@ -3,11 +3,11 @@ import { createClient } from '@/lib/supabase/server'
 import ShopPageClient from './ShopPageClient'
 import type { Category, Product, Occasion, ProductOccasion } from '@/lib/supabase/types'
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 300 // Cache for 5 minutes
 
 export const metadata: Metadata = {
-  title: 'Shop | Gerbera Gifts',
-  description: 'Browse our collection of handmade personalized gifts. Filter by category, occasion, and price.',
+  title: 'Продавница | Гербера Подароци',
+  description: 'Разгледајте ја нашата колекција на рачно изработени персонализирани подароци. Филтрирајте по категорија, пригода и цена.',
 }
 
 // Extended product type with category info

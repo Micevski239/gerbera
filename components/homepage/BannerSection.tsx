@@ -14,9 +14,9 @@ export default function BannerSection({ section }: BannerSectionProps) {
   const { language } = useLanguage()
   const config = section.config as BannerConfig
 
-  const title = getLocalizedField(section, 'title', language)
-  const subtitle = getLocalizedField(section, 'subtitle', language)
-  const ctaText = language === 'mk' ? config.cta_text_mk : config.cta_text_en
+  const title = getLocalizedField(section, 'title')
+  const subtitle = getLocalizedField(section, 'subtitle')
+  const ctaText = config.cta_text_mk
   const imageUrl = getImageUrl(config.image_path || null)
 
   const getHeightClass = () => {

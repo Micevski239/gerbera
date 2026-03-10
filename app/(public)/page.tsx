@@ -1,13 +1,13 @@
 import { createClient } from '@/lib/supabase/server'
 import HomePageClient from './HomePageClient'
-import type { Category, Product, Occasion, SiteStat, HeroTile } from '@/lib/supabase/types'
+import type { Category, Product, Occasion, SiteStat, HeroTile, Testimonial } from '@/lib/supabase/types'
 
 export const revalidate = 3600 // Cache for 1 hour
 
 async function getHomepageData() {
   const supabase = await createClient()
 
-  const [categoriesResult, latestProductsResult, popularProductsResult, bestSellersResult, occasionsResult, statsResult, heroTilesResult] = await Promise.all([
+  const [categoriesResult, latestProductsResult, popularProductsResult, bestSellersResult, occasionsResult, statsResult, heroTilesResult, testimonialsResult] = await Promise.all([
     supabase
       .from('categories')
       .select('id, name, name_en, name_mk, slug, category_image_path, description, description_mk, description_en')
@@ -50,6 +50,12 @@ async function getHomepageData() {
       .select('id, slot, label_mk, label_en, tagline_mk, tagline_en, image_url, url, display_order')
       .eq('is_active', true)
       .order('display_order', { ascending: true }),
+    supabase
+      .from('testimonials')
+      .select('*')
+      .eq('is_active', true)
+      .order('created_at', { ascending: false })
+      .limit(5),
   ])
 
   if (categoriesResult.error) {
@@ -73,17 +79,22 @@ async function getHomepageData() {
   if (heroTilesResult.error) {
     console.error('Failed to load hero tiles', heroTilesResult.error.message)
   }
+  if (testimonialsResult.error) {
+    console.error('Failed to load testimonials', testimonialsResult.error.message)
+  }
 
   const categories = (categoriesResult.data || []) as Category[]
   const occasions = (occasionsResult.data || []) as Occasion[]
   const stats = (statsResult.data || []) as SiteStat[]
   const heroTiles = (heroTilesResult.data || []) as HeroTile[]
+  const testimonials = (testimonialsResult.data || []) as Testimonial[]
 
   return {
     categories,
     occasions,
     stats,
     heroTiles,
+    testimonials,
     productHighlights: {
       latest: (latestProductsResult.data || []) as Product[],
       popular: (popularProductsResult.data || []) as Product[],
@@ -93,7 +104,7 @@ async function getHomepageData() {
 }
 
 export default async function HomePage() {
-  const { categories, occasions, stats, productHighlights, heroTiles } = await getHomepageData()
+  const { categories, occasions, stats, productHighlights, heroTiles, testimonials } = await getHomepageData()
 
   return (
     <HomePageClient
@@ -102,6 +113,7 @@ export default async function HomePage() {
       stats={stats}
       productHighlights={productHighlights}
       heroTiles={heroTiles}
+      testimonials={testimonials}
     />
   )
 }

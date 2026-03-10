@@ -8,7 +8,7 @@ import type { Category, HeroTile } from '@/lib/supabase/types'
 interface HeroBentoGridProps {
   heroTiles?: HeroTile[]
   categories: Category[]
-  language: 'mk' | 'en'
+  language: 'mk'
 }
 
 const SLOT_ORDER = ['left', 'right_top', 'right_bottom_left', 'right_bottom_right'] as const
@@ -44,8 +44,8 @@ function TileLink({ tile, className, children }: { tile: NormalizedTile; classNa
 }
 
 export default function HeroBentoGrid({ heroTiles, categories, language }: HeroBentoGridProps) {
-  const shopNow = language === 'mk' ? 'Купи сега' : 'Shop Now'
-  const eyebrow = language === 'mk' ? 'Колекција' : 'Collection'
+  const shopNow = 'Купи сега'
+  const eyebrow = 'Колекција'
 
   // Build a map of slot → HeroTile for quick lookup
   const tileBySlot = new Map<string, HeroTile>()
@@ -62,8 +62,8 @@ export default function HeroBentoGrid({ heroTiles, categories, language }: HeroB
     if (ht) {
       const tileUrl = ht.url || '/products'
       return {
-        label: language === 'mk' ? ht.label_mk : (ht.label_en || ht.label_mk),
-        tagline: language === 'mk' ? ht.tagline_mk : (ht.tagline_en || ht.tagline_mk),
+        label: ht.label_mk,
+        tagline: ht.tagline_mk,
         image: ht.image_url,
         href: tileUrl,
         isExternal: tileUrl.startsWith('http'),

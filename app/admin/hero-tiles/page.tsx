@@ -32,9 +32,9 @@ export default async function HeroTilesPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-neutral-800">Hero Tiles</h1>
+        <h1 className="text-3xl font-bold text-neutral-800">Хиро банер</h1>
         <p className="text-neutral-600 mt-2">
-          Manage the four hero tiles in the bento grid (one large left, three right).
+          Управувајте со четирите плочки во хиро секцијата (една голема лево, три десно).
         </p>
       </div>
 

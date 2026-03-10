@@ -32,9 +32,9 @@ export default async function AnnouncementLinesPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-neutral-800">Top Bar Announcements</h1>
+        <h1 className="text-3xl font-bold text-neutral-800">Најави во лентата</h1>
         <p className="text-neutral-600 mt-2">
-          Manage the short promo lines that rotate in the website top bar.
+          Управувајте со кратките промо пораки што се ротираат во горната лента на сајтот.
         </p>
       </div>
 

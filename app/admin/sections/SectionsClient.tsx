@@ -13,7 +13,6 @@ interface SectionsClientProps {
 
 interface SectionFormState {
   title_mk: string
-  title_en: string
   shape: SectionShape
   category_id: string
   product_limit: number
@@ -30,7 +29,6 @@ export default function SectionsClient({ sections, categories }: SectionsClientP
     sections.forEach((section) => {
       values[section.id] = {
         title_mk: section.title_mk,
-        title_en: section.title_en || '',
         shape: section.shape,
         category_id: section.category_id,
         product_limit: section.product_limit,
@@ -52,7 +50,6 @@ export default function SectionsClient({ sections, categories }: SectionsClientP
 
   const [newSection, setNewSection] = useState<SectionFormState>({
     title_mk: '',
-    title_en: '',
     shape: 'square',
     category_id: categories[0]?.id || '',
     product_limit: 8,
@@ -97,13 +94,13 @@ export default function SectionsClient({ sections, categories }: SectionsClientP
     const form = forms[sectionId]
     if (!form) return
 
-    if (!form.title_mk.trim() || !form.title_en.trim()) {
-      alert('Section titles cannot be empty.')
+    if (!form.title_mk.trim()) {
+      alert('Насловот не може да биде празен.')
       return
     }
 
     if (!form.category_id) {
-      alert('Please select a category.')
+      alert('Изберете категорија.')
       return
     }
 
@@ -111,7 +108,6 @@ export default function SectionsClient({ sections, categories }: SectionsClientP
     try {
       const updateData: SectionUpdate = {
         title_mk: form.title_mk,
-        title_en: form.title_en,
         shape: form.shape,
         category_id: form.category_id,
         product_limit: form.product_limit,
@@ -132,7 +128,7 @@ export default function SectionsClient({ sections, categories }: SectionsClientP
       router.refresh()
     } catch (error) {
       console.error(error)
-      alert('Failed to save section changes.')
+      alert('Неуспешно зачувување на промените.')
     } finally {
       setSavingId(null)
     }
@@ -140,8 +136,8 @@ export default function SectionsClient({ sections, categories }: SectionsClientP
 
   const handleCreate = async (event: React.FormEvent) => {
     event.preventDefault()
-    if (!newSection.title_mk.trim() || !newSection.title_en.trim() || !newSection.category_id) {
-      alert('Fill out all required fields before creating a section.')
+    if (!newSection.title_mk.trim() || !newSection.category_id) {
+      alert('Пополнете ги сите задолжителни полиња.')
       return
     }
 
@@ -149,7 +145,6 @@ export default function SectionsClient({ sections, categories }: SectionsClientP
     try {
       const insertData: SectionInsert = {
         title_mk: newSection.title_mk,
-        title_en: newSection.title_en,
         shape: newSection.shape,
         category_id: newSection.category_id,
         product_limit: newSection.product_limit,
@@ -167,7 +162,6 @@ export default function SectionsClient({ sections, categories }: SectionsClientP
 
       setNewSection({
         title_mk: '',
-        title_en: '',
         shape: 'square',
         category_id: categories[0]?.id || '',
         product_limit: 8,
@@ -178,14 +172,14 @@ export default function SectionsClient({ sections, categories }: SectionsClientP
       router.refresh()
     } catch (error) {
       console.error(error)
-      alert('Failed to create section.')
+      alert('Неуспешно креирање на секцијата.')
     } finally {
       setCreating(false)
     }
   }
 
   const handleDelete = async (sectionId: string) => {
-    if (!confirm('Delete this section?')) return
+    if (!confirm('Избриши ја оваа секција?')) return
 
     try {
       const { error } = await supabase
@@ -200,7 +194,7 @@ export default function SectionsClient({ sections, categories }: SectionsClientP
       router.refresh()
     } catch (error) {
       console.error(error)
-      alert('Failed to delete section.')
+      alert('Неуспешно бришење на секцијата.')
     }
   }
 
@@ -232,7 +226,7 @@ export default function SectionsClient({ sections, categories }: SectionsClientP
       router.refresh()
     } catch (error) {
       console.error(error)
-      alert('Failed to reorder sections.')
+      alert('Неуспешно преместување на секциите.')
     } finally {
       setMovingId(null)
     }
@@ -254,7 +248,7 @@ export default function SectionsClient({ sections, categories }: SectionsClientP
       router.refresh()
     } catch (error) {
       console.error(error)
-      alert('Failed to update visibility.')
+      alert('Неуспешна промена на видливоста.')
     }
   }
 
@@ -262,60 +256,49 @@ export default function SectionsClient({ sections, categories }: SectionsClientP
     <div className="space-y-6">
       {/* Header with Add Button */}
       <div className="flex items-center justify-between">
-        <p className="text-sm text-neutral-500">{sections.length} section{sections.length !== 1 ? 's' : ''}</p>
+        <p className="text-sm text-neutral-500">{sections.length} секци{sections.length !== 1 ? 'и' : 'ја'}</p>
         <button
           onClick={() => setShowCreateForm(!showCreateForm)}
           className="btn btn-primary"
         >
-          {showCreateForm ? 'Cancel' : '+ Add Section'}
+          {showCreateForm ? 'Откажи' : '+ Додај секција'}
         </button>
       </div>
 
       {/* Create Form (collapsible) */}
       {showCreateForm && (
         <form onSubmit={handleCreate} className="rounded-2xl bg-white p-6 shadow-card space-y-4 border-2 border-primary-200">
-          <h2 className="text-xl font-semibold text-neutral-800">New Section</h2>
+          <h2 className="text-xl font-semibold text-neutral-800">Нова секција</h2>
 
-          <div className="grid gap-4 md:grid-cols-2">
-            <div>
-              <label className="label">Title (MK)</label>
-              <input
-                className="input"
-                value={newSection.title_mk}
-                onChange={(e) => setNewSection((prev) => ({ ...prev, title_mk: e.target.value }))}
-                required
-              />
-            </div>
-            <div>
-              <label className="label">Title (EN)</label>
-              <input
-                className="input"
-                value={newSection.title_en}
-                onChange={(e) => setNewSection((prev) => ({ ...prev, title_en: e.target.value }))}
-                required
-              />
-            </div>
+          <div>
+            <label className="label">Наслов</label>
+            <input
+              className="input"
+              value={newSection.title_mk}
+              onChange={(e) => setNewSection((prev) => ({ ...prev, title_mk: e.target.value }))}
+              required
+            />
           </div>
 
           <div className="grid gap-4 md:grid-cols-3">
             <div>
-              <label className="label">Category</label>
+              <label className="label">Категорија</label>
               <select
                 className="input"
                 value={newSection.category_id}
                 onChange={(e) => setNewSection((prev) => ({ ...prev, category_id: e.target.value }))}
                 required
               >
-                <option value="">Select category</option>
+                <option value="">Избери категорија</option>
                 {categories.map((category) => (
                   <option key={category.id} value={category.id}>
-                    {category.name_en}
+                    {category.name_mk}
                   </option>
                 ))}
               </select>
             </div>
             <div>
-              <label className="label">Product Limit</label>
+              <label className="label">Лимит на производи</label>
               <input
                 type="number"
                 min={1}
@@ -325,24 +308,24 @@ export default function SectionsClient({ sections, categories }: SectionsClientP
               />
             </div>
             <div>
-              <label className="label">Shape</label>
+              <label className="label">Форма</label>
               <select
                 className="input"
                 value={newSection.shape}
                 onChange={(e) => setNewSection((prev) => ({ ...prev, shape: e.target.value as SectionShape }))}
               >
-                <option value="square">Square grid</option>
-                <option value="circle">Circle</option>
+                <option value="square">Квадратна мрежа</option>
+                <option value="circle">Кружна</option>
               </select>
             </div>
           </div>
 
           <div className="flex gap-3">
             <button type="submit" className="btn btn-primary" disabled={creating}>
-              {creating ? 'Creating...' : 'Create Section'}
+              {creating ? 'Креирање...' : 'Креирај секција'}
             </button>
             <button type="button" className="btn btn-secondary" onClick={() => setShowCreateForm(false)}>
-              Cancel
+              Откажи
             </button>
           </div>
         </form>
@@ -354,7 +337,7 @@ export default function SectionsClient({ sections, categories }: SectionsClientP
           const form = forms[section.id]
           if (!form) return null
           const isEditing = editingId === section.id
-          const categoryName = categories.find((cat) => cat.id === form.category_id)?.name_en || 'Unknown'
+          const categoryName = categories.find((cat) => cat.id === form.category_id)?.name_mk || 'Непозната'
 
           return (
             <div key={section.id} className="rounded-xl bg-white shadow-card overflow-hidden">
@@ -377,12 +360,8 @@ export default function SectionsClient({ sections, categories }: SectionsClientP
 
                 {/* Info */}
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-semibold text-neutral-800 truncate">{section.title_en}</h3>
-                    <span className="text-neutral-400">|</span>
-                    <span className="text-neutral-600 truncate">{section.title_mk}</span>
-                  </div>
-                  <p className="text-sm text-neutral-500">{categoryName} • {form.product_limit} products</p>
+                  <h3 className="font-semibold text-neutral-800 truncate">{section.title_mk}</h3>
+                  <p className="text-sm text-neutral-500">{categoryName} &bull; {form.product_limit} производи</p>
                 </div>
 
                 {/* Status & Actions */}
@@ -395,7 +374,7 @@ export default function SectionsClient({ sections, categories }: SectionsClientP
                         : 'bg-neutral-100 text-neutral-500 hover:bg-neutral-200'
                     }`}
                   >
-                    {form.is_active ? 'Active' : 'Inactive'}
+                    {form.is_active ? 'Активна' : 'Неактивна'}
                   </button>
 
                   <div className="flex gap-1">
@@ -427,7 +406,7 @@ export default function SectionsClient({ sections, categories }: SectionsClientP
                         : 'bg-primary-100 text-primary-700 hover:bg-primary-200'
                     }`}
                   >
-                    {isEditing ? 'Close' : 'Edit'}
+                    {isEditing ? 'Затвори' : 'Уреди'}
                   </button>
                 </div>
               </div>
@@ -435,41 +414,31 @@ export default function SectionsClient({ sections, categories }: SectionsClientP
               {/* Expanded Edit Form */}
               {isEditing && (
                 <div className="border-t border-neutral-100 p-4 bg-neutral-50 space-y-4">
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <div>
-                      <label className="label">Title (MK)</label>
-                      <input
-                        className="input"
-                        value={form.title_mk}
-                        onChange={(e) => handleFormChange(section.id, 'title_mk', e.target.value)}
-                      />
-                    </div>
-                    <div>
-                      <label className="label">Title (EN)</label>
-                      <input
-                        className="input"
-                        value={form.title_en}
-                        onChange={(e) => handleFormChange(section.id, 'title_en', e.target.value)}
-                      />
-                    </div>
+                  <div>
+                    <label className="label">Наслов</label>
+                    <input
+                      className="input"
+                      value={form.title_mk}
+                      onChange={(e) => handleFormChange(section.id, 'title_mk', e.target.value)}
+                    />
                   </div>
 
                   <div className="grid gap-4 md:grid-cols-3">
                     <div>
-                      <label className="label">Category</label>
+                      <label className="label">Категорија</label>
                       <select
                         className="input"
                         value={form.category_id}
                         onChange={(e) => handleFormChange(section.id, 'category_id', e.target.value)}
                       >
-                        <option value="">Select</option>
+                        <option value="">Избери</option>
                         {categories.map((cat) => (
-                          <option key={cat.id} value={cat.id}>{cat.name_en}</option>
+                          <option key={cat.id} value={cat.id}>{cat.name_mk}</option>
                         ))}
                       </select>
                     </div>
                     <div>
-                      <label className="label">Product Limit</label>
+                      <label className="label">Лимит на производи</label>
                       <input
                         type="number"
                         min={1}
@@ -479,14 +448,14 @@ export default function SectionsClient({ sections, categories }: SectionsClientP
                       />
                     </div>
                     <div>
-                      <label className="label">Shape</label>
+                      <label className="label">Форма</label>
                       <select
                         className="input"
                         value={form.shape}
                         onChange={(e) => handleFormChange(section.id, 'shape', e.target.value as SectionShape)}
                       >
-                        <option value="square">Square grid</option>
-                        <option value="circle">Circle</option>
+                        <option value="square">Квадратна мрежа</option>
+                        <option value="circle">Кружна</option>
                       </select>
                     </div>
                   </div>
@@ -497,19 +466,19 @@ export default function SectionsClient({ sections, categories }: SectionsClientP
                       onClick={() => handleSave(section.id)}
                       disabled={savingId === section.id}
                     >
-                      {savingId === section.id ? 'Saving...' : 'Save Changes'}
+                      {savingId === section.id ? 'Зачувување...' : 'Зачувај'}
                     </button>
                     <button
                       className="btn btn-secondary"
                       onClick={() => resetForm(section.id)}
                     >
-                      Cancel
+                      Откажи
                     </button>
                     <button
                       className="btn btn-danger ml-auto"
                       onClick={() => handleDelete(section.id)}
                     >
-                      Delete
+                      Избриши
                     </button>
                   </div>
                 </div>
@@ -520,7 +489,7 @@ export default function SectionsClient({ sections, categories }: SectionsClientP
 
         {sections.length === 0 && (
           <div className="rounded-xl border-2 border-dashed border-neutral-200 p-8 text-center text-neutral-500">
-            No sections yet. Click "+ Add Section" to create your first one.
+            Нема секции. Кликнете „+ Додај секција" за да ја креирате првата.
           </div>
         )}
       </div>

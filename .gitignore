@@ -27,6 +27,7 @@ yarn-error.log*
 # local env files
 .env
 .env*.local
+.env.local.example
 
 # vercel
 .vercel
@@ -34,3 +35,16 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# documentation
+*.md
+docs/
+
+# sql schemas & migrations
+*.sql
+scheme
+supabase/
+lib/supabase/migrations/
+
+# lock files (regenerated on install)
+package-lock.json

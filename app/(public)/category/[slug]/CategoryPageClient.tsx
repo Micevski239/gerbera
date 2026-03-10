@@ -19,8 +19,8 @@ export default function CategoryPageClient({
 }: CategoryPageClientProps) {
   const { language, t } = useLanguage()
 
-  const name = getLocalizedField(category, 'name', language)
-  const description = getLocalizedField(category, 'description', language)
+  const name = getLocalizedField(category, 'name')
+  const description = getLocalizedField(category, 'description')
 
   return (
     <div className="min-h-screen bg-neutral-50">
@@ -70,7 +70,7 @@ export default function CategoryPageClient({
               {t('categories.all')}
             </Link>
             {categories.map((cat) => {
-              const catName = getLocalizedField(cat, 'name', language)
+              const catName = getLocalizedField(cat, 'name')
               const isActive = cat.id === category.id
               return (
                 <Link

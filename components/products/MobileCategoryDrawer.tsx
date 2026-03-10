@@ -108,7 +108,7 @@ export default function MobileCategoryDrawer({
 
               {/* Category list */}
               {categories.map((category) => {
-                const name = getLocalizedField(category, 'name', language)
+                const name = getLocalizedField(category, 'name')
                 const isActive = selectedSlug === category.slug
 
                 return (

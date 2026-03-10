@@ -1,20 +1,21 @@
 'use client'
 
 import { useState, useRef, useEffect, useCallback } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { useLanguage } from '@/context/LanguageContext'
+import { ChevronRightIcon } from '@/components/icons'
 import HeroBentoGrid from '@/components/HeroBentoGrid'
 import OccasionShowcase from '@/components/sections/OccasionShowcase'
 import TestimonialsShowcase from '@/components/sections/TestimonialsShowcase'
 import ProductCard from '@/components/ProductCard'
-import SplashScreen from '@/components/SplashScreen'
 import ScrollReveal from '@/components/ScrollReveal'
-import type { Category, Product, Occasion, SiteStat, HeroTile } from '@/lib/supabase/types'
+import type { Category, Product, Occasion, SiteStat, HeroTile, Testimonial } from '@/lib/supabase/types'
 
 /* ─── Parallax Image ──────────────────────────────────────────────── */
 function ParallaxImage({ src, alt }: { src: string; alt: string }) {
   const containerRef = useRef<HTMLDivElement>(null)
-  const imgRef = useRef<HTMLImageElement | null>(null)
+  const innerRef = useRef<HTMLDivElement>(null)
   const ticking = useRef(false)
 
   const onScroll = useCallback(() => {
@@ -22,17 +23,15 @@ function ParallaxImage({ src, alt }: { src: string; alt: string }) {
     ticking.current = true
     requestAnimationFrame(() => {
       const container = containerRef.current
-      const img = imgRef.current
-      if (!container || !img) { ticking.current = false; return }
+      const inner = innerRef.current
+      if (!container || !inner) { ticking.current = false; return }
 
       const rect = container.getBoundingClientRect()
       const windowH = window.innerHeight
-      // 0 when section enters viewport bottom, 1 when it leaves top
       const progress = Math.min(Math.max(
         1 - (rect.bottom / (windowH + rect.height)), 0), 1)
-      // image is 250% tall — slide up as user scrolls
-      const maxTravel = img.offsetHeight - rect.height
-      img.style.transform = `translate3d(0, ${-progress * maxTravel * 0.6}px, 0)`
+      const maxTravel = inner.offsetHeight - rect.height
+      inner.style.transform = `translate3d(0, ${-progress * maxTravel * 0.6}px, 0)`
 
       ticking.current = false
     })
@@ -46,14 +45,19 @@ function ParallaxImage({ src, alt }: { src: string; alt: string }) {
 
   return (
     <div ref={containerRef} className="relative h-64 md:h-[480px] overflow-hidden">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        ref={imgRef}
-        src={src}
-        alt={alt}
-        className="absolute top-0 left-0 w-full object-cover object-center will-change-transform"
-        style={{ height: '250%' }}
-      />
+      <div
+        ref={innerRef}
+        className="absolute top-0 left-0 w-full will-change-transform"
+        style={{ height: '180%' }}
+      >
+        <Image
+          src={src}
+          alt={alt}
+          fill
+          className="object-cover object-center"
+          sizes="(max-width: 768px) 100vw, 50vw"
+        />
+      </div>
       {/* Dark gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent pointer-events-none" />
     </div>
@@ -65,6 +69,7 @@ interface HomePageClientProps {
   occasions: Occasion[]
   stats: SiteStat[]
   heroTiles?: HeroTile[]
+  testimonials?: Testimonial[]
   productHighlights?: {
     latest: Product[]
     popular: Product[]
@@ -77,14 +82,13 @@ export default function HomePageClient({
   occasions,
   stats,
   heroTiles,
+  testimonials,
   productHighlights
 }: HomePageClientProps) {
   const { language, t } = useLanguage()
 
   return (
     <div className="bg-canvas-100 text-ink-base">
-      <SplashScreen />
-
       {/* Hero — no animation, immediately visible */}
       <HeroBentoGrid heroTiles={heroTiles} categories={categories} language={language} />
 
@@ -135,7 +139,7 @@ export default function HomePageClient({
 
       {/* Testimonials */}
       <ScrollReveal>
-        <TestimonialsShowcase language={language} />
+        <TestimonialsShowcase language={language} testimonials={testimonials} />
       </ScrollReveal>
 
     </div>
@@ -173,7 +177,7 @@ function NewCollectionSection({
         <div className="text-center mb-8 md:mb-10">
           <p className="eyebrow font-body mb-2">{t('home.newCollection')}</p>
           <h2 className="font-heading text-ds-section text-ink-strong">
-            {language === 'mk' ? 'Нашата колекција' : 'Our Collection'}
+            Нашата колекција
           </h2>
           <div className="w-12 h-px bg-ink-muted/40 mx-auto mt-4" />
         </div>
@@ -215,9 +219,7 @@ function NewCollectionSection({
             className="inline-flex items-center gap-2 border border-ink-strong text-ink-strong text-sm font-medium px-8 py-3 rounded-full hover:bg-ink-strong hover:text-white transition-colors"
           >
             {t('home.viewAllProducts')}
-            <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-            </svg>
+            <ChevronRightIcon />
           </Link>
         </div>
       </div>

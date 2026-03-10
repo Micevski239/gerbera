@@ -11,8 +11,8 @@ export default function TrustBadgesSection({ section }: TrustBadgesSectionProps)
   const { language } = useLanguage()
   const config = section.config as TrustBadgesConfig
 
-  const title = getLocalizedField(section, 'title', language)
-  const subtitle = getLocalizedField(section, 'subtitle', language)
+  const title = getLocalizedField(section, 'title')
+  const subtitle = getLocalizedField(section, 'subtitle')
 
   // Filter active items and sort by display_order
   const items = (section.items || [])
@@ -73,8 +73,8 @@ interface TrustBadgeItemProps {
 function TrustBadgeItem({ item, iconSize }: TrustBadgeItemProps) {
   const { language } = useLanguage()
 
-  const title = getLocalizedField(item, 'title', language)
-  const subtitle = getLocalizedField(item, 'subtitle', language)
+  const title = getLocalizedField(item, 'title')
+  const subtitle = getLocalizedField(item, 'subtitle')
 
   return (
     <div className="flex flex-col items-center text-center p-4 rounded-xl hover:bg-neutral-50 transition-colors">

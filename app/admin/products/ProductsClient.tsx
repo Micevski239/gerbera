@@ -15,9 +15,7 @@ interface ProductsClientProps {
 
 interface ProductFormState {
   name_mk: string
-  name_en: string
   description_mk: string | null
-  description_en: string | null
   image_url: string
   price: string
   sale_price: string
@@ -51,9 +49,7 @@ export default function ProductsClient({ products, categories, occasions, produc
     products.forEach((product) => {
       map[product.id] = {
         name_mk: product.name_mk,
-        name_en: product.name_en || '',
         description_mk: product.description_mk,
-        description_en: product.description_en,
         image_url: product.image_url,
         price: product.price ? String(product.price) : '',
         sale_price: product.sale_price ? String(product.sale_price) : '',
@@ -84,9 +80,7 @@ export default function ProductsClient({ products, categories, occasions, produc
 
   const [newProduct, setNewProduct] = useState<ProductFormState>({
     name_mk: '',
-    name_en: '',
     description_mk: '',
-    description_en: '',
     image_url: '',
     price: '',
     sale_price: '',
@@ -134,7 +128,7 @@ export default function ProductsClient({ products, categories, occasions, produc
 
   const uploadProductImage = async (file: File, productId: string | null) => {
     if (!isImageFile(file)) {
-      throw new Error('Only JPEG, PNG, and WebP images are allowed.')
+      throw new Error('Дозволени се само JPEG, PNG и WebP слики.')
     }
     const { full, thumbnail } = await processImage(file, 1200)
     const safeName = sanitizeFilename(file.name)
@@ -175,7 +169,7 @@ export default function ProductsClient({ products, categories, occasions, produc
       }
     } catch (error) {
       console.error(error)
-      alert('Failed to upload the image.')
+      alert('Неуспешно прикачување на сликата.')
     } finally {
       setUploadingImageId(null)
     }
@@ -194,12 +188,12 @@ export default function ProductsClient({ products, categories, occasions, produc
     if (!form) return
 
     if (!form.category_id) {
-      alert('Select a category for this product.')
+      alert('Изберете категорија за производот.')
       return
     }
 
     if (!form.name_mk.trim()) {
-      alert('Provide a Macedonian name.')
+      alert('Внесете име на производот.')
       return
     }
 
@@ -210,10 +204,10 @@ export default function ProductsClient({ products, categories, occasions, produc
         .update({
           name: form.name_mk,
           name_mk: form.name_mk,
-          name_en: form.name_en.trim() || null,
+          name_en: null,
           description: form.description_mk,
           description_mk: form.description_mk,
-          description_en: form.description_en,
+          description_en: null,
           image_url: form.image_url,
           price_text: 'From',
           price: toNumberOrNull(form.price),
@@ -252,7 +246,7 @@ export default function ProductsClient({ products, categories, occasions, produc
       router.refresh()
     } catch (error) {
       console.error(error)
-      alert('Failed to save product changes.')
+      alert('Неуспешно зачувување на промените.')
     } finally {
       setSavingId(null)
     }
@@ -261,15 +255,15 @@ export default function ProductsClient({ products, categories, occasions, produc
   const handleCreate = async (event: React.FormEvent) => {
     event.preventDefault()
     if (!newProduct.category_id) {
-      alert('Select a category for the product.')
+      alert('Изберете категорија за производот.')
       return
     }
     if (!newProduct.name_mk.trim()) {
-      alert('Provide a Macedonian name.')
+      alert('Внесете име на производот.')
       return
     }
     if (!newProduct.image_url.trim()) {
-      alert('Upload or paste an image URL for the product.')
+      alert('Прикачете или залепете URL на слика за производот.')
       return
     }
 
@@ -280,10 +274,10 @@ export default function ProductsClient({ products, categories, occasions, produc
         .insert({
           name: newProduct.name_mk,
           name_mk: newProduct.name_mk,
-          name_en: newProduct.name_en.trim() || null,
+          name_en: null,
           description: newProduct.description_mk,
           description_mk: newProduct.description_mk,
-          description_en: newProduct.description_en,
+          description_en: null,
           image_url: newProduct.image_url,
           price_text: 'From',
           price: toNumberOrNull(newProduct.price),
@@ -317,9 +311,7 @@ export default function ProductsClient({ products, categories, occasions, produc
 
       setNewProduct({
         name_mk: '',
-        name_en: '',
         description_mk: '',
-        description_en: '',
         image_url: '',
         price: '',
         sale_price: '',
@@ -335,14 +327,14 @@ export default function ProductsClient({ products, categories, occasions, produc
       router.refresh()
     } catch (error) {
       console.error(error)
-      alert('Failed to create product.')
+      alert('Неуспешно креирање на производот.')
     } finally {
       setCreating(false)
     }
   }
 
   const handleDelete = async (productId: string) => {
-    if (!confirm('Delete this product?')) return
+    if (!confirm('Избриши го овој производ?')) return
 
     try {
       const { error } = await supabase
@@ -355,7 +347,7 @@ export default function ProductsClient({ products, categories, occasions, produc
       router.refresh()
     } catch (error) {
       console.error(error)
-      alert('Failed to delete product.')
+      alert('Неуспешно бришење на производот.')
     }
   }
 
@@ -387,7 +379,7 @@ export default function ProductsClient({ products, categories, occasions, produc
       router.refresh()
     } catch (error) {
       console.error(error)
-      alert('Failed to reorder products.')
+      alert('Неуспешно преместување на производот.')
     } finally {
       setMovingId(null)
     }
@@ -409,8 +401,14 @@ export default function ProductsClient({ products, categories, occasions, produc
       router.refresh()
     } catch (error) {
       console.error(error)
-      alert('Failed to update visibility.')
+      alert('Неуспешна промена на видливоста.')
     }
+  }
+
+  const statusLabels: Record<ProductStatus, string> = {
+    draft: 'Нацрт',
+    published: 'Објавен',
+    sold: 'Продаден',
   }
 
   const statusOptions: ProductStatus[] = ['draft', 'published', 'sold']
@@ -419,23 +417,23 @@ export default function ProductsClient({ products, categories, occasions, produc
     <div className="space-y-6">
       {/* Header with Add Button */}
       <div className="flex items-center justify-between">
-        <p className="text-sm text-neutral-500">{products.length} product{products.length !== 1 ? 's' : ''}</p>
+        <p className="text-sm text-neutral-500">{products.length} производ{products.length !== 1 ? 'и' : ''}</p>
         <button
           onClick={() => setShowCreateForm(!showCreateForm)}
           className="btn btn-primary"
         >
-          {showCreateForm ? 'Cancel' : '+ Add Product'}
+          {showCreateForm ? 'Откажи' : '+ Додај производ'}
         </button>
       </div>
 
       {/* Create Form (collapsible) */}
       {showCreateForm && (
         <form onSubmit={handleCreate} className="rounded-2xl bg-white p-6 shadow-card space-y-4 border-2 border-primary-200">
-          <h2 className="text-xl font-semibold text-neutral-800">New Product</h2>
+          <h2 className="text-xl font-semibold text-neutral-800">Нов производ</h2>
 
           <div className="grid gap-4 md:grid-cols-2">
             <div>
-              <label className="label">Name (MK)</label>
+              <label className="label">Име</label>
               <input
                 className="input"
                 value={newProduct.name_mk}
@@ -444,34 +442,26 @@ export default function ProductsClient({ products, categories, occasions, produc
               />
             </div>
             <div>
-              <label className="label">Name (EN)</label>
-              <input
-                className="input"
-                value={newProduct.name_en}
-                onChange={(e) => setNewProduct((prev) => ({ ...prev, name_en: e.target.value }))}
-              />
-            </div>
-          </div>
-
-          <div className="grid gap-4 md:grid-cols-3">
-            <div>
-              <label className="label">Category</label>
+              <label className="label">Категорија</label>
               <select
                 className="input"
                 value={newProduct.category_id}
                 onChange={(e) => setNewProduct((prev) => ({ ...prev, category_id: e.target.value }))}
                 required
               >
-                <option value="">Select category</option>
+                <option value="">Избери категорија</option>
                 {categories.map((category) => (
                   <option key={category.id} value={category.id}>
-                    {category.name_en}
+                    {category.name_mk}
                   </option>
                 ))}
               </select>
             </div>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2">
             <div>
-              <label className="label">Price (ден)</label>
+              <label className="label">Цена (ден)</label>
               <input
                 type="number"
                 step="1"
@@ -481,7 +471,7 @@ export default function ProductsClient({ products, categories, occasions, produc
               />
             </div>
             <div>
-              <label className="label">Sale Price (ден)</label>
+              <label className="label">Попуст цена (ден)</label>
               <input
                 type="number"
                 step="1"
@@ -493,10 +483,10 @@ export default function ProductsClient({ products, categories, occasions, produc
           </div>
 
           <div>
-            <label className="label">Occasions</label>
+            <label className="label">Пригоди</label>
             <div className="grid gap-2 max-h-40 overflow-auto rounded-lg border border-neutral-200 bg-white p-3">
               {occasions.length === 0 && (
-                <p className="text-xs text-neutral-500">No occasions yet.</p>
+                <p className="text-xs text-neutral-500">Нема пригоди.</p>
               )}
               {occasions.map((occasion) => {
                 const checked = newProduct.occasion_ids.includes(occasion.id)
@@ -515,7 +505,7 @@ export default function ProductsClient({ products, categories, occasions, produc
                         }))
                       }}
                     />
-                    <span>{occasion.name_en}</span>
+                    <span>{occasion.name_mk}</span>
                   </label>
                 )
               })}
@@ -525,9 +515,9 @@ export default function ProductsClient({ products, categories, occasions, produc
           <div className="flex flex-wrap gap-4 items-start">
             <div className="relative h-24 w-24 overflow-hidden rounded-xl border border-neutral-200 bg-neutral-50 flex-shrink-0">
               {newProduct.image_url ? (
-                <img src={newProduct.image_url} alt="Preview" className="h-full w-full object-cover" />
+                <img src={newProduct.image_url} alt="Преглед" className="h-full w-full object-cover" />
               ) : (
-                <div className="flex h-full w-full items-center justify-center text-xs text-neutral-400">No image</div>
+                <div className="flex h-full w-full items-center justify-center text-xs text-neutral-400">Нема слика</div>
               )}
             </div>
             <div className="flex-1 space-y-2">
@@ -538,17 +528,17 @@ export default function ProductsClient({ products, categories, occasions, produc
                   className="hidden"
                   onChange={(e) => { void handleImageSelect(null, e.target.files); e.target.value = '' }}
                 />
-                {uploadingImageId === 'new' ? 'Uploading...' : 'Upload Image'}
+                {uploadingImageId === 'new' ? 'Прикачување...' : 'Прикачи слика'}
               </label>
             </div>
           </div>
 
           <div className="flex gap-3">
             <button type="submit" className="btn btn-primary" disabled={creating}>
-              {creating ? 'Creating...' : 'Create Product'}
+              {creating ? 'Креирање...' : 'Креирај производ'}
             </button>
             <button type="button" className="btn btn-secondary" onClick={() => setShowCreateForm(false)}>
-              Cancel
+              Откажи
             </button>
           </div>
         </form>
@@ -569,7 +559,7 @@ export default function ProductsClient({ products, categories, occasions, produc
                 {/* Image */}
                 <div className="relative h-14 w-14 overflow-hidden rounded-xl border border-neutral-200 bg-neutral-50 flex-shrink-0">
                   {form.image_url ? (
-                    <img src={form.image_url} alt={product.name_en || product.name_mk} className="h-full w-full object-cover" />
+                    <img src={form.image_url} alt={product.name_mk} className="h-full w-full object-cover" />
                   ) : (
                     <div className="flex h-full w-full items-center justify-center text-xs text-neutral-400">?</div>
                   )}
@@ -578,24 +568,24 @@ export default function ProductsClient({ products, categories, occasions, produc
                 {/* Info */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <h3 className="font-semibold text-neutral-800 truncate">{product.name_en}</h3>
+                    <h3 className="font-semibold text-neutral-800 truncate">{product.name_mk}</h3>
                     {form.price && (
                       <>
-                        <span className="text-neutral-400">•</span>
+                        <span className="text-neutral-400">&bull;</span>
                         <span className="text-primary-600 font-medium">{form.price} ден</span>
                       </>
                     )}
                   </div>
-                  <p className="text-sm text-neutral-500">{category?.name_en || 'No category'}</p>
+                  <p className="text-sm text-neutral-500">{category?.name_mk || 'Без категорија'}</p>
                 </div>
 
                 {/* Status & Actions */}
                 <div className="flex items-center gap-2 flex-shrink-0">
                   {form.is_best_seller && (
-                    <span className="px-2 py-1 text-xs font-medium rounded-full bg-amber-100 text-amber-700">Best</span>
+                    <span className="px-2 py-1 text-xs font-medium rounded-full bg-amber-100 text-amber-700">Топ</span>
                   )}
                   {form.is_on_sale && (
-                    <span className="px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-700">Sale</span>
+                    <span className="px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-700">Попуст</span>
                   )}
                   <button
                     onClick={() => handleToggleVisibility(product.id)}
@@ -605,7 +595,7 @@ export default function ProductsClient({ products, categories, occasions, produc
                         : 'bg-neutral-100 text-neutral-500 hover:bg-neutral-200'
                     }`}
                   >
-                    {form.is_visible ? 'Visible' : 'Hidden'}
+                    {form.is_visible ? 'Видлив' : 'Скриен'}
                   </button>
 
                   <div className="flex gap-1">
@@ -637,7 +627,7 @@ export default function ProductsClient({ products, categories, occasions, produc
                         : 'bg-primary-100 text-primary-700 hover:bg-primary-200'
                     }`}
                   >
-                    {isEditing ? 'Close' : 'Edit'}
+                    {isEditing ? 'Затвори' : 'Уреди'}
                   </button>
                 </div>
               </div>
@@ -645,41 +635,31 @@ export default function ProductsClient({ products, categories, occasions, produc
               {/* Expanded Edit Form */}
               {isEditing && (
                 <div className="border-t border-neutral-100 p-4 bg-neutral-50 space-y-4">
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <div>
-                      <label className="label">Name (MK)</label>
-                      <input
-                        className="input"
-                        value={form.name_mk}
-                        onChange={(e) => handleFormChange(product.id, 'name_mk', e.target.value)}
-                      />
-                    </div>
-                    <div>
-                      <label className="label">Name (EN)</label>
-                      <input
-                        className="input"
-                        value={form.name_en}
-                        onChange={(e) => handleFormChange(product.id, 'name_en', e.target.value)}
-                      />
-                    </div>
+                  <div>
+                    <label className="label">Име</label>
+                    <input
+                      className="input"
+                      value={form.name_mk}
+                      onChange={(e) => handleFormChange(product.id, 'name_mk', e.target.value)}
+                    />
                   </div>
 
                   <div className="grid gap-4 md:grid-cols-4">
                     <div>
-                      <label className="label">Category</label>
+                      <label className="label">Категорија</label>
                       <select
                         className="input"
                         value={form.category_id}
                         onChange={(e) => handleFormChange(product.id, 'category_id', e.target.value)}
                       >
-                        <option value="">Select</option>
+                        <option value="">Избери</option>
                         {categories.map((cat) => (
-                          <option key={cat.id} value={cat.id}>{cat.name_en}</option>
+                          <option key={cat.id} value={cat.id}>{cat.name_mk}</option>
                         ))}
                       </select>
                     </div>
                     <div>
-                      <label className="label">Price (ден)</label>
+                      <label className="label">Цена (ден)</label>
                       <input
                         type="number"
                         step="1"
@@ -689,7 +669,7 @@ export default function ProductsClient({ products, categories, occasions, produc
                       />
                     </div>
                     <div>
-                      <label className="label">Sale Price (ден)</label>
+                      <label className="label">Попуст цена (ден)</label>
                       <input
                         type="number"
                         step="1"
@@ -699,24 +679,24 @@ export default function ProductsClient({ products, categories, occasions, produc
                       />
                     </div>
                     <div>
-                      <label className="label">Status</label>
+                      <label className="label">Статус</label>
                       <select
                         className="input"
                         value={form.status}
                         onChange={(e) => handleFormChange(product.id, 'status', e.target.value as ProductStatus)}
                       >
                         {statusOptions.map((status) => (
-                          <option key={status} value={status}>{status}</option>
+                          <option key={status} value={status}>{statusLabels[status]}</option>
                         ))}
                       </select>
                     </div>
                   </div>
 
                   <div>
-                    <label className="label">Occasions</label>
+                    <label className="label">Пригоди</label>
                     <div className="grid gap-2 max-h-40 overflow-auto rounded-lg border border-neutral-200 bg-white p-3">
                       {occasions.length === 0 && (
-                        <p className="text-xs text-neutral-500">No occasions yet.</p>
+                        <p className="text-xs text-neutral-500">Нема пригоди.</p>
                       )}
                       {occasions.map((occasion) => {
                         const checked = form.occasion_ids.includes(occasion.id)
@@ -733,7 +713,7 @@ export default function ProductsClient({ products, categories, occasions, produc
                                 handleFormChange(product.id, 'occasion_ids', nextIds)
                               }}
                             />
-                            <span>{occasion.name_en}</span>
+                            <span>{occasion.name_mk}</span>
                           </label>
                         )
                       })}
@@ -748,7 +728,7 @@ export default function ProductsClient({ products, categories, occasions, produc
                         checked={form.is_on_sale}
                         onChange={(e) => handleFormChange(product.id, 'is_on_sale', e.target.checked)}
                       />
-                      On Sale
+                      На попуст
                     </label>
                     <label className="flex items-center gap-2 text-sm">
                       <input
@@ -757,12 +737,12 @@ export default function ProductsClient({ products, categories, occasions, produc
                         checked={form.is_best_seller}
                         onChange={(e) => handleFormChange(product.id, 'is_best_seller', e.target.checked)}
                       />
-                      Best Seller
+                      Најпродаван
                     </label>
                   </div>
 
                   <div>
-                    <label className="label">Image</label>
+                    <label className="label">Слика</label>
                     <div className="flex gap-2">
                       <label className={`btn btn-secondary cursor-pointer text-sm ${uploadingImageId === product.id ? 'pointer-events-none opacity-60' : ''}`}>
                         <input
@@ -771,7 +751,7 @@ export default function ProductsClient({ products, categories, occasions, produc
                           className="hidden"
                           onChange={(e) => { void handleImageSelect(product.id, e.target.files); e.target.value = '' }}
                         />
-                        {uploadingImageId === product.id ? 'Uploading...' : 'Upload'}
+                        {uploadingImageId === product.id ? 'Прикачување...' : 'Прикачи'}
                       </label>
                       {form.image_url && (
                         <button
@@ -779,31 +759,20 @@ export default function ProductsClient({ products, categories, occasions, produc
                           className="btn btn-outline text-sm"
                           onClick={() => handleFormChange(product.id, 'image_url', '')}
                         >
-                          Clear
+                          Избриши
                         </button>
                       )}
                     </div>
                   </div>
 
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <div>
-                      <label className="label">Description (MK)</label>
-                      <textarea
-                        className="textarea"
-                        rows={2}
-                        value={form.description_mk ?? ''}
-                        onChange={(e) => handleFormChange(product.id, 'description_mk', e.target.value)}
-                      />
-                    </div>
-                    <div>
-                      <label className="label">Description (EN)</label>
-                      <textarea
-                        className="textarea"
-                        rows={2}
-                        value={form.description_en ?? ''}
-                        onChange={(e) => handleFormChange(product.id, 'description_en', e.target.value)}
-                      />
-                    </div>
+                  <div>
+                    <label className="label">Опис</label>
+                    <textarea
+                      className="textarea"
+                      rows={2}
+                      value={form.description_mk ?? ''}
+                      onChange={(e) => handleFormChange(product.id, 'description_mk', e.target.value)}
+                    />
                   </div>
 
                   <div className="flex flex-wrap gap-3 pt-2">
@@ -812,19 +781,19 @@ export default function ProductsClient({ products, categories, occasions, produc
                       onClick={() => handleSave(product.id)}
                       disabled={savingId === product.id}
                     >
-                      {savingId === product.id ? 'Saving...' : 'Save Changes'}
+                      {savingId === product.id ? 'Зачувување...' : 'Зачувај'}
                     </button>
                     <button
                       className="btn btn-secondary"
                       onClick={() => resetForm(product.id)}
                     >
-                      Cancel
+                      Откажи
                     </button>
                     <button
                       className="btn btn-danger ml-auto"
                       onClick={() => handleDelete(product.id)}
                     >
-                      Delete
+                      Избриши
                     </button>
                   </div>
                 </div>
@@ -835,7 +804,7 @@ export default function ProductsClient({ products, categories, occasions, produc
 
         {products.length === 0 && (
           <div className="rounded-xl border-2 border-dashed border-neutral-200 p-8 text-center text-neutral-500">
-            No products yet. Click "+ Add Product" to create your first one.
+            Нема производи. Кликнете „+ Додај производ" за да го креирате првиот.
           </div>
         )}
       </div>

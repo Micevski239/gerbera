@@ -27,7 +27,7 @@ type _linkReturn = Assert<Equal<ReturnType<typeof getWhatsAppLink>, string>>
 
 const product = {} as Product
 const displayPrices = getProductDisplayPrices(product)
-const messages = getProductWhatsAppMessages('mk', 'Test', displayPrices.currentPrice)
+const messages = getProductWhatsAppMessages('Test', displayPrices.currentPrice)
 const link = getWhatsAppLink('38970000000', messages.orderMessage)
 
 void link

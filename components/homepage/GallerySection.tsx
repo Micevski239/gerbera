@@ -14,8 +14,8 @@ export default function GallerySection({ section }: GallerySectionProps) {
   const { language } = useLanguage()
   const config = section.config as GalleryConfig
 
-  const title = getLocalizedField(section, 'title', language)
-  const subtitle = getLocalizedField(section, 'subtitle', language)
+  const title = getLocalizedField(section, 'title')
+  const subtitle = getLocalizedField(section, 'subtitle')
 
   // Filter active items and sort by display_order
   const items = (section.items || [])
@@ -63,7 +63,7 @@ interface GalleryItemProps {
 function GalleryItem({ item }: GalleryItemProps) {
   const { language } = useLanguage()
 
-  const title = getLocalizedField(item, 'title', language)
+  const title = getLocalizedField(item, 'title')
   const imageUrl = getImageUrl(item.image_path)
 
   const content = (

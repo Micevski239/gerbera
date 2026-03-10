@@ -29,19 +29,17 @@ export default function CategorySection({
 }: CategorySectionProps) {
   const { language, t } = useLanguage()
 
-  const categoryName = language === 'mk'
-    ? category.name_mk || category.name
-    : category.name_en || category.name
+  const categoryName = category.name_mk || category.name
 
   const formatPrice = (price: number | null) => {
     if (!price) return null
-    return new Intl.NumberFormat(language === 'mk' ? 'mk-MK' : 'en-US', {
+    return new Intl.NumberFormat('mk-MK', {
       style: 'currency',
       currency: 'MKD',
     }).format(price)
   }
 
-  const viewAllLabel = language === 'mk' ? 'Погледни сè' : 'View All'
+  const viewAllLabel = 'Погледни сè'
 
   return (
     <section className={`border-b border-border-soft ${backgroundClasses[backgroundVariant]}`}>
@@ -102,12 +100,12 @@ export default function CategorySection({
                   <div className="absolute left-3 top-3 flex flex-col gap-2">
                     {product.is_on_sale && (
                       <span className="badge-sale text-xs">
-                        {language === 'mk' ? 'Попуст' : 'Sale'}
+                        Попуст
                       </span>
                     )}
                     {product.is_best_seller && (
                       <span className="badge-bestseller text-xs">
-                        {language === 'mk' ? 'Најпродавано' : 'Bestseller'}
+                        Најпродавано
                       </span>
                     )}
                   </div>
@@ -141,7 +139,7 @@ export default function CategorySection({
         {products.length === 0 && (
           <div className="text-center py-12">
             <p className="text-ink-muted">
-              {language === 'mk' ? 'Нема достапни производи.' : 'No products available.'}
+              Нема достапни производи.
             </p>
           </div>
         )}

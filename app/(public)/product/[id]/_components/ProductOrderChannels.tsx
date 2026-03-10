@@ -3,24 +3,20 @@
 import { WhatsAppIcon, InstagramIcon, FacebookIcon } from './ProductDetailIcons'
 
 interface ProductOrderChannelsProps {
-  language: 'mk' | 'en'
   whatsappUrl: string
   instagramUrl: string
   facebookUrl: string
 }
 
 export default function ProductOrderChannels({
-  language,
   whatsappUrl,
   instagramUrl,
   facebookUrl,
 }: ProductOrderChannelsProps) {
-  const mk = language === 'mk'
-
   return (
     <div className="mb-6">
       <p className="text-xs text-ink-muted uppercase tracking-wider font-medium mb-3">
-        {mk ? 'Нарачај преку' : 'Order via'}
+        Нарачај преку
       </p>
 
       <div className="grid grid-cols-3 gap-3">

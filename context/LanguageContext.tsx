@@ -1,48 +1,31 @@
 'use client'
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
-import type { Language } from '@/lib/supabase/types'
+import { createContext, useContext, ReactNode } from 'react'
 
 interface LanguageContextType {
-  language: Language
-  setLanguage: (lang: Language) => void
+  language: 'mk'
   t: (key: string) => string
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined)
 
-const STORAGE_KEY = 'gerbera-language'
-
-// Helper to get localized field from an object
+// Helper to get Macedonian field from a DB object with _mk/_en suffixes
 export function getLocalizedField<T extends object>(
   obj: T,
   field: string,
-  language: Language
 ): string {
-  const localizedKey = `${field}_${language}` as keyof T
+  const mkKey = `${field}_mk` as keyof T
   const fallbackKey = field as keyof T
-  return (obj[localizedKey] as string) || (obj[fallbackKey] as string) || ''
+  return (obj[mkKey] as string) || (obj[fallbackKey] as string) || ''
 }
 
 // Translations import
 import { translations } from '@/i18n/translations'
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const language: Language = 'mk'
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  const setLanguage = (_lang: Language) => {
-    // Language switching disabled — hardcoded to 'mk'
-  }
-
-  // Translation function
   const t = (key: string): string => {
     const keys = key.split('.')
-    let value: unknown = translations[language]
+    let value: unknown = translations.mk
 
     for (const k of keys) {
       if (value && typeof value === 'object' && k in value) {
@@ -56,17 +39,8 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     return typeof value === 'string' ? value : key
   }
 
-  // Prevent hydration mismatch by rendering children only after mount
-  if (!mounted) {
-    return (
-      <LanguageContext.Provider value={{ language: 'mk', setLanguage, t }}>
-        {children}
-      </LanguageContext.Provider>
-    )
-  }
-
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, t }}>
+    <LanguageContext.Provider value={{ language: 'mk', t }}>
       {children}
     </LanguageContext.Provider>
   )
@@ -80,12 +54,11 @@ export function useLanguage() {
   return context
 }
 
-// Hook for getting localized content from database objects
+// Hook for getting Macedonian content from database objects
 export function useLocalized<T extends object>(
   obj: T | null | undefined,
   field: string
 ): string {
-  const { language } = useLanguage()
   if (!obj) return ''
-  return getLocalizedField(obj, field, language)
+  return getLocalizedField(obj, field)
 }

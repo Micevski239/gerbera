@@ -32,8 +32,8 @@ export default async function OccasionsPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-neutral-800">Occasions</h1>
-        <p className="text-neutral-600 mt-2">Manage occasions for the "Shop by Occasion" section on the homepage.</p>
+        <h1 className="text-3xl font-bold text-neutral-800">Пригоди</h1>
+        <p className="text-neutral-600 mt-2">Управувајте со пригодите за секцијата „Купувај по пригода" на почетната страница.</p>
       </div>
 
       <OccasionsClient occasions={occasions} />

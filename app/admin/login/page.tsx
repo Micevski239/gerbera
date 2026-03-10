@@ -31,7 +31,7 @@ export default function AdminLoginPage() {
 
       // Check if user is admin
       if (!data.user?.user_metadata?.is_admin) {
-        setError('Unauthorized: You do not have admin access')
+        setError('Немате администраторски пристап')
         await supabase.auth.signOut()
         setLoading(false)
         return
@@ -41,7 +41,7 @@ export default function AdminLoginPage() {
       router.push('/admin/products')
       router.refresh()
     } catch (err) {
-      setError('An unexpected error occurred')
+      setError('Настана неочекувана грешка')
       setLoading(false)
     }
   }
@@ -50,16 +50,16 @@ export default function AdminLoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-primary-500 to-accent-fern p-4">
       <div className="w-full max-w-md rounded-lg border border-border-soft bg-surface-base p-8 shadow-lift">
         <div className="mb-8 text-center">
-          <h1 className="font-heading text-ds-section text-ink-strong">Admin Login</h1>
+          <h1 className="font-heading text-ds-section text-ink-strong">Администратор</h1>
           <p className="text-ds-body text-ink-muted">
-            {process.env.NEXT_PUBLIC_SITE_NAME || 'Christmas Decorations'}
+            {process.env.NEXT_PUBLIC_SITE_NAME || 'Гербера Подароци'}
           </p>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-6">
           <div>
             <label htmlFor="email" className="mb-2 block text-ds-body-sm font-medium text-ink-base">
-              Email
+              Е-пошта
             </label>
             <input
               id="email"
@@ -75,7 +75,7 @@ export default function AdminLoginPage() {
 
           <div>
             <label htmlFor="password" className="mb-2 block text-ds-body-sm font-medium text-ink-base">
-              Password
+              Лозинка
             </label>
             <input
               id="password"
@@ -100,13 +100,13 @@ export default function AdminLoginPage() {
             disabled={loading}
             className="btn btn-primary w-full"
           >
-            {loading ? 'Logging in...' : 'Log In'}
+            {loading ? 'Најавување...' : 'Најави се'}
           </button>
         </form>
 
         <div className="mt-6 text-center">
           <a href="/" className="text-ds-body-sm text-primary-500 underline-offset-4 hover:underline">
-            Back to website
+            Назад на сајтот
           </a>
         </div>
       </div>

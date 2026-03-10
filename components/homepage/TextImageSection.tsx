@@ -14,10 +14,10 @@ export default function TextImageSection({ section }: TextImageSectionProps) {
   const { language } = useLanguage()
   const config = section.config as TextImageConfig
 
-  const title = getLocalizedField(section, 'title', language)
-  const subtitle = getLocalizedField(section, 'subtitle', language)
-  const content = language === 'mk' ? config.content_mk : config.content_en
-  const ctaText = language === 'mk' ? config.cta_text_mk : config.cta_text_en
+  const title = getLocalizedField(section, 'title')
+  const subtitle = getLocalizedField(section, 'subtitle')
+  const content = config.content_mk
+  const ctaText = config.cta_text_mk
   const imageUrl = getImageUrl(config.image_path || null)
 
   const isImageLeft = config.image_position === 'left'

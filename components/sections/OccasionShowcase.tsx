@@ -7,12 +7,12 @@ import { getImageUrl } from '@/lib/supabase/client'
 import ScrollReveal from '@/components/ScrollReveal'
 
 interface OccasionShowcaseProps {
-  language: 'mk' | 'en'
+  language: 'mk'
   occasions: Occasion[]
 }
 
-function OccasionCard({ occasion, language }: { occasion: Occasion; language: 'mk' | 'en' }) {
-  const label = language === 'mk' ? occasion.name_mk : (occasion.name_en || occasion.name_mk)
+function OccasionCard({ occasion, language }: { occasion: Occasion; language: 'mk' }) {
+  const label = occasion.name_mk
   const imageSrc = occasion.occasion_image_path ? getImageUrl(occasion.occasion_image_path) : null
 
   return (
@@ -60,10 +60,10 @@ export default function OccasionShowcase({ language, occasions }: OccasionShowca
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto">
           <p className="eyebrow font-body">
-            {language === 'mk' ? 'Купувај по пригода' : 'Shop by occasion'}
+            Купувај по пригода
           </p>
           <h2 className="font-heading text-ds-section text-ink-strong">
-            {language === 'mk' ? 'Пронајди го совршениот подарок' : 'Find the perfect gift'}
+            Пронајди го совршениот подарок
           </h2>
         </div>
 

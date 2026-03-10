@@ -32,8 +32,8 @@ export default async function StatsPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-neutral-800">Site Statistics</h1>
-        <p className="text-neutral-600 mt-2">Manage the statistics displayed in the About section on the homepage.</p>
+        <h1 className="text-3xl font-bold text-neutral-800">Статистики</h1>
+        <p className="text-neutral-600 mt-2">Управувајте со статистиките прикажани во секцијата „За нас" на почетната страница.</p>
       </div>
 
       <StatsClient stats={stats} />

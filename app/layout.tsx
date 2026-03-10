@@ -6,7 +6,7 @@ import './globals.css'
 
 const nunito = Nunito({
   subsets: ['latin', 'latin-ext', 'cyrillic'],
-  weight: ['300', '400', '500', '600', '700'],
+  weight: ['400', '500', '600', '700'],
   variable: '--font-nunito',
   display: 'swap',
 })
@@ -19,21 +19,22 @@ const badScript = Bad_Script({
 })
 
 export const metadata: Metadata = {
-  title: 'Gerbera Gifts - Personalized Gifts & Decorations',
+  title: 'Гербера Подароци - Персонализирани подароци и декорации',
   description:
-    'Gerbera Gifts crafts personalized gifts, balloons, floral arrangements, wines, and decor that make every celebration memorable.',
+    'Гербера Подароци изработува персонализирани подароци, балони, цветни аранжмани, вина и декорации за секоја незаборавна прослава.',
   keywords: [
-    'Gerbera Gifts',
-    'personalized gifts',
-    'custom balloons',
-    'flower arrangements',
-    'event decorations',
-    'personalized wine',
+    'Гербера Подароци',
+    'персонализирани подароци',
+    'балони',
+    'цветни аранжмани',
+    'декорации',
+    'персонализирано вино',
+    'подароци Македонија',
   ],
   openGraph: {
-    title: 'Gerbera Gifts - Personalized Gifts & Decorations',
+    title: 'Гербера Подароци - Персонализирани подароци и декорации',
     description:
-      'Gerbera Gifts crafts personalized gifts, balloons, floral arrangements, wines, and decor that make every celebration memorable.',
+      'Гербера Подароци изработува персонализирани подароци, балони, цветни аранжмани, вина и декорации за секоја незаборавна прослава.',
     type: 'website',
   },
 }

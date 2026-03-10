@@ -11,7 +11,7 @@ interface ProductShowcaseProps {
     popular: Product[]
     best: Product[]
   }
-  language: 'mk' | 'en'
+  language: 'mk'
 }
 
 const tabLabels: Record<'latest' | 'popular' | 'best', { mk: string; en: string }> = {
@@ -47,7 +47,7 @@ function formatPrice(value: number | null | undefined) {
   return `${value.toFixed(0)} ден`
 }
 
-function ProductCard({ product, language }: { product: Product; language: 'mk' | 'en' }) {
+function ProductCard({ product, language }: { product: Product; language: 'mk' }) {
   const title = language === 'mk'
     ? product.name_mk || product.name_en || product.name
     : product.name_en || product.name_mk || product.name
@@ -76,7 +76,7 @@ function ProductCard({ product, language }: { product: Product; language: 'mk' |
               <circle cx="12" cy="7" r="3" />
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4V2m5 5h2m-2 0l1.5-1.5M7 7H5m2 0L5.5 5.5" />
             </svg>
-            <span className="text-xs font-medium">{language === 'mk' ? 'Нема слика' : 'No image'}</span>
+            <span className="text-xs font-medium">Нема слика</span>
           </div>
         )}
         {hasSale && (
@@ -135,14 +135,14 @@ export default function ProductShowcase({ products, language }: ProductShowcaseP
           </div>
           <div className="flex gap-3">
             <button
-              aria-label={language === 'mk' ? 'Претходна категорија' : 'Previous category'}
+              aria-label="Претходна категорија"
               className="h-9 w-9 rounded-full bg-neutral-100 text-neutral-500 hover:text-primary-500 hover:bg-neutral-200 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
               onClick={() => setActiveTab((prev) => (prev === 'latest' ? 'best' : prev === 'popular' ? 'latest' : 'popular'))}
             >
               ←
             </button>
             <button
-              aria-label={language === 'mk' ? 'Следна категорија' : 'Next category'}
+              aria-label="Следна категорија"
               className="h-9 w-9 rounded-full bg-neutral-100 text-neutral-500 hover:text-primary-500 hover:bg-neutral-200 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
               onClick={() => setActiveTab((prev) => (prev === 'latest' ? 'popular' : prev === 'popular' ? 'best' : 'latest'))}
             >

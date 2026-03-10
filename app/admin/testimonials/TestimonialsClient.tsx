@@ -8,9 +8,7 @@ import type { Testimonial } from '@/lib/supabase/types'
 interface TestimonialFormState {
   customer_name: string
   customer_location_mk: string
-  customer_location_en: string
   content_mk: string
-  content_en: string
   rating: number
   avatar_path: string
   is_featured: boolean
@@ -24,9 +22,7 @@ interface TestimonialsClientProps {
 const EMPTY_FORM: TestimonialFormState = {
   customer_name: '',
   customer_location_mk: '',
-  customer_location_en: '',
   content_mk: '',
-  content_en: '',
   rating: 5,
   avatar_path: '',
   is_featured: false,
@@ -59,9 +55,7 @@ export default function TestimonialsClient({ testimonials }: TestimonialsClientP
       map[t.id] = {
         customer_name: t.customer_name,
         customer_location_mk: t.customer_location_mk || '',
-        customer_location_en: t.customer_location_en || '',
         content_mk: t.content_mk,
-        content_en: t.content_en || '',
         rating: t.rating,
         avatar_path: t.avatar_path || '',
         is_featured: t.is_featured,
@@ -85,8 +79,8 @@ export default function TestimonialsClient({ testimonials }: TestimonialsClientP
   const handleSave = async (id: string) => {
     const form = forms[id]
     if (!form) return
-    if (!form.customer_name.trim() || !form.content_mk.trim() || !form.content_en.trim()) {
-      alert('Name and both content fields are required.')
+    if (!form.customer_name.trim() || !form.content_mk.trim()) {
+      alert('Името и изјавата се задолжителни.')
       return
     }
     setSavingId(id)
@@ -96,9 +90,9 @@ export default function TestimonialsClient({ testimonials }: TestimonialsClientP
         .update({
           customer_name: form.customer_name.trim(),
           customer_location_mk: form.customer_location_mk.trim() || null,
-          customer_location_en: form.customer_location_en.trim() || null,
+          customer_location_en: null,
           content_mk: form.content_mk.trim(),
-          content_en: form.content_en.trim(),
+          content_en: null,
           rating: form.rating,
           avatar_path: form.avatar_path.trim() || null,
           is_featured: form.is_featured,
@@ -110,28 +104,28 @@ export default function TestimonialsClient({ testimonials }: TestimonialsClientP
       router.refresh()
     } catch (err) {
       console.error(err)
-      alert('Failed to save testimonial.')
+      alert('Неуспешно зачувување на изјавата.')
     } finally {
       setSavingId(null)
     }
   }
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Delete this testimonial?')) return
+    if (!confirm('Избриши ја оваа изјава?')) return
     try {
       const { error } = await supabase.from('testimonials').delete().eq('id', id)
       if (error) throw new Error(error.message)
       router.refresh()
     } catch (err) {
       console.error(err)
-      alert('Failed to delete testimonial.')
+      alert('Неуспешно бришење на изјавата.')
     }
   }
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!newTestimonial.customer_name.trim() || !newTestimonial.content_mk.trim() || !newTestimonial.content_en.trim()) {
-      alert('Name and content are required.')
+    if (!newTestimonial.customer_name.trim() || !newTestimonial.content_mk.trim()) {
+      alert('Името и изјавата се задолжителни.')
       return
     }
     setCreating(true)
@@ -139,9 +133,9 @@ export default function TestimonialsClient({ testimonials }: TestimonialsClientP
       const { error } = await supabase.from('testimonials').insert({
         customer_name: newTestimonial.customer_name.trim(),
         customer_location_mk: newTestimonial.customer_location_mk.trim() || null,
-        customer_location_en: newTestimonial.customer_location_en.trim() || null,
+        customer_location_en: null,
         content_mk: newTestimonial.content_mk.trim(),
-        content_en: newTestimonial.content_en.trim(),
+        content_en: null,
         rating: newTestimonial.rating,
         avatar_path: newTestimonial.avatar_path.trim() || null,
         is_featured: newTestimonial.is_featured,
@@ -153,7 +147,7 @@ export default function TestimonialsClient({ testimonials }: TestimonialsClientP
       router.refresh()
     } catch (err) {
       console.error(err)
-      alert('Failed to create testimonial.')
+      alert('Неуспешно креирање на изјавата.')
     } finally {
       setCreating(false)
     }
@@ -168,7 +162,7 @@ export default function TestimonialsClient({ testimonials }: TestimonialsClientP
           onClick={() => setShowAddForm((v) => !v)}
           className="w-full flex items-center justify-between px-6 py-4 text-left hover:bg-neutral-50 transition-colors"
         >
-          <span className="font-semibold text-neutral-800">Add testimonial</span>
+          <span className="font-semibold text-neutral-800">Додај изјава</span>
           <svg
             className={`h-5 w-5 text-neutral-400 transition-transform ${showAddForm ? 'rotate-180' : ''}`}
             fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"
@@ -181,54 +175,42 @@ export default function TestimonialsClient({ testimonials }: TestimonialsClientP
           <form onSubmit={handleCreate} className="border-t border-neutral-100 px-6 pb-6 pt-5 space-y-4">
             <div className="grid gap-4 md:grid-cols-2">
               <div>
-                <label className="label">Customer Name</label>
+                <label className="label">Име на клиент</label>
                 <input className="input" value={newTestimonial.customer_name} onChange={(e) => setNewTestimonial((p) => ({ ...p, customer_name: e.target.value }))} />
               </div>
               <div>
-                <label className="label">Avatar URL</label>
+                <label className="label">URL на аватар</label>
                 <input className="input" value={newTestimonial.avatar_path} onChange={(e) => setNewTestimonial((p) => ({ ...p, avatar_path: e.target.value }))} />
               </div>
             </div>
-            <div className="grid gap-4 md:grid-cols-2">
-              <div>
-                <label className="label">Location (MK)</label>
-                <input className="input" value={newTestimonial.customer_location_mk} onChange={(e) => setNewTestimonial((p) => ({ ...p, customer_location_mk: e.target.value }))} />
-              </div>
-              <div>
-                <label className="label">Location (EN)</label>
-                <input className="input" value={newTestimonial.customer_location_en} onChange={(e) => setNewTestimonial((p) => ({ ...p, customer_location_en: e.target.value }))} />
-              </div>
+            <div>
+              <label className="label">Локација</label>
+              <input className="input" value={newTestimonial.customer_location_mk} onChange={(e) => setNewTestimonial((p) => ({ ...p, customer_location_mk: e.target.value }))} />
             </div>
-            <div className="grid gap-4 md:grid-cols-2">
-              <div>
-                <label className="label">Quote (MK)</label>
-                <textarea className="input min-h-[100px]" value={newTestimonial.content_mk} onChange={(e) => setNewTestimonial((p) => ({ ...p, content_mk: e.target.value }))} />
-              </div>
-              <div>
-                <label className="label">Quote (EN)</label>
-                <textarea className="input min-h-[100px]" value={newTestimonial.content_en} onChange={(e) => setNewTestimonial((p) => ({ ...p, content_en: e.target.value }))} />
-              </div>
+            <div>
+              <label className="label">Изјава</label>
+              <textarea className="input min-h-[100px]" value={newTestimonial.content_mk} onChange={(e) => setNewTestimonial((p) => ({ ...p, content_mk: e.target.value }))} />
             </div>
             <div className="flex flex-wrap items-center gap-6">
               <div className="w-24">
-                <label className="label">Rating</label>
+                <label className="label">Оценка</label>
                 <input type="number" min={1} max={5} className="input" value={newTestimonial.rating} onChange={(e) => setNewTestimonial((p) => ({ ...p, rating: Number(e.target.value) }))} />
               </div>
               <label className="label flex items-center gap-2 cursor-pointer">
                 <input type="checkbox" checked={newTestimonial.is_featured} onChange={(e) => setNewTestimonial((p) => ({ ...p, is_featured: e.target.checked }))} />
-                Featured
+                Истакната
               </label>
               <label className="label flex items-center gap-2 cursor-pointer">
                 <input type="checkbox" checked={newTestimonial.is_active} onChange={(e) => setNewTestimonial((p) => ({ ...p, is_active: e.target.checked }))} />
-                Visible
+                Видлива
               </label>
             </div>
             <div className="flex gap-3">
               <button type="submit" className="btn btn-primary" disabled={creating}>
-                {creating ? 'Saving…' : 'Create testimonial'}
+                {creating ? 'Зачувување...' : 'Креирај изјава'}
               </button>
               <button type="button" className="btn" onClick={() => { setShowAddForm(false); setNewTestimonial(EMPTY_FORM) }}>
-                Cancel
+                Откажи
               </button>
             </div>
           </form>
@@ -239,7 +221,7 @@ export default function TestimonialsClient({ testimonials }: TestimonialsClientP
       <div className="space-y-3">
         {testimonials.length === 0 && (
           <div className="rounded-2xl border border-dashed border-neutral-200 p-8 text-center text-neutral-500">
-            No testimonials yet. Use the form above to add your first client story.
+            Нема изјави. Користете ја формата погоре за да ја додадете првата.
           </div>
         )}
 
@@ -259,17 +241,17 @@ export default function TestimonialsClient({ testimonials }: TestimonialsClientP
 
                 <div className="flex-1 min-w-0">
                   <p className="font-medium text-neutral-900 truncate">{form.customer_name}</p>
-                  <p className="text-xs text-neutral-400 truncate">{form.customer_location_en || form.customer_location_mk || '—'}</p>
+                  <p className="text-xs text-neutral-400 truncate">{form.customer_location_mk || '—'}</p>
                 </div>
 
                 <StarRating rating={form.rating} />
 
                 <div className="hidden sm:flex items-center gap-2">
                   {form.is_featured && (
-                    <span className="text-xs bg-amber-50 text-amber-600 border border-amber-200 px-2 py-0.5 rounded-full">Featured</span>
+                    <span className="text-xs bg-amber-50 text-amber-600 border border-amber-200 px-2 py-0.5 rounded-full">Истакната</span>
                   )}
                   <span className={`text-xs px-2 py-0.5 rounded-full border ${form.is_active ? 'bg-green-50 text-green-600 border-green-200' : 'bg-neutral-50 text-neutral-400 border-neutral-200'}`}>
-                    {form.is_active ? 'Visible' : 'Hidden'}
+                    {form.is_active ? 'Видлива' : 'Скриена'}
                   </span>
                 </div>
 
@@ -279,14 +261,14 @@ export default function TestimonialsClient({ testimonials }: TestimonialsClientP
                     onClick={() => setExpandedId(isOpen ? null : testimonial.id)}
                     className="text-sm font-medium text-neutral-600 hover:text-neutral-900 border border-neutral-200 hover:border-neutral-400 px-3 py-1.5 rounded-lg transition-colors"
                   >
-                    {isOpen ? 'Close' : 'Edit'}
+                    {isOpen ? 'Затвори' : 'Уреди'}
                   </button>
                   <button
                     type="button"
                     onClick={() => handleDelete(testimonial.id)}
                     className="text-sm font-medium text-red-500 hover:text-red-700 border border-red-100 hover:border-red-300 px-3 py-1.5 rounded-lg transition-colors"
                   >
-                    Delete
+                    Избриши
                   </button>
                 </div>
               </div>
@@ -296,46 +278,34 @@ export default function TestimonialsClient({ testimonials }: TestimonialsClientP
                 <div className="border-t border-neutral-100 px-5 pb-5 pt-4 space-y-4">
                   <div className="grid gap-4 md:grid-cols-2">
                     <div>
-                      <label className="label">Customer Name</label>
+                      <label className="label">Име на клиент</label>
                       <input className="input" value={form.customer_name} onChange={(e) => handleChange(testimonial.id, 'customer_name', e.target.value)} />
                     </div>
                     <div>
-                      <label className="label">Avatar URL</label>
+                      <label className="label">URL на аватар</label>
                       <input className="input" value={form.avatar_path} onChange={(e) => handleChange(testimonial.id, 'avatar_path', e.target.value)} />
                     </div>
                   </div>
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <div>
-                      <label className="label">Location (MK)</label>
-                      <input className="input" value={form.customer_location_mk} onChange={(e) => handleChange(testimonial.id, 'customer_location_mk', e.target.value)} />
-                    </div>
-                    <div>
-                      <label className="label">Location (EN)</label>
-                      <input className="input" value={form.customer_location_en} onChange={(e) => handleChange(testimonial.id, 'customer_location_en', e.target.value)} />
-                    </div>
+                  <div>
+                    <label className="label">Локација</label>
+                    <input className="input" value={form.customer_location_mk} onChange={(e) => handleChange(testimonial.id, 'customer_location_mk', e.target.value)} />
                   </div>
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <div>
-                      <label className="label">Quote (MK)</label>
-                      <textarea className="input min-h-[100px]" value={form.content_mk} onChange={(e) => handleChange(testimonial.id, 'content_mk', e.target.value)} />
-                    </div>
-                    <div>
-                      <label className="label">Quote (EN)</label>
-                      <textarea className="input min-h-[100px]" value={form.content_en} onChange={(e) => handleChange(testimonial.id, 'content_en', e.target.value)} />
-                    </div>
+                  <div>
+                    <label className="label">Изјава</label>
+                    <textarea className="input min-h-[100px]" value={form.content_mk} onChange={(e) => handleChange(testimonial.id, 'content_mk', e.target.value)} />
                   </div>
                   <div className="flex flex-wrap items-center gap-6">
                     <div className="w-24">
-                      <label className="label">Rating</label>
+                      <label className="label">Оценка</label>
                       <input type="number" min={1} max={5} className="input" value={form.rating} onChange={(e) => handleChange(testimonial.id, 'rating', Number(e.target.value))} />
                     </div>
                     <label className="label flex items-center gap-2 cursor-pointer">
                       <input type="checkbox" checked={form.is_featured} onChange={(e) => handleChange(testimonial.id, 'is_featured', e.target.checked)} />
-                      Featured
+                      Истакната
                     </label>
                     <label className="label flex items-center gap-2 cursor-pointer">
                       <input type="checkbox" checked={form.is_active} onChange={(e) => handleChange(testimonial.id, 'is_active', e.target.checked)} />
-                      Visible
+                      Видлива
                     </label>
                   </div>
                   <div className="flex gap-3">
@@ -345,14 +315,14 @@ export default function TestimonialsClient({ testimonials }: TestimonialsClientP
                       onClick={() => handleSave(testimonial.id)}
                       disabled={savingId === testimonial.id}
                     >
-                      {savingId === testimonial.id ? 'Saving…' : 'Save changes'}
+                      {savingId === testimonial.id ? 'Зачувување...' : 'Зачувај'}
                     </button>
                     <button
                       type="button"
                       className="btn"
                       onClick={() => setExpandedId(null)}
                     >
-                      Cancel
+                      Откажи
                     </button>
                   </div>
                 </div>

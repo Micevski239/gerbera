@@ -10,25 +10,38 @@ interface ProductPageProps {
   params: Promise<{ id: string }>
 }
 
+export async function generateStaticParams() {
+  const { createBuildClient } = await import('@/lib/supabase/server')
+  const supabase = createBuildClient()
+  const { data } = await supabase
+    .from('products')
+    .select('id')
+    .eq('is_visible', true)
+    .eq('status', 'published')
+    .limit(50)
+
+  return (data || []).map((product) => ({ id: product.id }))
+}
+
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
   const { id } = await params
   const supabase = await createClient()
   const { data: product } = await supabase
     .from('products')
-    .select('name, name_en, name_mk, description_en, image_url')
+    .select('name, name_mk, description_mk, image_url')
     .eq('id', id)
     .eq('is_visible', true)
     .single()
 
   if (!product) {
-    return { title: 'Product Not Found | Gerbera Gifts' }
+    return { title: 'Производ не е пронајден | Гербера Подароци' }
   }
 
-  const name = product.name_en || product.name_mk || product.name
-  const description = product.description_en || `${name} — handmade personalized gift from Gerbera Gifts.`
+  const name = product.name_mk || product.name
+  const description = product.description_mk || `${name} — рачно изработен персонализиран подарок од Гербера Подароци.`
 
   return {
-    title: `${name} | Gerbera Gifts`,
+    title: `${name} | Гербера Подароци`,
     description,
     openGraph: {
       title: name,
@@ -76,12 +89,39 @@ export default async function ProductPage({ params }: ProductPageProps) {
       .limit(8),
   ])
 
+  // JSON-LD structured data for SEO — data is from our own database, not user input
+  const productName = product.name_mk || product.name
+  const productDesc = product.description_mk || ''
+  const price = product.is_on_sale && product.sale_price ? product.sale_price : product.price
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: productName,
+    description: productDesc,
+    image: product.image_url || undefined,
+    offers: price ? {
+      '@type': 'Offer',
+      price: price.toString(),
+      priceCurrency: 'MKD',
+      availability: product.status === 'sold'
+        ? 'https://schema.org/SoldOut'
+        : 'https://schema.org/InStock',
+    } : undefined,
+  }
+
   return (
-    <ProductDetailClient
-      product={product}
-      images={imagesResult.data || []}
-      category={categoryResult.data}
-      relatedProducts={relatedResult.data || []}
-    />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <ProductDetailClient
+        product={product}
+        images={imagesResult.data || []}
+        category={categoryResult.data}
+        relatedProducts={relatedResult.data || []}
+      />
+    </>
   )
 }

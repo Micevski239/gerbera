@@ -14,9 +14,7 @@ interface HeroTilesClientProps {
 
 interface HeroTileFormState {
   label_mk: string
-  label_en: string
   tagline_mk: string
-  tagline_en: string
   image_url: string
   url: string
   is_active: boolean
@@ -26,23 +24,23 @@ const HERO_TILE_BUCKET = 'product-images'
 
 const slotMeta: Record<HeroTileSlot, { title: string; helper: string; order: number }> = {
   left: {
-    title: 'Left (Large)',
-    helper: 'Full-height card on the left side of the bento grid.',
+    title: 'Лево (Голема)',
+    helper: 'Картичка на целата висина од левата страна.',
     order: 10,
   },
   right_top: {
-    title: 'Right Top',
-    helper: 'Wide card at the top of the right column.',
+    title: 'Десно горе',
+    helper: 'Широка картичка на врвот од десната колона.',
     order: 20,
   },
   right_bottom_left: {
-    title: 'Right Bottom Left',
-    helper: 'Small card on the bottom-left of the right column.',
+    title: 'Десно долу лево',
+    helper: 'Мала картичка долу-лево од десната колона.',
     order: 30,
   },
   right_bottom_right: {
-    title: 'Right Bottom Right',
-    helper: 'Small card on the bottom-right of the right column.',
+    title: 'Десно долу десно',
+    helper: 'Мала картичка долу-десно од десната колона.',
     order: 40,
   },
 }
@@ -56,9 +54,7 @@ export default function HeroTilesClient({ tiles }: HeroTilesClientProps) {
       const existing = tiles.find((tile) => tile.slot === slot)
       acc[slot] = {
         label_mk: existing?.label_mk ?? '',
-        label_en: existing?.label_en ?? '',
         tagline_mk: existing?.tagline_mk ?? '',
-        tagline_en: existing?.tagline_en ?? '',
         image_url: existing?.image_url ?? '',
         url: existing?.url ?? '/products',
         is_active: existing?.is_active ?? true,
@@ -87,8 +83,8 @@ export default function HeroTilesClient({ tiles }: HeroTilesClientProps) {
 
   const handleSave = async (slot: HeroTileSlot) => {
     const form = forms[slot]
-    if (!form.label_mk.trim() || !form.label_en.trim() || !form.image_url.trim()) {
-      alert('Please fill out both labels and the image URL.')
+    if (!form.label_mk.trim() || !form.image_url.trim()) {
+      alert('Пополнете го насловот и сликата.')
       return
     }
 
@@ -98,9 +94,9 @@ export default function HeroTilesClient({ tiles }: HeroTilesClientProps) {
       const payload = {
         slot,
         label_mk: form.label_mk.trim(),
-        label_en: form.label_en.trim(),
+        label_en: null,
         tagline_mk: form.tagline_mk.trim(),
-        tagline_en: form.tagline_en.trim(),
+        tagline_en: null,
         image_url: form.image_url.trim(),
         url: (() => {
           const u = form.url.trim()
@@ -121,7 +117,7 @@ export default function HeroTilesClient({ tiles }: HeroTilesClientProps) {
       router.refresh()
     } catch (error) {
       console.error(error)
-      alert('Failed to save hero tile. Please try again.')
+      alert('Неуспешно зачувување на плочката.')
     } finally {
       setSavingSlot(null)
     }
@@ -136,7 +132,7 @@ export default function HeroTilesClient({ tiles }: HeroTilesClientProps) {
 
   const uploadTileImage = async (slot: HeroTileSlot, file: File) => {
     if (!isImageFile(file)) {
-      throw new Error('Only JPEG, PNG, and WebP images are allowed.')
+      throw new Error('Дозволени се само JPEG, PNG и WebP слики.')
     }
     const { full, thumbnail } = await processImage(file, 1200)
     const safeName = sanitizeFilename(file.name)
@@ -172,7 +168,7 @@ export default function HeroTilesClient({ tiles }: HeroTilesClientProps) {
       }))
     } catch (error) {
       console.error(error)
-      alert('Failed to upload the image. Please try again.')
+      alert('Неуспешно прикачување на сликата.')
     } finally {
       setUploadingSlot(null)
     }
@@ -182,20 +178,20 @@ export default function HeroTilesClient({ tiles }: HeroTilesClientProps) {
     <div className="space-y-8">
       {/* Layout preview */}
       <div className="rounded-2xl bg-neutral-50 border border-neutral-200 p-4">
-        <p className="text-xs font-semibold uppercase tracking-wide text-neutral-400 mb-3">Layout Preview</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-neutral-400 mb-3">Преглед на распоред</p>
         <div className="grid grid-cols-[1fr_1fr] gap-2 h-32">
           <div className="rounded-lg bg-neutral-200 flex items-center justify-center text-xs font-medium text-neutral-500 row-span-2">
-            Left (Large)
+            Лево (Голема)
           </div>
           <div className="rounded-lg bg-neutral-200 flex items-center justify-center text-xs font-medium text-neutral-500">
-            Right Top
+            Десно горе
           </div>
           <div className="grid grid-cols-2 gap-2">
             <div className="rounded-lg bg-neutral-200 flex items-center justify-center text-[10px] font-medium text-neutral-500">
-              R. Bottom Left
+              Д. долу лево
             </div>
             <div className="rounded-lg bg-neutral-200 flex items-center justify-center text-[10px] font-medium text-neutral-500">
-              R. Bottom Right
+              Д. долу десно
             </div>
           </div>
         </div>
@@ -220,67 +216,45 @@ export default function HeroTilesClient({ tiles }: HeroTilesClientProps) {
                 {form.image_url ? (
                   <Image
                     src={form.image_url}
-                    alt={form.label_en || meta.title}
+                    alt={form.label_mk || meta.title}
                     fill
                     className="object-cover"
                     sizes="(max-width: 1024px) 100vw, 400px"
                   />
                 ) : (
                   <div className="absolute inset-0 flex items-center justify-center text-neutral-400 text-sm bg-neutral-50">
-                    No image
+                    Нема слика
                   </div>
                 )}
                 {uploadingSlot === slot && (
                   <div className="absolute inset-0 bg-white/70 flex items-center justify-center text-sm font-semibold text-neutral-500">
-                    Uploading…
+                    Прикачување…
                   </div>
                 )}
               </div>
 
-              <div className="grid gap-4 md:grid-cols-2">
-                <div>
-                  <label className="label">Label (MK)</label>
-                  <input
-                    className="input"
-                    value={form.label_mk}
-                    onChange={(e) => handleFormChange(slot, 'label_mk', e.target.value)}
-                    placeholder="Наслов"
-                  />
-                </div>
-                <div>
-                  <label className="label">Label (EN)</label>
-                  <input
-                    className="input"
-                    value={form.label_en}
-                    onChange={(e) => handleFormChange(slot, 'label_en', e.target.value)}
-                    placeholder="Label"
-                  />
-                </div>
-              </div>
-
-              <div className="grid gap-4 md:grid-cols-2">
-                <div>
-                  <label className="label">Tagline (MK)</label>
-                  <input
-                    className="input"
-                    value={form.tagline_mk}
-                    onChange={(e) => handleFormChange(slot, 'tagline_mk', e.target.value)}
-                    placeholder="Краток опис"
-                  />
-                </div>
-                <div>
-                  <label className="label">Tagline (EN)</label>
-                  <input
-                    className="input"
-                    value={form.tagline_en}
-                    onChange={(e) => handleFormChange(slot, 'tagline_en', e.target.value)}
-                    placeholder="Short description"
-                  />
-                </div>
+              <div>
+                <label className="label">Наслов</label>
+                <input
+                  className="input"
+                  value={form.label_mk}
+                  onChange={(e) => handleFormChange(slot, 'label_mk', e.target.value)}
+                  placeholder="Наслов"
+                />
               </div>
 
               <div>
-                <label className="label">Image</label>
+                <label className="label">Краток опис</label>
+                <input
+                  className="input"
+                  value={form.tagline_mk}
+                  onChange={(e) => handleFormChange(slot, 'tagline_mk', e.target.value)}
+                  placeholder="Краток опис"
+                />
+              </div>
+
+              <div>
+                <label className="label">Слика</label>
                 <div className="flex flex-wrap gap-3">
                   <label className={`btn btn-secondary cursor-pointer ${uploadingSlot === slot ? 'opacity-70 pointer-events-none' : ''}`}>
                     <input
@@ -292,7 +266,7 @@ export default function HeroTilesClient({ tiles }: HeroTilesClientProps) {
                         e.target.value = ''
                       }}
                     />
-                    {uploadingSlot === slot ? 'Uploading…' : 'Upload image'}
+                    {uploadingSlot === slot ? 'Прикачување…' : 'Прикачи слика'}
                   </label>
                   <input
                     className="input flex-1 min-w-[200px]"
@@ -302,20 +276,20 @@ export default function HeroTilesClient({ tiles }: HeroTilesClientProps) {
                   />
                 </div>
                 <p className="text-xs text-neutral-500 mt-1">
-                  Upload a file (stored in Supabase) or paste any public image URL.
+                  Прикачете датотека (зачувана во Supabase) или залепете јавен URL на слика.
                 </p>
               </div>
 
               <div>
-                <label className="label">Link URL</label>
+                <label className="label">Линк URL</label>
                 <input
                   className="input"
                   value={form.url}
                   onChange={(e) => handleFormChange(slot, 'url', e.target.value)}
-                  placeholder="/products or https://instagram.com/..."
+                  placeholder="/products или https://instagram.com/..."
                 />
                 <p className="text-xs text-neutral-500 mt-1">
-                  Where the tile links to. Use /products for internal pages or a full URL for external (Facebook, Instagram, etc).
+                  Каде води плочката. Користете /products за интерни страници или целосен URL за надворешни.
                 </p>
               </div>
 
@@ -326,7 +300,7 @@ export default function HeroTilesClient({ tiles }: HeroTilesClientProps) {
                   checked={form.is_active}
                   onChange={(e) => handleFormChange(slot, 'is_active', e.target.checked)}
                 />
-                Visible on storefront
+                Видлива на сајтот
               </label>
 
               <div className="flex flex-wrap gap-3">
@@ -335,7 +309,7 @@ export default function HeroTilesClient({ tiles }: HeroTilesClientProps) {
                   onClick={() => handleSave(slot)}
                   disabled={savingSlot === slot}
                 >
-                  {savingSlot === slot ? 'Saving…' : 'Save tile'}
+                  {savingSlot === slot ? 'Зачувување…' : 'Зачувај'}
                 </button>
                 <button
                   className="btn btn-secondary"
@@ -343,7 +317,7 @@ export default function HeroTilesClient({ tiles }: HeroTilesClientProps) {
                   onClick={() => handleReset(slot)}
                   disabled={savingSlot === slot}
                 >
-                  Reset
+                  Ресетирај
                 </button>
               </div>
             </div>

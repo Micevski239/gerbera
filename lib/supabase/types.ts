@@ -1,10 +1,13 @@
 // Database types - auto-generated from schema
 
-// Language type for bilingual support
-export type Language = 'mk' | 'en'
+// Language type
+export type Language = 'mk'
 
 // Product status type
 export type ProductStatus = 'draft' | 'published' | 'sold'
+
+// Sort options for product listings
+export type SortOption = 'newest' | 'oldest' | 'priceAsc' | 'priceDesc' | 'nameAsc' | 'nameDesc'
 
 // Homepage Section Types
 export type HomepageSectionType = 'product_grid' | 'category_grid' | 'banner' | 'text_image' | 'trust_badges' | 'gallery'

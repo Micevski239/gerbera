@@ -42,7 +42,7 @@ export default function ImageOptimizerClient({ images }: { images: ImageRecord[]
       try {
         const imageUrl = getFullUrl(record.imageValue)
         const response = await fetch(imageUrl)
-        if (!response.ok) throw new Error(`Failed to download: ${response.status}`)
+        if (!response.ok) throw new Error(`Неуспешно преземање: ${response.status}`)
 
         const blob = await response.blob()
         const file = new File([blob], 'image.jpg', { type: blob.type })
@@ -84,9 +84,9 @@ export default function ImageOptimizerClient({ images }: { images: ImageRecord[]
 
         if (updateError) throw new Error(updateError.message)
 
-        setResults((prev) => [...prev, { label: record.label, status: 'success', message: 'Converted to WebP + thumbnail' }])
+        setResults((prev) => [...prev, { label: record.label, status: 'success', message: 'Конвертирано во WebP + миниатура' }])
       } catch (error) {
-        const message = error instanceof Error ? error.message : 'Unknown error'
+        const message = error instanceof Error ? error.message : 'Непозната грешка'
         setResults((prev) => [...prev, { label: record.label, status: 'error', message }])
       }
     }
@@ -106,21 +106,21 @@ export default function ImageOptimizerClient({ images }: { images: ImageRecord[]
         <div className="flex items-center justify-between">
           <div>
             <p className="text-2xl font-bold text-neutral-800">{images.length}</p>
-            <p className="text-sm text-neutral-500">Total images across all tables</p>
+            <p className="text-sm text-neutral-500">Вкупно слики од сите табели</p>
           </div>
           <button
             onClick={reprocessAll}
             disabled={processing || images.length === 0}
             className="btn btn-primary"
           >
-            {processing ? 'Processing...' : 'Reprocess All Images'}
+            {processing ? 'Процесирање...' : 'Репроцесирај ги сите'}
           </button>
         </div>
 
         {processing && (
           <div className="mt-4 space-y-2">
             <div className="flex justify-between text-sm text-neutral-600">
-              <span>Processing: {currentLabel}</span>
+              <span>Процесирање: {currentLabel}</span>
               <span>{currentIndex} / {images.length}</span>
             </div>
             <div className="w-full bg-neutral-200 rounded-full h-2">
@@ -134,8 +134,8 @@ export default function ImageOptimizerClient({ images }: { images: ImageRecord[]
 
         {results.length > 0 && !processing && (
           <div className="mt-4 flex gap-4 text-sm">
-            <span className="text-emerald-600 font-medium">{successCount} succeeded</span>
-            {errorCount > 0 && <span className="text-red-600 font-medium">{errorCount} failed</span>}
+            <span className="text-emerald-600 font-medium">{successCount} успешни</span>
+            {errorCount > 0 && <span className="text-red-600 font-medium">{errorCount} неуспешни</span>}
           </div>
         )}
       </div>
@@ -144,7 +144,7 @@ export default function ImageOptimizerClient({ images }: { images: ImageRecord[]
       {results.length > 0 && (
         <div className="rounded-2xl bg-white shadow-card border border-neutral-100 overflow-hidden">
           <div className="p-4 border-b border-neutral-100">
-            <h2 className="text-lg font-semibold text-neutral-800">Results</h2>
+            <h2 className="text-lg font-semibold text-neutral-800">Резултати</h2>
           </div>
           <div className="divide-y divide-neutral-100 max-h-96 overflow-auto">
             {results.map((result, idx) => (
@@ -167,7 +167,7 @@ export default function ImageOptimizerClient({ images }: { images: ImageRecord[]
       {/* Image inventory */}
       <div className="rounded-2xl bg-white shadow-card border border-neutral-100 overflow-hidden">
         <div className="p-4 border-b border-neutral-100">
-          <h2 className="text-lg font-semibold text-neutral-800">Image Inventory</h2>
+          <h2 className="text-lg font-semibold text-neutral-800">Инвентар на слики</h2>
         </div>
         <div className="divide-y divide-neutral-100 max-h-96 overflow-auto">
           {images.map((img, idx) => {
@@ -180,7 +180,7 @@ export default function ImageOptimizerClient({ images }: { images: ImageRecord[]
                 </div>
                 <span className="text-sm text-neutral-700 flex-1">{img.label}</span>
                 <span className={`text-xs px-2 py-0.5 rounded-full ${isWebp ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
-                  {isWebp ? 'WebP' : 'Not WebP'}
+                  {isWebp ? 'WebP' : 'Не е WebP'}
                 </span>
               </div>
             )

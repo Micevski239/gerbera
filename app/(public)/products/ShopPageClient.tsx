@@ -8,8 +8,8 @@ import ShopSidebar from '@/components/products/ShopSidebar'
 import MobileShopFilter from '@/components/products/MobileShopFilter'
 import ProductGridControls, { type ViewMode } from '@/components/products/ProductGridControls'
 import LoadMoreButton from '@/components/products/LoadMoreButton'
-import type { SortOption } from '@/hooks/useProducts'
-import type { Category, Product, Occasion, ProductOccasion } from '@/lib/supabase/types'
+import { FilterIcon, SearchIcon, CloseIcon } from '@/components/icons'
+import type { SortOption, Category, Product, Occasion, ProductOccasion } from '@/lib/supabase/types'
 
 interface ProductWithCategory extends Product {
   category_slug: string
@@ -36,15 +36,10 @@ export default function ShopPageClient({ categories, products, occasions, produc
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
-  const categoryParam = searchParams.get('category')
-  const occasionParam = searchParams.get('occasion')
+  // Derive category/occasion from URL — single source of truth
+  const selectedCategory = searchParams.get('category') || null
+  const selectedOccasion = searchParams.get('occasion') || null
 
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(() =>
-    categoryParam && categoryParam.length > 0 ? categoryParam : null
-  )
-  const [selectedOccasion, setSelectedOccasion] = useState<string | null>(() =>
-    occasionParam && occasionParam.length > 0 ? occasionParam : null
-  )
   const [priceRange, setPriceRange] = useState<{ min: number | null; max: number | null }>({ min: null, max: null })
   const [showOnSale, setShowOnSale] = useState(false)
   const [showBestSeller, setShowBestSeller] = useState(false)
@@ -52,14 +47,6 @@ export default function ShopPageClient({ categories, products, occasions, produc
   const [sortBy, setSortBy] = useState<SortOption>('newest')
   const [viewMode, setViewMode] = useState<ViewMode>('grid-4')
   const [displayCount, setDisplayCount] = useState(PRODUCTS_PER_PAGE)
-
-  useEffect(() => {
-    setSelectedCategory(categoryParam && categoryParam.length > 0 ? categoryParam : null)
-  }, [categoryParam])
-
-  useEffect(() => {
-    setSelectedOccasion(occasionParam && occasionParam.length > 0 ? occasionParam : null)
-  }, [occasionParam])
 
   const productOccasionMap = useMemo(() => {
     const map = new Map<string, Set<string>>()
@@ -110,7 +97,14 @@ export default function ShopPageClient({ categories, products, occasions, produc
     setDisplayCount(prev => prev + PRODUCTS_PER_PAGE)
   }, [])
 
-  const getCategoryCount = (slug: string) => products.filter(p => p.category_slug === slug).length
+  const categoryCounts = useMemo(() => {
+    const map = new Map<string, number>()
+    for (const p of products) {
+      map.set(p.category_slug, (map.get(p.category_slug) || 0) + 1)
+    }
+    return map
+  }, [products])
+  const getCategoryCount = (slug: string) => categoryCounts.get(slug) || 0
 
   const hasActiveFilters = selectedCategory !== null || selectedOccasion !== null ||
     priceRange.min !== null || priceRange.max !== null || showOnSale || showBestSeller
@@ -140,18 +134,14 @@ export default function ShopPageClient({ categories, products, occasions, produc
   }, [pathname, router, searchParams])
 
   const handleCategoryChange = useCallback((slug: string | null) => {
-    setSelectedCategory(slug)
     updateQueryParams({ category: slug })
   }, [updateQueryParams])
 
   const handleOccasionChange = useCallback((slug: string | null) => {
-    setSelectedOccasion(slug)
     updateQueryParams({ occasion: slug })
   }, [updateQueryParams])
 
   const handleClearFilters = useCallback(() => {
-    setSelectedCategory(null)
-    setSelectedOccasion(null)
     setPriceRange({ min: null, max: null })
     setShowOnSale(false)
     setShowBestSeller(false)
@@ -174,7 +164,7 @@ export default function ShopPageClient({ categories, products, occasions, produc
       <section
         className="bg-secondary-50 relative overflow-hidden"
         style={{
-          backgroundImage: "url('/images/hero-background.png')",
+          backgroundImage: "url('/images/hero-background.webp')",
           backgroundSize: '400px 400px',
           backgroundPosition: 'center',
           backgroundRepeat: 'repeat',
@@ -182,15 +172,13 @@ export default function ShopPageClient({ categories, products, occasions, produc
       >
         <div className="container-custom py-12 md:py-16 text-center relative z-10">
           <span className="inline-block px-4 py-1.5 bg-surface-base/80 backdrop-blur-sm rounded-full text-xs font-medium uppercase tracking-wider text-primary-600 mb-4">
-            {language === 'mk' ? 'Нашата колекција' : 'Our Collection'}
+            Нашата колекција
           </span>
           <h1 className="font-heading text-4xl md:text-5xl text-ink-strong mb-3">
-            {language === 'mk' ? 'Сите производи' : 'All Products'}
+            Сите производи
           </h1>
           <p className="text-ink-muted max-w-md mx-auto">
-            {language === 'mk'
-              ? 'Пронајдете го совршениот подарок за вашите најблиски'
-              : 'Find the perfect gift for your loved ones'}
+            Пронајдете го совршениот подарок за вашите најблиски
           </p>
         </div>
       </section>
@@ -200,16 +188,14 @@ export default function ShopPageClient({ categories, products, occasions, produc
         <div className="container-custom py-3">
           <div className="flex items-center justify-between">
             <p className="text-sm text-ink-muted">
-              {language === 'mk' ? `${filteredProducts.length} производи` : `${filteredProducts.length} products`}
+              {filteredProducts.length} производи
             </p>
             <button
               onClick={() => setMobileFilterOpen(true)}
               className="flex items-center gap-2 px-4 py-2 bg-neutral-100 hover:bg-neutral-200 rounded-full text-sm font-medium transition-colors"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-              </svg>
-              {language === 'mk' ? 'Филтри' : 'Filters'}
+              <FilterIcon />
+              Филтри
               {hasActiveFilters && (
                 <span className="w-5 h-5 flex items-center justify-center text-xs font-bold bg-ink-strong text-white rounded-full">
                   {[selectedCategory, selectedOccasion, priceRange.min, priceRange.max, showOnSale, showBestSeller].filter(Boolean).length}
@@ -262,38 +248,32 @@ export default function ShopPageClient({ categories, products, occasions, produc
                 onChange={(e) => setSortBy(e.target.value as SortOption)}
                 className="w-44 px-3 py-2.5 text-sm border border-neutral-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary-500"
               >
-                <option value="newest">{language === 'mk' ? 'Најнови' : 'Newest'}</option>
-                <option value="oldest">{language === 'mk' ? 'Најстари' : 'Oldest'}</option>
-                <option value="priceAsc">{language === 'mk' ? 'Цена: ниска - висока' : 'Price: Low to High'}</option>
-                <option value="priceDesc">{language === 'mk' ? 'Цена: висока - ниска' : 'Price: High to Low'}</option>
-                <option value="nameAsc">{language === 'mk' ? 'Име: А - Ш' : 'Name: A - Z'}</option>
-                <option value="nameDesc">{language === 'mk' ? 'Име: Ш - А' : 'Name: Z - A'}</option>
+                <option value="newest">Најнови</option>
+                <option value="oldest">Најстари</option>
+                <option value="priceAsc">Цена: ниска - висока</option>
+                <option value="priceDesc">Цена: висока - ниска</option>
+                <option value="nameAsc">Име: А - Ш</option>
+                <option value="nameDesc">Име: Ш - А</option>
               </select>
             </div>
 
             {filteredProducts.length === 0 ? (
               <div className="text-center py-20">
                 <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-neutral-100 flex items-center justify-center">
-                  <svg className="w-8 h-8 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
+                  <SearchIcon className="w-8 h-8 text-neutral-400" />
                 </div>
                 <h3 className="text-lg font-heading font-semibold text-ink-strong mb-2">
-                  {language === 'mk' ? 'Нема пронајдени производи' : 'No products found'}
+                  Нема пронајдени производи
                 </h3>
                 <p className="text-ink-muted text-sm mb-6 max-w-xs mx-auto">
-                  {language === 'mk'
-                    ? 'Пробајте да ги промените филтрите'
-                    : 'Try adjusting your filters'}
+                  Пробајте да ги промените филтрите
                 </p>
                 <button
                   onClick={handleClearFilters}
                   className="inline-flex items-center gap-2 px-6 py-2.5 bg-primary-600 text-white text-sm font-medium rounded-full hover:bg-primary-700 transition-colors"
                 >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                  {language === 'mk' ? 'Исчисти сè' : 'Clear all'}
+                  <CloseIcon />
+                  Исчисти сè
                 </button>
               </div>
             ) : (

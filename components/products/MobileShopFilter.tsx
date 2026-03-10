@@ -110,12 +110,12 @@ export default function MobileShopFilter({
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b border-neutral-200">
             <h2 className="text-lg font-semibold text-neutral-900">
-              {language === 'mk' ? 'Филтри' : 'Filters'}
+              Филтри
             </h2>
             <button
               onClick={onClose}
               className="p-2 rounded-lg text-neutral-600 hover:bg-neutral-100 transition-colors"
-              aria-label={language === 'mk' ? 'Затвори' : 'Close'}
+              aria-label="Затвори"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -134,7 +134,7 @@ export default function MobileShopFilter({
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
-                {language === 'mk' ? 'Исчисти филтри' : 'Clear All Filters'}
+                Исчисти филтри
               </button>
             )}
 
@@ -153,7 +153,7 @@ export default function MobileShopFilter({
                       : 'text-neutral-600 hover:bg-neutral-100'
                   }`}
                 >
-                  <span>{language === 'mk' ? 'Сите производи' : 'All Products'}</span>
+                  <span>Сите производи</span>
                   <div className="flex items-center gap-2">
                     <span className={`text-sm ${selectedCategory === null ? 'text-primary-500' : 'text-neutral-400'}`}>
                       {totalProducts}
@@ -168,7 +168,7 @@ export default function MobileShopFilter({
 
                 {/* Category List */}
                 {categories.map((category) => {
-                  const name = getLocalizedField(category, 'name', language)
+                  const name = getLocalizedField(category, 'name')
                   const count = getCategoryCount(category.slug)
                   const isActive = selectedCategory === category.slug
 
@@ -205,7 +205,7 @@ export default function MobileShopFilter({
             {/* Price Range Section */}
             <div>
               <h3 className="text-sm font-semibold text-neutral-900 uppercase tracking-wider mb-3">
-                {language === 'mk' ? 'Цена' : 'Price'}
+                Цена
               </h3>
               <div className="space-y-3">
                 <div className="flex items-center gap-2">
@@ -214,7 +214,7 @@ export default function MobileShopFilter({
                       type="number"
                       value={minInput}
                       onChange={(e) => setMinInput(e.target.value)}
-                      placeholder={language === 'mk' ? 'Мин' : 'Min'}
+                      placeholder="Мин"
                       className="w-full px-3 py-3 text-base border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                       min="0"
                     />
@@ -225,7 +225,7 @@ export default function MobileShopFilter({
                       type="number"
                       value={maxInput}
                       onChange={(e) => setMaxInput(e.target.value)}
-                      placeholder={language === 'mk' ? 'Макс' : 'Max'}
+                      placeholder="Макс"
                       className="w-full px-3 py-3 text-base border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                       min="0"
                     />
@@ -236,7 +236,7 @@ export default function MobileShopFilter({
                     onClick={handleClearPrice}
                     className="text-sm text-primary-600 hover:text-primary-700"
                   >
-                    {language === 'mk' ? 'Исчисти цена' : 'Clear price'}
+                    Исчисти цена
                   </button>
                 )}
               </div>
@@ -248,7 +248,7 @@ export default function MobileShopFilter({
             {/* Tags Section */}
             <div>
               <h3 className="text-sm font-semibold text-neutral-900 uppercase tracking-wider mb-3">
-                {language === 'mk' ? 'Ознаки' : 'Tags'}
+                Ознаки
               </h3>
               <div className="space-y-2">
                 {/* On Sale Checkbox */}
@@ -261,9 +261,9 @@ export default function MobileShopFilter({
                   />
                   <span className="flex items-center gap-2 text-neutral-700">
                     <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-700">
-                      {language === 'mk' ? 'Попуст' : 'Sale'}
+                      Попуст
                     </span>
-                    {language === 'mk' ? 'На попуст' : 'On Sale'}
+                    На попуст
                   </span>
                 </label>
 
@@ -277,9 +277,9 @@ export default function MobileShopFilter({
                   />
                   <span className="flex items-center gap-2 text-neutral-700">
                     <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-amber-100 text-amber-700">
-                      {language === 'mk' ? 'Топ' : 'Best'}
+                      Топ
                     </span>
-                    {language === 'mk' ? 'Најпродаван' : 'Best Seller'}
+                    Најпродаван
                   </span>
                 </label>
               </div>

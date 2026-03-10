@@ -1,7 +1,7 @@
 'use client'
 
 import { useLanguage } from '@/context/LanguageContext'
-import type { SortOption } from '@/hooks/useProducts'
+import type { SortOption } from '@/lib/supabase/types'
 
 export type ViewMode = 'grid-2' | 'grid-3' | 'grid-4' | 'grid-5'
 
