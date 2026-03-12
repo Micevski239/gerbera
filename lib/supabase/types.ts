@@ -794,6 +794,32 @@ export type Database = {
           updated_at?: string
         }
       }>
+      page_views: SupabaseTable<{
+        Row: {
+          id: string
+          visitor_id: string
+          page_path: string
+          referrer: string | null
+          user_agent: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          visitor_id: string
+          page_path: string
+          referrer?: string | null
+          user_agent?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          visitor_id?: string
+          page_path?: string
+          referrer?: string | null
+          user_agent?: string | null
+          created_at?: string
+        }
+      }>
       site_stats: SupabaseTable<{
         Row: {
           id: string
@@ -921,6 +947,7 @@ export type HomepageSectionItem = Database['public']['Tables']['homepage_section
 export type HomepageSectionWithItems = Database['public']['Views']['homepage_sections_with_items']['Row']
 export type Occasion = Database['public']['Tables']['occasions']['Row']
 export type SiteStat = Database['public']['Tables']['site_stats']['Row']
+export type PageView = Database['public']['Tables']['page_views']['Row']
 
 // Insert types
 export type CategoryInsert = Database['public']['Tables']['categories']['Insert']

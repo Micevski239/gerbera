@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Nunito, Bad_Script } from 'next/font/google'
 import { LanguageProvider } from '@/context/LanguageContext'
 import FloatingWhatsApp from '@/components/FloatingWhatsApp'
+import PageViewTracker from '@/components/PageViewTracker'
 import './globals.css'
 
 const nunito = Nunito({
@@ -53,6 +54,7 @@ export default function RootLayout({
       <body className="min-h-screen bg-canvas-100 text-ink-base font-body" suppressHydrationWarning>
         <LanguageProvider>
           {children}
+          <PageViewTracker />
           <FloatingWhatsApp />
         </LanguageProvider>
       </body>
