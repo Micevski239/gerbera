@@ -3,6 +3,7 @@ import { Nunito, Bad_Script } from 'next/font/google'
 import { LanguageProvider } from '@/context/LanguageContext'
 import FloatingWhatsApp from '@/components/FloatingWhatsApp'
 import PageViewTracker from '@/components/PageViewTracker'
+import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
 const nunito = Nunito({
@@ -55,6 +56,7 @@ export default function RootLayout({
         <LanguageProvider>
           {children}
           <PageViewTracker />
+          <Analytics />
           <FloatingWhatsApp />
         </LanguageProvider>
       </body>
