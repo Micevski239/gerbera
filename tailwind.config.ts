@@ -25,7 +25,7 @@ const config: Config = {
           base: '#333333',
           muted: '#666666',
         },
-        // Primary — Coral
+        // Primary - Coral
         primary: {
           50: '#FFF5F0',
           100: '#FFE8DE',
@@ -38,7 +38,7 @@ const config: Config = {
           800: '#965A4C',
           900: '#6E3F35',
         },
-        // Secondary — Muted Sage (unchanged)
+        // Secondary - Muted Sage (unchanged)
         secondary: {
           50: '#EEF6F1',
           100: '#D4EAE0',
@@ -51,7 +51,7 @@ const config: Config = {
           800: '#476A57',
           900: '#334D3F',
         },
-        // Accent — Warm Saffron (unchanged)
+        // Accent - Warm Saffron (unchanged)
         accent: {
           50: '#FFF9EE',
           100: '#FFF0D4',

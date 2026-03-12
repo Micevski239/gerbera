@@ -56,7 +56,7 @@ export default function ProductCard({
   const originalPrice = product.is_on_sale && product.sale_price ? formatPrice(product.price) : null
   const priceText = isProductWithDetails(product) ? product.price_text : null
 
-  // Shop variant — grid card used on shop, homepage, related products
+  // Shop variant - grid card used on shop, homepage, related products
   if (variant === 'shop') {
     const hasSale = product.is_on_sale && product.sale_price && product.price
     const discountPercent = hasSale
@@ -133,7 +133,7 @@ export default function ProductCard({
     )
   }
 
-  // Default variant — card with border and category label
+  // Default variant - card with border and category label
   return (
     <Link href={`/product/${product.id}`} className="product-card-shell group overflow-hidden">
       <div className="relative overflow-hidden bg-canvas-200 aspect-[4/5] rounded-lg">

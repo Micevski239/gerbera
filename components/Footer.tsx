@@ -19,7 +19,7 @@ export default function Footer() {
     <footer className="bg-ink-strong text-white mt-auto">
       <div className="container-custom py-10">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-          {/* Brand — spans 2 cols on desktop */}
+          {/* Brand - spans 2 cols on desktop */}
           <div className="col-span-2">
             <Link href="/" className="inline-block mb-3">
               <span className="font-heading text-xl text-white">Gerbera</span>

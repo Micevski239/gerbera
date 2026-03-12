@@ -43,7 +43,7 @@ export default function Header({ categories = [] }: HeaderProps) {
     <header className="sticky top-0 z-50 bg-white border-b border-border-soft">
       <div className="max-w-shell mx-auto px-5 md:px-8">
         <div className="flex items-center justify-between h-16 md:grid md:grid-cols-3 md:h-20">
-          {/* Logo — left */}
+          {/* Logo - left */}
           <Link href="/" className="flex-shrink-0">
             <div className="flex flex-col leading-none">
               <span className="font-heading text-2xl md:text-3xl tracking-wide text-ink-strong">
@@ -55,7 +55,7 @@ export default function Header({ categories = [] }: HeaderProps) {
             </div>
           </Link>
 
-          {/* Desktop Navigation — center */}
+          {/* Desktop Navigation - center */}
           <nav className="hidden md:flex items-center justify-center gap-6 lg:gap-8">
             <Link
               href="/"
@@ -91,10 +91,10 @@ export default function Header({ categories = [] }: HeaderProps) {
             </Link>
           </nav>
 
-          {/* Right side — right */}
+          {/* Right side - right */}
           <div className="flex items-center gap-1 justify-self-end">
 
-            {/* Social + WhatsApp icons — desktop only */}
+            {/* Social + WhatsApp icons - desktop only */}
             <a href={SOCIAL.facebook} target="_blank" rel="noopener noreferrer"
               className="hidden md:flex p-2 text-ink-muted hover:text-ink-strong transition-colors" aria-label="Facebook">
               <FacebookIcon />
@@ -122,7 +122,7 @@ export default function Header({ categories = [] }: HeaderProps) {
         </div>
       </div>
 
-      {/* Mobile Navigation — full-width overlay below header */}
+      {/* Mobile Navigation - full-width overlay below header */}
       <div
         className={`md:hidden fixed inset-x-0 top-16 bottom-0 bg-white z-40 transition-[opacity,transform] duration-300 ease-in-out ${
           mobileMenuOpen
@@ -166,7 +166,7 @@ export default function Header({ categories = [] }: HeaderProps) {
             </Link>
           </div>
 
-          {/* Social links + WhatsApp — mobile */}
+          {/* Social links + WhatsApp - mobile */}
           <div className="pt-6 border-t border-border-soft mx-4 mt-6">
             <div className="flex items-center justify-center gap-4">
               <a href={SOCIAL.facebook} target="_blank" rel="noopener noreferrer"

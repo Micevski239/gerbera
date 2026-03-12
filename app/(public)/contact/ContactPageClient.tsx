@@ -67,7 +67,7 @@ export default function ContactPageClient() {
             Контакт
           </h1>
           <p className="text-ink-muted max-w-md mx-auto">
-            Секогаш сме тука за вас — пишете ни!
+            Секогаш сме тука за вас - пишете ни!
           </p>
         </div>
       </section>

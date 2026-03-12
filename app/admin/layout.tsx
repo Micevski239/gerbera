@@ -9,7 +9,7 @@ export default async function AdminLayout({
   const admin = await isAdmin()
 
   if (!admin) {
-    // Login page or middleware will redirect — render children for login page
+    // Login page or middleware will redirect - render children for login page
     return <>{children}</>
   }
 

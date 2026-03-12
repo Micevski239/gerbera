@@ -89,7 +89,7 @@ export default function HomePageClient({
 
   return (
     <div className="bg-canvas-100 text-ink-base">
-      {/* Hero — no animation, immediately visible */}
+      {/* Hero - no animation, immediately visible */}
       <HeroBentoGrid heroTiles={heroTiles} categories={categories} language={language} />
 
       {/* Shop by Occasion */}
@@ -97,16 +97,16 @@ export default function HomePageClient({
         <OccasionShowcase language={language} occasions={occasions} />
       </ScrollReveal>
 
-      {/* Info Banner — Craft Story */}
+      {/* Info Banner - Craft Story */}
       <ScrollReveal>
         <section className="bg-softPink">
           <div className="split-banner">
-            {/* Left — Image with parallax scroll */}
+            {/* Left - Image with parallax scroll */}
             <ParallaxImage
               src="/images/gerbera.webp"
               alt={t('home.craftStoryTitle')}
             />
-            {/* Right — Text */}
+            {/* Right - Text */}
             <div className="flex flex-col justify-center px-8 py-10 md:px-16 md:py-20">
               <p className="eyebrow font-body mb-2">
                 Gerbera Gifts

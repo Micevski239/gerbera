@@ -38,7 +38,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
   }
 
   const name = product.name_mk || product.name
-  const description = product.description_mk || `${name} — рачно изработен персонализиран подарок од Гербера Подароци.`
+  const description = product.description_mk || `${name} - рачно изработен персонализиран подарок од Гербера Подароци.`
 
   return {
     title: `${name} | Гербера Подароци`,
@@ -89,7 +89,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
       .limit(8),
   ])
 
-  // JSON-LD structured data for SEO — data is from our own database, not user input
+  // JSON-LD structured data for SEO - data is from our own database, not user input
   const productName = product.name_mk || product.name
   const productDesc = product.description_mk || ''
   const price = product.is_on_sale && product.sale_price ? product.sale_price : product.price

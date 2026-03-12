@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
   }
 
   const name = category.name_mk || category.name
-  const description = category.description_mk || `${name} — рачно изработени персонализирани подароци од Гербера.`
+  const description = category.description_mk || `${name} - рачно изработени персонализирани подароци од Гербера.`
 
   return {
     title: `${name} | Гербера Подароци`,

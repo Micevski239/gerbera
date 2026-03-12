@@ -55,7 +55,7 @@ async function getHomepageData() {
       .select('*')
       .eq('is_active', true)
       .order('created_at', { ascending: false })
-      .limit(5),
+      .limit(6),
   ])
 
   if (categoriesResult.error) {

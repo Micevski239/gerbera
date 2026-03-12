@@ -44,7 +44,7 @@ function TileLink({ tile, className, children }: { tile: NormalizedTile; classNa
 }
 
 export default function HeroBentoGrid({ heroTiles, categories, language }: HeroBentoGridProps) {
-  const shopNow = 'Купи сега'
+  const shopNow = 'Нарачај подарок'
   const eyebrow = 'Колекција'
 
   // Build a map of slot → HeroTile for quick lookup

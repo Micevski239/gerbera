@@ -241,7 +241,7 @@ export default function TestimonialsClient({ testimonials }: TestimonialsClientP
 
                 <div className="flex-1 min-w-0">
                   <p className="font-medium text-neutral-900 truncate">{form.customer_name}</p>
-                  <p className="text-xs text-neutral-400 truncate">{form.customer_location_mk || '—'}</p>
+                  <p className="text-xs text-neutral-400 truncate">{form.customer_location_mk || '-'}</p>
                 </div>
 
                 <StarRating rating={form.rating} />

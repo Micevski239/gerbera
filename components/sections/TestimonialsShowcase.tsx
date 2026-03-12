@@ -27,26 +27,27 @@ export default function TestimonialsShowcase({ language, testimonials = [] }: Te
         {/* Testimonials row */}
         <ScrollReveal
           stagger={80}
-          className="grid grid-cols-2 lg:grid-cols-5 gap-0"
+          className="grid grid-cols-2 lg:grid-cols-3 gap-0"
         >
           {testimonials.map((t, i) => {
             const content = getContent(t)
             const location = getLocation(t)
 
             // Mobile (2-col): right border on left column, bottom border except last row
-            // Desktop (5-col): right border on all except last
+            // Desktop (3-col): right border except every 3rd, bottom border except last row
             const isLeftCol = i % 2 === 0
-            const isLastRow = i >= testimonials.length - 2
-            const isLastItem = i === testimonials.length - 1
+            const mobileLastRow = i >= testimonials.length - (testimonials.length % 2 === 0 ? 2 : 1)
+            const lgCol = i % 3
+            const lgLastRow = i >= testimonials.length - (testimonials.length % 3 === 0 ? 3 : testimonials.length % 3)
 
             return (
               <div
                 key={t.id}
                 className={`px-4 py-4 flex flex-col gap-3 items-center text-center lg:items-start lg:text-left
                   ${isLeftCol ? 'border-r border-border-soft' : ''}
-                  ${!isLastRow ? 'border-b border-border-soft' : ''}
-                  lg:border-b-0
-                  ${!isLastItem ? 'lg:border-r border-border-soft' : 'lg:border-r-0'}
+                  ${!mobileLastRow ? 'border-b border-border-soft' : ''}
+                  ${lgCol < 2 ? 'lg:border-r lg:border-border-soft' : 'lg:border-r-0'}
+                  ${!lgLastRow ? 'lg:border-b lg:border-border-soft' : 'lg:border-b-0'}
                 `}
               >
                 {/* Stars */}

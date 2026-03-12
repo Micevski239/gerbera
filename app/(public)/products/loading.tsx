@@ -13,7 +13,7 @@ export default function Loading() {
       {/* Content */}
       <div className="container-custom py-8">
         <div className="flex gap-8">
-          {/* Sidebar skeleton — desktop only */}
+          {/* Sidebar skeleton - desktop only */}
           <aside className="hidden lg:block w-64 flex-shrink-0 space-y-6">
             <div className="skeleton-text w-24 h-4" />
             {Array.from({ length: 6 }).map((_, i) => (

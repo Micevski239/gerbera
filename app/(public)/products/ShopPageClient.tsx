@@ -36,7 +36,7 @@ export default function ShopPageClient({ categories, products, occasions, produc
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
-  // Derive category/occasion from URL — single source of truth
+  // Derive category/occasion from URL - single source of truth
   const selectedCategory = searchParams.get('category') || null
   const selectedOccasion = searchParams.get('occasion') || null
 
