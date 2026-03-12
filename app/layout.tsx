@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Nunito, Bad_Script } from 'next/font/google'
 import { LanguageProvider } from '@/context/LanguageContext'
 import FloatingWhatsApp from '@/components/FloatingWhatsApp'
+import SplashScreen from '@/components/SplashScreen'
 import PageViewTracker from '@/components/PageViewTracker'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
@@ -54,6 +55,7 @@ export default function RootLayout({
     >
       <body className="min-h-screen bg-canvas-100 text-ink-base font-body" suppressHydrationWarning>
         <LanguageProvider>
+          <SplashScreen />
           {children}
           <PageViewTracker />
           <Analytics />
